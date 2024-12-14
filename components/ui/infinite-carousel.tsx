@@ -4,6 +4,7 @@ import Image from "next/image";
 interface CarouselItem {
   name: string;
   logo: string;
+  size?: "small" | "medium" | "large";
 }
 
 interface InfiniteCarouselProps {
@@ -28,19 +29,23 @@ export function InfiniteCarousel({
   const content = (
     <>
       {items.map((item, idx) => (
-        <div key={idx} className="mx-12 flex flex-col items-center group">
-          <div className="h-8 flex items-center">
-            <Image
-              src={item.logo}
-              alt={item.name}
-              width={120}
-              height={32}
-              className="opacity-60 group-hover:opacity-100 transition-opacity"
-            />
-          </div>
-          <span className="mt-2 text-xs text-blue-100/60 group-hover:text-blue-100/90 transition-colors">
-            {item.name}
-          </span>
+        <div key={idx} className="flex items-center group px-16">
+          <Image
+            src={item.logo}
+            alt={item.name}
+            width={200}
+            height={100}
+            style={{
+              minWidth:
+                item.size === "small"
+                  ? "75px"
+                  : item.size === "large"
+                  ? "250px"
+                  : "150px",
+              height: "auto",
+            }}
+            className="group-hover:opacity-100 transition-opacity"
+          />
         </div>
       ))}
     </>
@@ -55,7 +60,7 @@ export function InfiniteCarousel({
           direction === "right" ? "animate-scroll-right" : "animate-scroll-left"
         )}
       >
-        {/* Duplicate content for seamless loop */}
+        {content}
         {content}
         {content}
       </div>

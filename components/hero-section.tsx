@@ -33,7 +33,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               size="lg"
-              className="bg-blue-400 hover:bg-blue-500 text-white"
+
               asChild
             >
               <Link href="/signup">Try for free</Link>

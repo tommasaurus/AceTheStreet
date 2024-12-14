@@ -1,37 +1,30 @@
 "use client";
 
-import { Building2, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./button";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-sm border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Building2 className="h-6 w-6" />
-          <span className="font-semibold text-xl">PrepIB</span>
-        </div>
-        
-        <div className="hidden md:flex items-center space-x-6">
-          <Link href="#features" className="text-muted-foreground hover:text-foreground transition">
-            Features
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <Link
+            href="/"
+            className="font-bold text-xl text-blue-900 dark:text-white"
+          >
+            PrepIB
           </Link>
-          <Link href="#pricing" className="text-muted-foreground hover:text-foreground transition">
-            Pricing
-          </Link>
-          <Link href="#about" className="text-muted-foreground hover:text-foreground transition">
-            About
-          </Link>
-        </div>
 
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" asChild>
-            <Link href="/signin">Sign In</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">Try for free</Link>
-          </Button>
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <Button variant="ghost" asChild>
+              <Link href="/signin">Sign In</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/signup">Try for free</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

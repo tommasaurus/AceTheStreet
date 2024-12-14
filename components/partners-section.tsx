@@ -57,7 +57,7 @@ const SCHOOLS = [
   {
     name: "Stanford",
     logo: "/logos/schools/stanford.png",
-    size: "small",
+    size: "medium",
   },
   {
     name: "UVA",
@@ -67,12 +67,12 @@ const SCHOOLS = [
   {
     name: "Wharton",
     logo: "/logos/schools/wharton.png",
-    size: "large",
+    size: "medium",
   },
   {
     name: "Harvard",
     logo: "/logos/schools/harvard.svg",
-    size: "large",
+    size: "medium",
   },
   {
     name: "MIT",
@@ -82,7 +82,7 @@ const SCHOOLS = [
   {
     name: "UMich",
     logo: "/logos/schools/umich.png",
-    size: "large",
+    size: "medium",
   },
   {
     name: "IU Kelley",
@@ -92,7 +92,7 @@ const SCHOOLS = [
   {
     name: "UChicago",
     logo: "/logos/schools/uchicago.webp",
-    size: "small",
+    size: "medium",
   },
   {
     name: "UTAustin",
@@ -108,26 +108,26 @@ const SCHOOLS = [
 
 export function PartnersSection() {
   return (
-    <div className='py-24 bg-gray-50/80 dark:bg-black/20 backdrop-blur-sm'>
-      <div className='space-y-16'>
-        <div className='space-y-6'>
-          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
+    <div className="py-24 bg-gray-50/80 dark:bg-black/20 backdrop-blur-sm">
+      <div className="space-y-16">
+        <div className="space-y-6">
+          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
             Real interview questions from top investment banks
           </h3>
-          <div className='h-20'>
-            <InfiniteCarousel items={BANKS} direction='left' speed='normal' />
+          <div className="h-20">
+            <InfiniteCarousel items={BANKS} direction="left" speed="normal" />
           </div>
         </div>
 
-        <div className='space-y-6'>
-          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
+        <div className="space-y-6">
+          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
             Trusted by students at leading universities
           </h3>
-          <div className='h-20'>
+          <div className="h-20">
             <InfiniteCarousel
               items={SCHOOLS}
-              direction='right'
-              speed='normal'
+              direction="right"
+              speed="normal"
             />
           </div>
         </div>

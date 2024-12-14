@@ -34,11 +34,7 @@ export function HeroSection() {
             elite boutique banks.
           </p>
           <div className='flex flex-col sm:flex-row gap-4'>
-            <Button
-              size='lg'
-              className='bg-black hover:bg-black/90 text-white font-medium w-full sm:w-auto justify-center rounded-full dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90'
-              asChild
-            >
+            <Button size='lg' asChild>
               <Link href='/signup' className='flex items-center gap-2'>
                 <svg className='w-5 h-5' viewBox='0 0 24 24'>
                   <path

@@ -16,13 +16,13 @@ export function HeroSection() {
         <source src="/videos/FrontPageVideo.mp4" type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="text-white">The fastest way to </span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ffffff] via-[#ffd4d4] to-[#ccd9ff]">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ffffff] via-[#ffebeb] to-[#b3c6ff]">
               master IB interviews
             </span>
           </h1>

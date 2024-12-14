@@ -1,119 +1,100 @@
-import { Check } from "lucide-react";
+import { Check, Trash2, MonitorPlay } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function PricingSection() {
   return (
-    <section
-      className="py-20 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800"
-      id="pricing"
-    >
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-blue-900">
-            Simple, transparent pricing
-          </h2>
-          <p className="text-blue-600/70">
-            Choose the plan that's right for you
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Free Plan */}
-          <Card className="border-blue-100 dark:border-blue-800 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
-            <CardHeader>
-              <CardTitle className="text-blue-900 dark:text-white">
-                Free
-              </CardTitle>
-              <CardDescription className="text-blue-600 dark:text-blue-300">
-                Perfect for getting started
-              </CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold text-blue-900">$0</span>
-                <span className="text-blue-600/70">/month</span>
+    <section className='py-20 bg-white dark:bg-[#151e2a]'>
+      <div className='container mx-auto px-4'>
+        <div className='grid md:grid-cols-2 gap-6 max-w-4xl mx-auto'>
+          {/* Basic Plan */}
+          <Card className='bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 p-8'>
+            <CardHeader className='p-0 space-y-6'>
+              <div className='w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#2a3744] flex items-center justify-center'>
+                <Trash2 className='w-6 h-6 text-black dark:text-white' />
+              </div>
+              <div className='space-y-2'>
+                <CardTitle className='text-2xl font-medium text-black dark:text-white'>
+                  Basic Plan
+                </CardTitle>
+                <div className='flex items-baseline gap-1'>
+                  <span className='text-3xl font-semibold text-black dark:text-white'>
+                    $20
+                  </span>
+                  <span className='text-gray-500 dark:text-gray-400'>
+                    /month
+                  </span>
+                </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <ul className="space-y-4">
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900 dark:text-white">
-                    100 practice questions
-                  </span>
+            <CardContent className='p-0 mt-8'>
+              <ul className='space-y-5'>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Up to 50 practice questions</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900 dark:text-white">
-                    Basic interview guides
-                  </span>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Basic interview guides</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900 dark:text-white">
-                    Community access
-                  </span>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Community access</span>
                 </li>
               </ul>
+              <div className='mt-8'>
+                <Button className='w-full bg-black hover:bg-black/90 text-white rounded-full h-12 dark:bg-white dark:text-black dark:hover:bg-white/90'>
+                  Current plan
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full bg-white hover:bg-blue-50 text-blue-600 border-2 border-blue-200">
-                Get Started
-              </Button>
-            </CardFooter>
           </Card>
 
-          {/* Premium Plan */}
-          <Card className="border-2 border-blue-400 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <CardTitle className="text-blue-900">Premium</CardTitle>
-              <CardDescription className="text-blue-600">
-                For serious candidates
-              </CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold text-blue-900">$10</span>
-                <span className="text-blue-600/70">/month</span>
+          {/* Pro Plan */}
+          <Card className='bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 p-8'>
+            <CardHeader className='p-0 space-y-6'>
+              <div className='w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#2a3744] flex items-center justify-center'>
+                <MonitorPlay className='w-6 h-6 text-black dark:text-white' />
+              </div>
+              <div className='space-y-2'>
+                <CardTitle className='text-2xl font-medium text-black dark:text-white'>
+                  Pro Plan
+                </CardTitle>
+                <div className='flex items-baseline gap-1'>
+                  <span className='text-3xl font-semibold text-black dark:text-white'>
+                    $200
+                  </span>
+                  <span className='text-gray-500 dark:text-gray-400'>
+                    /month
+                  </span>
+                </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <ul className="space-y-4">
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900">
-                    Unlimited practice questions
-                  </span>
+            <CardContent className='p-0 mt-8'>
+              <ul className='space-y-5'>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Up to 500 practice questions</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900">
-                    Advanced interview guides
-                  </span>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Advanced interview guides</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900">1-on-1 mock interviews</span>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>1-on-1 mock interviews</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900">Performance analytics</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-blue-900">Priority support</span>
+                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
+                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                  <span>Priority support</span>
                 </li>
               </ul>
+              <div className='mt-8'>
+                <Button className='w-full bg-white hover:bg-white/90 text-black rounded-full h-12 dark:bg-black dark:text-white dark:hover:bg-black/90'>
+                  Get Pro
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-                Get Premium
-              </Button>
-            </CardFooter>
           </Card>
         </div>
       </div>

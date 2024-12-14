@@ -8,32 +8,13 @@ import { PricingSection } from "@/components/pricing-section";
 // app/page.tsx
 export default function Home() {
   return (
-    <main className="relative">
+    <main className='relative bg-background'>
       <Navbar />
-      <div className="hero-section">
-        <HeroSection />
-      </div>
+      <HeroSection />
       <PartnersSection />
-      <div className="relative container mx-auto">
-        {/* First section - Right aligned */}
-        <div className="flex py-24">
-          <div className="w-1/4" />
-          <div className="w-3/4">
-            <DemoSection />
-          </div>
-        </div>
-
-        {/* Second section - Left aligned */}
-        <div className="flex py-24">
-          <div className="w-3/4">
-            <WhyUsSection />
-          </div>
-          <div className="w-1/4" />
-        </div>
-
-        {/* Third section - Right aligned */}
-        <PricingSection />
-      </div>
+      <DemoSection />
+      <WhyUsSection />
+      <PricingSection />
     </main>
   );
 }

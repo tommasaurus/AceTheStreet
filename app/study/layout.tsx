@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import { StudySidebar } from "@/components/study-sidebar";
 import MatchContent from "@/components/study/match/MatchContent";
+import { TestSetup, TestSettings } from "@/components/study/test/TestSetup";
+import { TestInterface } from "@/components/study/test/TestInterface";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function StudyLayout({
   children,
@@ -18,8 +22,46 @@ export default function StudyLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [isTestMode, setIsTestMode] = useState(false);
+  const [testSettings, setTestSettings] = useState<TestSettings | null>(null);
 
-  // Hide navigation for root bank and M&I pages
+  useEffect(() => {
+    setIsTestMode(false);
+    setTestSettings(null);
+  }, [pathname]);
+
+  const handleStartTest = (settings: TestSettings) => {
+    if (
+      !settings.questionTypes.trueFalse &&
+      !settings.questionTypes.multipleChoice &&
+      !settings.questionTypes.matching
+    ) {
+      toast.error("Please select at least one question type");
+      return;
+    }
+
+    if (settings.questionCount === 0) {
+      toast.error("Please enter the number of questions");
+      return;
+    }
+
+    setTestSettings(settings);
+    setIsTestMode(true);
+  };
+
+  const handleTestComplete = (results: any) => {
+    console.log("Test completed with results:", results);
+    setIsTestMode(false);
+    setTestSettings(null);
+  };
+
+  const handleTabChange = (value: string) => {
+    if (value !== "test") {
+      setIsTestMode(false);
+      setTestSettings(null);
+    }
+  };
+
   const shouldHideNav =
     pathname === "/study/banks" || pathname === "/study/m&i400";
 
@@ -33,7 +75,11 @@ export default function StudyLayout({
           {shouldHideNav ? (
             children
           ) : (
-            <Tabs defaultValue="flashcards" className="w-full">
+            <Tabs
+              defaultValue="flashcards"
+              className="w-full"
+              onValueChange={handleTabChange}
+            >
               <TabsList className="grid w-full grid-cols-5 h-auto gap-4">
                 <TabsTrigger
                   value="flashcards"
@@ -77,9 +123,33 @@ export default function StudyLayout({
                 </div>
               </TabsContent>
               <TabsContent value="test">
-                <div className="p-4 text-center text-muted-foreground">
-                  Test content coming soon...
-                </div>
+                {isTestMode && testSettings ? (
+                  <TestInterface
+                    settings={testSettings}
+                    questions={[
+                      {
+                        id: 1,
+                        type: "Technical",
+                        question: "What is WACC?",
+                        answer: "Weighted Average Cost of Capital",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 2,
+                        type: "Technical",
+                        question: "What is CAPM?",
+                        answer: "Capital Asset Pricing Model",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      // Add more sample questions here
+                    ]}
+                    onComplete={handleTestComplete}
+                  />
+                ) : (
+                  <TestSetup maxQuestions={50} onStartTest={handleStartTest} />
+                )}
               </TabsContent>
               <TabsContent value="match">
                 <MatchContent />

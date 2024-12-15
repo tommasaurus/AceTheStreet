@@ -1,8 +1,12 @@
-"use client";
-
 import { FlashcardsContent } from "@/components/flashcards-content";
 
-export default function BankPage({ params }: { params: { bankId: string } }) {
+interface PageProps {
+  params: {
+    bankId: string;
+  };
+}
+
+export default async function Page({ params }: PageProps) {
   return (
     <div className="container mx-auto py-8">
       <FlashcardsContent category="banks" bankId={params.bankId} />

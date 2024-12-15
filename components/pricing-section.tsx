@@ -1,13 +1,172 @@
 "use client";
 
-import { Check, Trash2, MonitorPlay, X } from "lucide-react";
+import { useState } from "react";
+import {
+  Star,
+  Crown,
+  Gem,
+  Check,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
+interface Feature {
+  included: boolean;
+  text: string;
+}
+
+interface PricingPlan {
+  icon: React.ElementType;
+  title: string;
+  price: string;
+  period: string;
+  total: string;
+  duration: string;
+  popular?: boolean;
+  bestValue?: boolean;
+  features: Feature[];
+}
+
+const PRICING_PLANS: PricingPlan[] = [
+  {
+    icon: Star,
+    title: "Basic Plan",
+    price: "$20",
+    period: "month",
+    total: "$20 total",
+    duration: "1 month",
+    features: [
+      { included: false, text: "Bank specific questions" },
+      { included: true, text: "M&I questions" },
+      { included: true, text: "Community access" },
+      { included: true, text: "Interview guides" },
+    ],
+  },
+  {
+    icon: Crown,
+    title: "Pro Plan",
+    price: "$13.33",
+    period: "month",
+    total: "$40 total",
+    duration: "3 months",
+    popular: true,
+    features: [
+      { included: true, text: "Bank specific questions" },
+      { included: true, text: "M&I questions" },
+      { included: true, text: "Community access" },
+      { included: true, text: "Interview guides" },
+    ],
+  },
+  {
+    icon: Gem,
+    title: "Max Plan",
+    price: "$6.67",
+    period: "month",
+    total: "$80 total",
+    duration: "12 months",
+    bestValue: true,
+    features: [
+      { included: true, text: "Bank specific questions" },
+      { included: true, text: "M&I questions" },
+      { included: true, text: "Community access" },
+      { included: true, text: "Interview guides" },
+    ],
+  },
+];
+
 export function PricingSection() {
+  interface PricingCardProps {
+    plan: PricingPlan;
+    isRelative?: boolean;
+  }
+
+  const PricingCard = ({ plan, isRelative = false }: PricingCardProps) => {
+    const Icon = plan.icon;
+    return (
+      <div className='relative' style={{ zIndex: 1 }}>
+        {(plan.popular || plan.bestValue) && (
+          <div
+            className='absolute -top-3 left-0 right-0 flex justify-center'
+            style={{ zIndex: 999 }}
+          >
+            <div
+              className={`px-6 py-1.5 rounded-full text-sm font-medium shadow-lg relative ${
+                plan.popular
+                  ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
+                  : "bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-400 text-white"
+              }`}
+            >
+              {plan.popular ? "Most Popular: Save 33%" : "Best Value"}
+            </div>
+          </div>
+        )}
+        <Card
+          className={`bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col ${
+            isRelative ? "relative" : ""
+          }`}
+        >
+          {plan.popular && (
+            <>
+              <div className='absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[24px] z-0' />
+              <div className='absolute inset-[1px] bg-[#ECECEC] dark:bg-[#1c2936] rounded-[23px] z-10' />
+            </>
+          )}
+          <div className={`${plan.popular ? "relative z-10" : ""}`}>
+            <CardHeader className='p-0 space-y-6'>
+              <div className='w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center'>
+                <Icon className='w-6 h-6 text-black dark:text-white' />
+              </div>
+              <div className='space-y-2'>
+                <CardTitle className='text-2xl font-medium text-black dark:text-white'>
+                  {plan.title}
+                </CardTitle>
+                <div className='flex flex-col'>
+                  <div className='flex items-baseline gap-1'>
+                    <span className='text-3xl font-semibold text-black dark:text-white'>
+                      {plan.price}
+                    </span>
+                    <span className='text-gray-500 dark:text-gray-400'>
+                      /{plan.period}
+                    </span>
+                  </div>
+                  <span className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                    {plan.duration} • {plan.total}
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className='p-0 mt-8 flex-grow flex flex-col justify-between'>
+              <ul className='space-y-5 mb-8'>
+                {plan.features.map((feature: Feature, index: number) => (
+                  <li
+                    key={index}
+                    className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'
+                  >
+                    {feature.included ? (
+                      <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                    ) : (
+                      <X className='h-4 w-4 text-gray-500 dark:text-gray-400' />
+                    )}
+                    <span>{feature.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button className='w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90'>
+                Subscribe
+              </Button>
+            </CardContent>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
   return (
-    <section className='pt-12 pb-24 bg-white dark:bg-[#151e2a]'>
+    <section className='py-16 bg-white dark:bg-[#151e2a]'>
       <div className='container mx-auto px-4'>
         {/* Title and subtitle */}
         <div className='text-center max-w-4xl mx-auto mb-8'>
@@ -32,177 +191,23 @@ export function PricingSection() {
           </motion.p>
         </div>
 
-        {/* Pricing cards grid */}
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto pt-4'>
-          {/* Basic Plan */}
-          <Card className='bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col'>
-            <CardHeader className='p-0 space-y-6'>
-              <div className='w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#2a3744] flex items-center justify-center'>
-                <Trash2 className='w-6 h-6 text-black dark:text-white' />
-              </div>
-              <div className='space-y-2'>
-                <CardTitle className='text-2xl font-medium text-black dark:text-white'>
-                  Basic Plan
-                </CardTitle>
-                <div className='flex flex-col'>
-                  <div className='flex items-baseline gap-1'>
-                    <span className='text-3xl font-semibold text-black dark:text-white'>
-                      $20
-                    </span>
-                    <span className='text-gray-500 dark:text-gray-400'>
-                      /month
-                    </span>
-                  </div>
-                  <span className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                    1 month • $20 total
-                  </span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className='p-0 mt-8 flex-grow flex flex-col justify-between'>
-              <ul className='space-y-5 mb-8'>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <X className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Bank specific questions</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>M&I questions</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Community access</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Interview guides</span>
-                </li>
-              </ul>
-              <Button className='w-full bg-black hover:bg-black/90 text-white rounded-full h-12 dark:bg-white dark:text-black dark:hover:bg-white/90'>
-                Current plan
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Desktop Grid */}
+        <div className='hidden md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto pt-4'>
+          {PRICING_PLANS.map((plan, index) => (
+            <PricingCard key={index} plan={plan} isRelative={true} />
+          ))}
+        </div>
 
-          {/* Pro Plan */}
-          <Card className='bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col relative'>
-            {/* Most Popular Tag */}
-            <div className='absolute -top-3 left-0 right-0 flex justify-center'>
-              <div className='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-6 py-1.5 rounded-full text-sm font-medium shadow-lg z-10'>
-                Most Popular: Save 33%
-              </div>
-            </div>
-            {/* Colorful Border */}
-            <div className='absolute -inset-[1px] bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[24px]' />
-            {/* White/Dark Background to create border effect */}
-            <div className='absolute inset-[1px] bg-gray-100 dark:bg-[#1c2936] rounded-[23px]' />
-            {/* Content with relative positioning to appear above backgrounds */}
-            <div className='relative'>
-              <CardHeader className='p-0 space-y-6'>
-                <div className='w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#2a3744] flex items-center justify-center'>
-                  <MonitorPlay className='w-6 h-6 text-black dark:text-white' />
-                </div>
-                <div className='space-y-2'>
-                  <CardTitle className='text-2xl font-medium text-black dark:text-white'>
-                    Pro Plan
-                  </CardTitle>
-                  <div className='flex flex-col'>
-                    <div className='flex items-baseline gap-1'>
-                      <span className='text-3xl font-semibold text-black dark:text-white'>
-                        $13.33
-                      </span>
-                      <span className='text-gray-500 dark:text-gray-400'>
-                        /month
-                      </span>
-                    </div>
-                    <span className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                      3 months • $40 total
-                    </span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className='p-0 mt-8 flex-grow flex flex-col justify-between'>
-                <ul className='space-y-5 mb-8'>
-                  <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                    <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                    <span>Bank specific questions</span>
-                  </li>
-                  <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                    <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                    <span>M&I questions</span>
-                  </li>
-                  <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                    <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                    <span>Community access</span>
-                  </li>
-                  <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                    <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                    <span>Interview guides</span>
-                  </li>
-                </ul>
-                <Button className='w-full bg-black hover:bg-black/90 text-white rounded-full h-12 dark:bg-white dark:text-black dark:hover:bg-white/90 relative group overflow-hidden'>
-                  <span className='relative z-10'>Subscribe</span>
-                  <div className='absolute inset-0 animate-gradient bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity' />
-                </Button>
-              </CardContent>
-            </div>
-          </Card>
+        {/* Mobile Stack - Replace the carousel with this */}
+        <div className='md:hidden space-y-6'>
+          {PRICING_PLANS.map((plan, index) => (
+            <PricingCard key={index} plan={plan} isRelative={true} />
+          ))}
+        </div>
 
-          {/* Max Plan */}
-          <Card className='bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col relative'>
-            {/* Best Value Tag */}
-            <div className='absolute -top-3 left-0 right-0 flex justify-center'>
-              <div className='bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-400 text-white px-6 py-1.5 rounded-full text-sm font-medium shadow-lg z-10'>
-                Best Value
-              </div>
-            </div>
-            <CardHeader className='p-0 space-y-6'>
-              <div className='w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#2a3744] flex items-center justify-center'>
-                <MonitorPlay className='w-6 h-6 text-black dark:text-white' />
-              </div>
-              <div className='space-y-2'>
-                <CardTitle className='text-2xl font-medium text-black dark:text-white'>
-                  Max Plan
-                </CardTitle>
-                <div className='flex flex-col'>
-                  <div className='flex items-baseline gap-1'>
-                    <span className='text-3xl font-semibold text-black dark:text-white'>
-                      $6.67
-                    </span>
-                    <span className='text-gray-500 dark:text-gray-400'>
-                      /month
-                    </span>
-                  </div>
-                  <span className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                    12 months • $80 total
-                  </span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className='p-0 mt-8 flex-grow flex flex-col justify-between'>
-              <ul className='space-y-5 mb-8'>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Bank specific questions</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>M&I questions</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Community access</span>
-                </li>
-                <li className='flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300'>
-                  <Check className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-                  <span>Interview guides</span>
-                </li>
-              </ul>
-              <Button className='w-full bg-white hover:bg-white/90 text-black rounded-full h-12 dark:bg-black dark:text-white dark:hover:bg-black/90'>
-                Get Max
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Terms of Service Message */}
+        <div className='text-center mt-8 text-sm text-gray-500 dark:text-gray-400'>
+          By subscribing, you agree to our Terms of Service and Privacy Policy
         </div>
       </div>
     </section>

@@ -4,6 +4,8 @@ import { PartnersSection } from "@/components/partners-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { DemoSection } from "@/components/demo-section";
 import { PricingSection } from "@/components/pricing-section";
+import { FAQSection } from "@/components/faq-section";
+import { Footer } from "@/components/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +19,8 @@ export default function Home() {
       <TestimonialsSection />
       <DemoSection />
       <PricingSection />
+      <FAQSection />
+      <Footer />
     </main>
   );
 }

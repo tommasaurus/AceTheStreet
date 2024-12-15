@@ -229,6 +229,7 @@ export function FlashcardsContent({
   const [showAnswer, setShowAnswer] = useState(false);
   const [completedCards, setCompletedCards] = useState<number[]>([]);
   const [fontSize, setFontSize] = useState(16);
+  const [prevIndex, setPrevIndex] = useState(0);
 
   const id = category === "banks" ? bankId : categoryId;
   const content = sampleQuestions[category][id as string];
@@ -241,6 +242,7 @@ export function FlashcardsContent({
   const handleNext = () => {
     setShowAnswer(false);
     if (remainingCards.length > 1) {
+      setPrevIndex(currentIndex);
       setCurrentIndex((prev) => (prev + 1) % remainingCards.length);
     }
   };
@@ -248,6 +250,7 @@ export function FlashcardsContent({
   const handlePrevious = () => {
     setShowAnswer(false);
     if (remainingCards.length > 1) {
+      setPrevIndex(currentIndex);
       setCurrentIndex(
         (prev) => (prev - 1 + remainingCards.length) % remainingCards.length
       );
@@ -346,7 +349,7 @@ export function FlashcardsContent({
               className="absolute left-0 w-80 h-[300px] -ml-18 cursor-pointer"
               onClick={handlePrevious}
             >
-              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full">
+              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full blur-[2px] hover:blur-none transition-all duration-300">
                 <div className="text-base font-medium truncate">
                   {prevCard.question}
                 </div>
@@ -358,10 +361,27 @@ export function FlashcardsContent({
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="w-full max-w-xl"
+              initial={{
+                opacity: 0,
+                x: showAnswer ? 0 : currentIndex > prevIndex ? 300 : -300,
+                rotate: showAnswer ? 0 : currentIndex > prevIndex ? 6 : -6,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                rotate: 0,
+              }}
+              exit={{
+                opacity: 0,
+                x: currentIndex > prevIndex ? -300 : 300,
+                rotate: currentIndex > prevIndex ? -6 : 6,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+              className="w-full max-w-xl z-10"
               style={{ minHeight: showAnswer ? "600px" : "500px" }}
             >
               <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg h-full relative">
@@ -489,7 +509,7 @@ export function FlashcardsContent({
               className="absolute right-0 w-80 h-[300px] -mr-18 cursor-pointer"
               onClick={handleNext}
             >
-              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full">
+              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full blur-[2px] hover:blur-none transition-all duration-300">
                 <div className="text-base font-medium truncate">
                   {nextCard.question}
                 </div>

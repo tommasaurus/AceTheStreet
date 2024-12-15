@@ -29,7 +29,7 @@ export function InfiniteCarousel({
   const content = (
     <>
       {items.map((item, idx) => (
-        <div key={idx} className="flex items-center group px-16">
+        <div key={idx} className='flex items-center group px-16'>
           <Image
             src={item.logo}
             alt={item.name}
@@ -44,7 +44,7 @@ export function InfiniteCarousel({
                   : "150px",
               height: "auto",
             }}
-            className="group-hover:opacity-100 transition-opacity"
+            className='group-hover:opacity-100 transition-opacity'
           />
         </div>
       ))}

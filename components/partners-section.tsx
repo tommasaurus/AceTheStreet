@@ -58,7 +58,7 @@ const SCHOOLS = [
   {
     name: "Stanford",
     logo: "/logos/schools/stanford.png",
-    size: "medium",
+    size: "small",
   },
   {
     name: "UVA",
@@ -109,7 +109,7 @@ const SCHOOLS = [
 
 export function PartnersSection() {
   return (
-    <div className='py-24 bg-white dark:bg-[#151e2a]'>
+    <div className='py-24 sm:py-32 bg-white dark:bg-[#151e2a]'>
       <div className='space-y-16'>
         <div className='space-y-6'>
           <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>

@@ -2,8 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export function HeroSection() {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
+
   return (
     <div className='min-h-screen px-4 py-20 bg-white dark:bg-[#151e2a]'>
       <div className='mx-auto max-w-[1400px] rounded-[32px] overflow-hidden relative min-h-[85vh] flex items-center'>
@@ -13,29 +17,40 @@ export function HeroSection() {
           muted
           loop
           playsInline
-          className='absolute inset-0 w-full h-full object-cover blur-[4px] opacity-75 dark:opacity-90'
+          className='absolute inset-0 w-full h-full object-cover blur-[4px] opacity-90'
         >
           <source src='/videos/FrontPageVideo.mp4' type='video/mp4' />
         </video>
 
-        {/* Gradient Overlay - Only in Dark Mode */}
-        <div className='absolute inset-0 bg-none dark:bg-gradient-to-r dark:from-[#151e2a]/30 dark:via-[#151e2a]/20 dark:to-transparent' />
+        {/* Gradient Overlay - For Both Themes */}
+        <div className='absolute inset-0 bg-gradient-to-r from-[#151e2a]/30 via-[#151e2a]/20 to-transparent' />
 
         {/* Content */}
-        <div className='relative z-10 px-8 md:px-16 max-w-3xl'>
-          <h1 className='text-5xl md:text-7xl font-bold mb-6 text-black dark:text-white'>
-            The fastest way to{" "}
-            <span className='text-black dark:text-white'>
-              master IB interviews
-            </span>
+        <div className='relative z-10 px-8 md:px-16 max-w-4xl'>
+          <h1 className='text-5xl md:text-7xl font-bold mb-6 text-white opacity-0 animate-fade-in'>
+            Master{" "}
+            <span className='animate-gradient bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent bg-300% dark:from-blue-200 dark:via-purple-200 dark:to-pink-200'>
+              Investment Banking & Private Equity
+            </span>{" "}
+            Interviews
           </h1>
-          <p className='text-xl md:text-2xl text-black/80 mb-8 dark:text-white/80'>
-            Prepare with real technical questions from top bulge bracket and
-            elite boutique banks.
+          <p className='text-xl md:text-2xl text-white/80 mb-8 max-w-xl opacity-0 animate-fade-in-slow'>
+            Prepare with real technical questions from real interviews at elite
+            boutique banks and firms.
           </p>
-          <div className='flex flex-col sm:flex-row gap-4'>
-            <Button size='lg' asChild>
-              <Link href='/signup' className='flex items-center gap-2'>
+          <div
+            className='flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-in-slow'
+            style={{ animationDelay: "0.6s" }}
+          >
+            <Button
+              size='lg'
+              className='bg-white hover:bg-gray-100 text-black w-full sm:w-auto justify-center rounded-full flex items-center gap-2'
+              asChild
+            >
+              <Link
+                href='/signup'
+                className='flex items-center gap-2 text-black font-extrabold'
+              >
                 <svg className='w-5 h-5' viewBox='0 0 24 24'>
                   <path
                     d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
@@ -59,15 +74,12 @@ export function HeroSection() {
             </Button>
             <Button
               size='lg'
-              className='bg-black/20 backdrop-blur-sm hover:bg-black/30 text-black border-2 border-black w-full sm:w-auto justify-center rounded-full dark:bg-white/20 dark:backdrop-blur-md dark:hover:bg-white/30 dark:text-white dark:border-white'
+              className='bg-white/20 backdrop-blur-md hover:bg-white/30 text-white border border-white w-full sm:w-auto justify-center rounded-full'
               asChild
             >
               <Link href='/signup'>Sign in with email</Link>
             </Button>
           </div>
-          <p className='text-sm text-black/60 mt-4 dark:text-white/60'>
-            No credit card required.
-          </p>
         </div>
       </div>
     </div>

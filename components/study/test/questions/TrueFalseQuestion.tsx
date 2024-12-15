@@ -14,12 +14,14 @@ interface TrueFalseQuestionProps {
     };
     userAnswer?: string | null;
   };
+  questionNumber: number;
   onAnswer: (id: string, answer: string) => void;
   onDontKnow: (id: string) => void;
 }
 
 export function TrueFalseQuestion({
   question,
+  questionNumber,
   onAnswer,
   onDontKnow,
 }: TrueFalseQuestionProps) {
@@ -30,6 +32,7 @@ export function TrueFalseQuestion({
 
   return (
     <div className={styles.questionCard}>
+      <div className={styles.questionNumber}>Question {questionNumber}</div>
       <div className={styles.trueFalseContainer}>
         <div className={styles.questionSide}>
           <div className={styles.questionLabel}>Term</div>

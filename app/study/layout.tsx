@@ -148,7 +148,71 @@ export default function StudyLayout({
                         completed: false,
                         bookmarked: false,
                       },
-                      // Add more sample questions here
+                      {
+                        id: 3,
+                        type: "Technical",
+                        question: "What is DCF?",
+                        answer: "Discounted Cash Flow",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 4,
+                        type: "Technical",
+                        question: "What is LBO?",
+                        answer: "Leveraged Buyout",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 5,
+                        type: "Technical",
+                        question: "What is EBITDA?",
+                        answer:
+                          "Earnings Before Interest, Taxes, Depreciation, and Amortization",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 6,
+                        type: "Technical",
+                        question: "What is ROE?",
+                        answer: "Return on Equity",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 7,
+                        type: "Technical",
+                        question: "What is NPV?",
+                        answer: "Net Present Value",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 8,
+                        type: "Technical",
+                        question: "What is IRR?",
+                        answer: "Internal Rate of Return",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 9,
+                        type: "Technical",
+                        question: "What is Working Capital?",
+                        answer: "Current Assets minus Current Liabilities",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 10,
+                        type: "Technical",
+                        question: "What is Enterprise Value?",
+                        answer: "Market Cap plus Net Debt",
+                        completed: false,
+                        bookmarked: false,
+                      },
                     ]}
                     onComplete={handleTestComplete}
                   />

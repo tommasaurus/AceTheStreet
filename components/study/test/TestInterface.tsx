@@ -34,19 +34,20 @@ function generateQuestions(
   const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
   const selectedQuestions = shuffledQuestions.slice(0, settings.questionCount);
 
-  // Distribute questions among selected types
+  // Get array of enabled question types
   const enabledTypes = Object.entries(settings.questionTypes)
     .filter(([_, enabled]) => enabled)
     .map(([type]) => type as "trueFalse" | "multipleChoice" | "matching");
 
   if (enabledTypes.length === 0) return [];
 
-  return selectedQuestions.map((q, index) => {
-    // Rotate through enabled question types
-    const questionType = enabledTypes[index % enabledTypes.length];
+  return selectedQuestions.map((q) => {
+    // Randomly select a question type from enabled types
+    const questionType =
+      enabledTypes[Math.floor(Math.random() * enabledTypes.length)];
 
     const baseQuestion = {
-      id: `q${index}`,
+      id: `q${q.id}`,
       type: questionType,
       question: q.question,
       answer: q.answer,
@@ -54,7 +55,6 @@ function generateQuestions(
 
     switch (questionType) {
       case "trueFalse":
-        // For true/false, randomly pair with another answer
         const isTrue = Math.random() > 0.5;
         const randomWrongAnswer = shuffledQuestions.filter(
           (wrong) => wrong.answer !== q.answer
@@ -63,7 +63,7 @@ function generateQuestions(
         return {
           ...baseQuestion,
           question: q.question,
-          answer: isTrue ? "true" : "false", // The correct answer is whether they match
+          answer: isTrue ? "true" : "false",
           options: {
             term: q.question,
             definition: isTrue ? q.answer : randomWrongAnswer,
@@ -71,7 +71,6 @@ function generateQuestions(
         };
 
       case "multipleChoice":
-        // Get 5 random wrong answers from other questions
         const wrongAnswers = shuffledQuestions
           .filter((wrong) => wrong.answer !== q.answer)
           .slice(0, 5)
@@ -83,7 +82,24 @@ function generateQuestions(
         };
 
       case "matching":
-        return baseQuestion;
+        // Get 4 random pairs for matching
+        const matchingPairs = shuffledQuestions
+          .filter((q) => q.id !== baseQuestion.id)
+          .slice(0, 3)
+          .concat([q]);
+
+        const terms = matchingPairs.map((p) => p.question);
+        const answers = matchingPairs
+          .map((p) => p.answer)
+          .sort(() => Math.random() - 0.5);
+
+        return {
+          ...baseQuestion,
+          options: {
+            terms,
+            answers,
+          },
+        };
 
       default:
         return baseQuestion;
@@ -218,13 +234,14 @@ export function TestInterface({
       )}
 
       <div className={styles.questionsContainer}>
-        {testQuestions.map((question) => {
+        {testQuestions.map((question, index) => {
           switch (question.type) {
             case "trueFalse":
               return (
                 <TrueFalseQuestion
                   key={question.id}
                   question={question}
+                  questionNumber={index + 1}
                   onAnswer={handleAnswerChange}
                   onDontKnow={handleDontKnow}
                 />
@@ -234,6 +251,7 @@ export function TestInterface({
                 <MultipleChoiceQuestion
                   key={question.id}
                   question={question}
+                  questionNumber={index + 1}
                   onAnswer={handleAnswerChange}
                   onDontKnow={handleDontKnow}
                 />
@@ -243,6 +261,7 @@ export function TestInterface({
                 <MatchingQuestion
                   key={question.id}
                   question={question}
+                  questionNumber={index + 1}
                   onAnswer={handleAnswerChange}
                   onDontKnow={handleDontKnow}
                 />

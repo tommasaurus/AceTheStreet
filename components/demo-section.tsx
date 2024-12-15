@@ -1,49 +1,36 @@
 "use client";
 
-import { Play } from "lucide-react";
 import { AnimatedText } from "./animated-text";
-import { Button } from "./ui/button";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export function DemoSection() {
   return (
-    <section className='min-h-screen flex items-center bg-white dark:bg-[#151e2a]'>
+    <section className='py-24 md:py-32 -mt-20 bg-white dark:bg-[#151e2a]'>
       <div className='container mx-auto px-4'>
-        <div className='grid md:grid-cols-2 gap-12 items-center'>
-          {/* Text Content - Left aligned */}
-          <div className='space-y-6 order-2 md:order-1'>
-            <AnimatedText
-              text='See how it works'
-              className='text-sm font-semibold text-blue-500 uppercase tracking-wider'
-            />
-            <AnimatedText
-              text='Master Investment Banking Interviews with Real Questions'
-              className='text-3xl md:text-4xl font-bold text-blue-900 dark:text-white'
-            />
-            <AnimatedText
-              text='Watch our platform in action and discover how we can help you succeed in your investment banking interviews.'
-              className='text-lg text-blue-600/80 dark:text-blue-300/80'
-            />
-          </div>
+        {/* Center text */}
+        <div className='text-center max-w-4xl mx-auto mb-12 md:mb-16'>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className='text-4xl md:text-5xl font-bold text-center text-black dark:text-white'
+          >
+            Demo Video
+          </motion.h2>
+        </div>
 
-          {/* Video Preview - Right aligned */}
-          <div className='relative aspect-video bg-blue-900/5 rounded-lg overflow-hidden group cursor-pointer order-1 md:order-2'>
-            <div className='absolute inset-0 flex items-center justify-center'>
-              <Button
-                size='lg'
-                className='bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 p-0 group-hover:scale-110 transition-transform duration-300'
-              >
-                <Play className='h-8 w-8' />
-              </Button>
-            </div>
-            <div
-              className='absolute inset-0 bg-cover bg-center opacity-80'
-              style={
-                {
-                  // backgroundImage: 'url("/city-backdrop.jpg")'
-                }
-              }
-            />
-          </div>
+        {/* Dashboard Image */}
+        <div className='relative max-w-[1000px] mx-auto aspect-[16/9]'>
+          <div className='absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent rounded-3xl' />
+          <Image
+            src='/images/dashboardPic.png'
+            alt='Dashboard Preview'
+            fill
+            className='object-cover rounded-3xl border border-gray-200 dark:border-gray-800 shadow-2xl'
+            priority
+          />
         </div>
       </div>
     </section>

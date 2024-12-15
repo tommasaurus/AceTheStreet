@@ -1,4 +1,5 @@
 import { InfiniteCarousel } from "./ui/infinite-carousel";
+import { LogoImage } from "./ui/logo-image";
 
 const BANKS = [
   {
@@ -57,7 +58,7 @@ const SCHOOLS = [
   {
     name: "Stanford",
     logo: "/logos/schools/stanford.png",
-    size: "medium",
+    size: "small",
   },
   {
     name: "UVA",
@@ -67,11 +68,11 @@ const SCHOOLS = [
   {
     name: "Wharton",
     logo: "/logos/schools/wharton.png",
-    size: "medium",
+    size: "large",
   },
   {
     name: "Harvard",
-    logo: "/logos/schools/harvard.svg",
+    logo: "/logos/schools/yale.png",
     size: "medium",
   },
   {
@@ -82,7 +83,7 @@ const SCHOOLS = [
   {
     name: "UMich",
     logo: "/logos/schools/umich.png",
-    size: "medium",
+    size: "large",
   },
   {
     name: "IU Kelley",
@@ -108,26 +109,44 @@ const SCHOOLS = [
 
 export function PartnersSection() {
   return (
-    <div className="py-24 bg-gray-50/80 dark:bg-black/20 backdrop-blur-sm">
-      <div className="space-y-16">
-        <div className="space-y-6">
-          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
+    <div className='py-24 sm:py-32 bg-white dark:bg-[#151e2a]'>
+      <div className='space-y-16'>
+        <div className='space-y-6'>
+          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
             Real interview questions from top investment banks
           </h3>
-          <div className="h-20">
-            <InfiniteCarousel items={BANKS} direction="left" speed="normal" />
+          <div className='h-20'>
+            <InfiniteCarousel
+              items={BANKS.map((bank) => ({
+                ...bank,
+                component: (
+                  <LogoImage src={bank.logo} alt={bank.name} size={bank.size} />
+                ),
+              }))}
+              direction='left'
+              speed='normal'
+            />
           </div>
         </div>
 
-        <div className="space-y-6">
-          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
+        <div className='space-y-6'>
+          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
             Trusted by students at leading universities
           </h3>
-          <div className="h-20">
+          <div className='h-20'>
             <InfiniteCarousel
-              items={SCHOOLS}
-              direction="right"
-              speed="normal"
+              items={SCHOOLS.map((school) => ({
+                ...school,
+                component: (
+                  <LogoImage
+                    src={school.logo}
+                    alt={school.name}
+                    size={school.size}
+                  />
+                ),
+              }))}
+              direction='right'
+              speed='normal'
             />
           </div>
         </div>

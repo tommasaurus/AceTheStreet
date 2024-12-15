@@ -68,7 +68,7 @@ const SCHOOLS = [
   {
     name: "Wharton",
     logo: "/logos/schools/wharton.png",
-    size: "medium",
+    size: "large",
   },
   {
     name: "Harvard",
@@ -83,7 +83,7 @@ const SCHOOLS = [
   {
     name: "UMich",
     logo: "/logos/schools/umich.png",
-    size: "medium",
+    size: "large",
   },
   {
     name: "IU Kelley",

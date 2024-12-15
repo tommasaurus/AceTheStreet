@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card, CardContent } from "./ui/card";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
 const TESTIMONIALS = [
@@ -47,28 +47,6 @@ const TESTIMONIALS = [
 
 export function TestimonialsSection() {
   const [selectedTestimonial, setSelectedTestimonial] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const handleIntersection = (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const index = Number(entry.target.getAttribute("data-index"));
-        setActiveIndex(index);
-      }
-    });
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: null,
-      threshold: 0.5,
-    });
-
-    const testimonials = document.querySelectorAll(".testimonial-card");
-    testimonials.forEach((testimonial) => observer.observe(testimonial));
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section className='py-16 sm:py-24 bg-white dark:bg-[#151e2a] overflow-hidden -mb-20'>
@@ -89,73 +67,56 @@ export function TestimonialsSection() {
           <div className='relative w-full max-w-[1400px] mx-auto'>
             <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent opacity-40' />
 
-            <div className='relative flex overflow-x-auto no-scrollbar snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4'>
+            <div className='relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4'>
               {TESTIMONIALS.map((testimonial, index) => (
-                <div
+                <motion.div
                   key={testimonial.author}
-                  className='testimonial-card flex-none w-full sm:w-auto snap-center px-4 sm:px-0 min-w-[85vw] sm:min-w-0'
-                  data-index={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.1,
+                  }}
+                  whileHover={{ scale: 1.02, zIndex: 10 }}
+                  onClick={() => setSelectedTestimonial(testimonial)}
+                  className='cursor-pointer'
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.1,
-                    }}
-                    whileHover={{ scale: 1.02, zIndex: 10 }}
-                    onClick={() => setSelectedTestimonial(testimonial)}
-                    className='cursor-pointer'
-                  >
-                    <Card className='relative bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 shadow-lg hover:shadow-xl transition-all duration-300'>
-                      <CardContent className='p-8'>
-                        <p className='text-2xl font-medium text-black dark:text-white mb-4 italic'>
-                          "{testimonial.quote}"
-                        </p>
-                        <p className='text-[15px] text-gray-600 dark:text-gray-300 mb-6 line-clamp-3 italic'>
-                          {testimonial.description}
-                        </p>
+                  <Card className='relative bg-gray-100 dark:bg-[#1c2936] rounded-3xl border-0 shadow-lg hover:shadow-xl transition-all duration-300'>
+                    <CardContent className='p-8'>
+                      <p className='text-2xl font-medium text-black dark:text-white mb-4 italic'>
+                        "{testimonial.quote}"
+                      </p>
+                      <p className='text-[15px] text-gray-600 dark:text-gray-300 mb-6 line-clamp-3 italic'>
+                        {testimonial.description}
+                      </p>
 
-                        <div className='flex items-center gap-4'>
-                          <Avatar className='h-12 w-12 border-2 border-gray-200 dark:border-[#2a3744]'>
-                            <AvatarImage
-                              src={testimonial.avatar}
-                              alt={testimonial.author}
-                            />
-                            <AvatarFallback>
-                              {testimonial.author[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className='text-lg font-medium text-black dark:text-white'>
-                              {testimonial.author}
-                            </p>
-                            <p className='text-sm text-gray-600 dark:text-gray-400'>
-                              {testimonial.role} • {testimonial.location}
-                            </p>
-                          </div>
+                      <div className='flex items-center gap-4'>
+                        <Avatar className='h-12 w-12 border-2 border-gray-200 dark:border-[#2a3744]'>
+                          <AvatarImage
+                            src={testimonial.avatar}
+                            alt={testimonial.author}
+                          />
+                          <AvatarFallback>
+                            {testimonial.author[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className='text-lg font-medium text-black dark:text-white'>
+                            {testimonial.author}
+                          </p>
+                          <p className='text-sm text-gray-600 dark:text-gray-400'>
+                            {testimonial.role} • {testimonial.location}
+                          </p>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Pagination Dots */}
-      <div className='flex justify-center gap-2 mt-6 sm:hidden'>
-        {TESTIMONIALS.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              index === activeIndex ? "bg-blue-500" : "bg-gray-300"
-            }`}
-          />
-        ))}
       </div>
 
       <AnimatePresence>

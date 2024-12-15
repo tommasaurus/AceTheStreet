@@ -58,7 +58,7 @@ const SCHOOLS = [
   {
     name: "Stanford",
     logo: "/logos/schools/stanford.png",
-    size: "small",
+    size: "medium",
   },
   {
     name: "UVA",
@@ -68,7 +68,7 @@ const SCHOOLS = [
   {
     name: "Wharton",
     logo: "/logos/schools/wharton.png",
-    size: "large",
+    size: "medium",
   },
   {
     name: "Harvard",
@@ -83,7 +83,7 @@ const SCHOOLS = [
   {
     name: "UMich",
     logo: "/logos/schools/umich.png",
-    size: "large",
+    size: "medium",
   },
   {
     name: "IU Kelley",
@@ -93,7 +93,7 @@ const SCHOOLS = [
   {
     name: "UChicago",
     logo: "/logos/schools/uchicago.webp",
-    size: "small",
+    size: "medium",
   },
   {
     name: "UTAustin",

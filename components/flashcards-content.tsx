@@ -10,11 +10,20 @@ import {
   RotateCcw,
   Volume2,
   Bookmark,
+  Settings,
+  Palette,
+  Eye,
+  Info,
+  HelpCircle,
+  Download,
+  LogOut,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BankFilter } from "@/components/bank-filter";
+import { Slider } from "@/components/ui/slider";
 
 // Sample data - replace with your actual data
 const sampleQuestions = {
@@ -85,6 +94,7 @@ export function FlashcardsContent({
   const [showAnswer, setShowAnswer] = useState(false);
   const [completedCards, setCompletedCards] = useState<number[]>([]);
   const [selectedBank, setSelectedBank] = useState("all");
+  const [fontSize, setFontSize] = useState(16);
 
   const questions = sampleQuestions[category];
   const remainingCards = questions.filter((q) => {
@@ -190,7 +200,7 @@ export function FlashcardsContent({
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 0.5, x: 0 }}
-            className="absolute left-0 w-80 h-[300px] -ml-20 cursor-pointer"
+            className="absolute left-0 w-80 h-[300px] -ml-18 cursor-pointer"
             onClick={handlePrevious}
           >
             <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full">
@@ -207,7 +217,7 @@ export function FlashcardsContent({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="w-full max-w-3xl"
+              className="w-full max-w-xl"
               style={{ minHeight: showAnswer ? "600px" : "500px" }}
             >
               <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg h-full relative">
@@ -215,7 +225,22 @@ export function FlashcardsContent({
                   <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
                     {currentCard.difficulty}
                   </span>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-4">
+                    {/* Font size slider */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Aa</span>
+                      <Slider
+                        className="w-24"
+                        min={12}
+                        max={24}
+                        step={1}
+                        value={[fontSize]}
+                        onValueChange={(value) => setFontSize(value[0])}
+                      />
+                      <span className="text-base text-muted-foreground">
+                        Aa
+                      </span>
+                    </div>
                     <Button variant="ghost" size="icon">
                       <Volume2 className="h-4 w-4" />
                     </Button>
@@ -224,7 +249,10 @@ export function FlashcardsContent({
                     </Button>
                   </div>
                 </div>
-                <div className="text-xl md:text-2xl font-medium mb-4">
+                <div
+                  className="text-xl md:text-2xl font-medium mb-4"
+                  style={{ fontSize: `${fontSize}px` }}
+                >
                   {currentCard.question}
                 </div>
                 <Button
@@ -270,7 +298,10 @@ export function FlashcardsContent({
                     className="mt-4"
                   >
                     <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg">
-                      <div className="text-xl md:text-2xl font-medium">
+                      <div
+                        className="text-xl md:text-2xl font-medium"
+                        style={{ fontSize: `${fontSize}px` }}
+                      >
                         {currentCard.answer}
                       </div>
                     </div>
@@ -306,7 +337,7 @@ export function FlashcardsContent({
           <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 0.5, x: 0 }}
-            className="absolute right-0 w-80 h-[300px] -mr-32 cursor-pointer"
+            className="absolute right-0 w-80 h-[300px] -mr-8 cursor-pointer"
             onClick={handleNext}
           >
             <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full">

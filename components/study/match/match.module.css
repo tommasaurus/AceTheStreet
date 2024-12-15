@@ -1,0 +1,269 @@
+/* // Move your existing MatchGame.module.css here */
+/* // Content remains the same */
+
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+.timer {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #4461f2;
+}
+
+.matchGameIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.gameComplete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  gap: 16px;
+}
+
+.gameComplete h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4461f2;
+}
+
+.startGameButton {
+  background-color: #4461f2;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 24px;
+  transition: all 0.2s ease;
+}
+
+.startGameButton:hover {
+  background-color: #3451d2;
+  transform: translateY(-1px);
+}
+
+.matchGameGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.matchCard {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+}
+
+:global(.dark) .matchCard {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.matchCard.selected {
+  background-color: #f3f4f6;
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px #4461f2;
+}
+
+:global(.dark) .matchCard.selected {
+  background-color: #374151;
+}
+
+.matchCard.matched {
+  background-color: #dcfce7;
+  border-color: #22c55e;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+:global(.dark) .matchCard.matched {
+  background-color: #064e3b;
+  border-color: #059669;
+}
+
+.matchCard.wrong {
+  animation: wrongMatch 0.5s ease;
+  background-color: #fee2e2;
+  border-color: #ef4444;
+}
+
+:global(.dark) .matchCard.wrong {
+  background-color: #991b1b;
+  border-color: #ef4444;
+}
+
+@keyframes wrongMatch {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.cardContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.penaltyText {
+  position: absolute;
+  color: #ef4444;
+  font-weight: bold;
+  font-size: 1.5rem;
+  pointer-events: none;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.matchCard.blank {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  cursor: default;
+  opacity: 0.3;
+}
+
+:global(.dark) .matchCard.blank {
+  background-color: #111827;
+  border-color: #1f2937;
+}
+
+.gameHeader {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.exitButtonContainer {
+  justify-self: start;
+}
+
+.spacer {
+  /* Empty div to balance the grid */
+}
+
+.exitButton {
+  background-color: transparent;
+  color: #ef4444;
+  padding: 8px 16px;
+  border: 2px solid #ef4444;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.exitButton:hover {
+  background-color: #ef4444;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.gameIcon {
+  margin-bottom: 32px;
+  perspective: 1000px;
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  animation: flip 6s linear infinite;
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+
+.iconCard {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4461f2;
+  transition: all 0.3s ease;
+  backface-visibility: visible;
+}
+
+:global(.dark) .iconCard {
+  background-color: #1f2937;
+  border: none;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.introText {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.gameDescription {
+  font-size: 1.25rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+:global(.dark) .gameDescription {
+  color: #9ca3af;
+}
+
+.readyText {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #4461f2, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}

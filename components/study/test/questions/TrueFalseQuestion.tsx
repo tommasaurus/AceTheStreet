@@ -8,6 +8,10 @@ interface TrueFalseQuestionProps {
     id: string;
     question: string;
     answer: string;
+    options: {
+      term: string;
+      definition: string;
+    };
     userAnswer?: string | null;
   };
   onAnswer: (id: string, answer: string) => void;
@@ -20,8 +24,8 @@ export function TrueFalseQuestion({
   onDontKnow,
 }: TrueFalseQuestionProps) {
   const handleDontKnow = () => {
-    onAnswer(question.id, question.answer);
-    onDontKnow(question.id);
+    onAnswer(question.id, question.answer); // Set the correct answer first
+    onDontKnow(question.id); // Then mark as "don't know"
   };
 
   return (
@@ -29,14 +33,12 @@ export function TrueFalseQuestion({
       <div className={styles.trueFalseContainer}>
         <div className={styles.questionSide}>
           <div className={styles.questionLabel}>Term</div>
-          <div className={styles.questionText}>
-            {question.question.split(" = ")[0]}
-          </div>
+          <div className={styles.questionText}>{question.options.term}</div>
         </div>
         <div className={styles.answerSide}>
           <div className={styles.questionLabel}>Definition</div>
           <div className={styles.questionText}>
-            {question.question.split(" = ")[1]}
+            {question.options.definition}
           </div>
         </div>
       </div>

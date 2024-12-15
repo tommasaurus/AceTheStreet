@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import styles from "./test.module.css";
+import { motion } from "framer-motion";
 
 interface TestResultsProps {
   results: {
@@ -32,10 +33,27 @@ export function TestResults({
       <h1 className={styles.resultsTitle}>Test Results</h1>
 
       <div className={styles.scoreCard}>
-        <div className={styles.scoreCircle}>
-          <div className={styles.scoreNumber}>{Math.round(results.score)}%</div>
+        <motion.div
+          className={styles.scoreCircle}
+          animate={{
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <motion.div
+            className={styles.scoreNumber}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            {Math.round(results.score)}%
+          </motion.div>
           <div className={styles.scoreLabel}>Score</div>
-        </div>
+        </motion.div>
       </div>
 
       <div className={styles.statsGrid}>

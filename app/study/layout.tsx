@@ -50,9 +50,14 @@ export default function StudyLayout({
   };
 
   const handleTestComplete = (results: any) => {
-    console.log("Test completed with results:", results);
-    setIsTestMode(false);
-    setTestSettings(null);
+    if (results === null) {
+      // User clicked "Start New Test"
+      setIsTestMode(false);
+      setTestSettings(null);
+    } else {
+      // Test was completed normally
+      console.log("Test completed with results:", results);
+    }
   };
 
   const handleTabChange = (value: string) => {

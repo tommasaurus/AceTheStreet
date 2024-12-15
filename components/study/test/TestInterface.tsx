@@ -7,7 +7,9 @@ import { Timer } from "./Timer";
 import { TrueFalseQuestion } from "./questions/TrueFalseQuestion";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoiceQuestion";
 import { MatchingQuestion } from "./questions/MatchingQuestion";
+import { TestResults } from "./TestResults";
 import styles from "./test.module.css";
+import confetti from "canvas-confetti";
 
 interface TestQuestion {
   id: string;
@@ -45,25 +47,27 @@ function generateQuestions(
 
     const baseQuestion = {
       id: `q${index}`,
+      type: questionType,
       question: q.question,
       answer: q.answer,
-      type: questionType,
     };
 
     switch (questionType) {
       case "trueFalse":
         // For true/false, randomly pair with another answer
         const isTrue = Math.random() > 0.5;
+        const randomWrongAnswer = shuffledQuestions.filter(
+          (wrong) => wrong.answer !== q.answer
+        )[Math.floor(Math.random() * (shuffledQuestions.length - 1))].answer;
+
         return {
           ...baseQuestion,
-          question: `${q.question} = ${
-            isTrue
-              ? q.answer
-              : shuffledQuestions[
-                  Math.floor(Math.random() * shuffledQuestions.length)
-                ].answer
-          }`,
-          answer: isTrue.toString(),
+          question: q.question,
+          answer: isTrue ? "true" : "false", // The correct answer is whether they match
+          options: {
+            term: q.question,
+            definition: isTrue ? q.answer : randomWrongAnswer,
+          },
         };
 
       case "multipleChoice":
@@ -102,7 +106,7 @@ function calculateResults(testQuestions: TestQuestion[]) {
   };
 
   testQuestions.forEach((q) => {
-    if (q.userAnswer === "dontknow") {
+    if (!q.userAnswer || q.userAnswer === "dontknow") {
       results.skipped++;
     } else if (q.userAnswer === q.answer) {
       results.correct++;
@@ -112,13 +116,13 @@ function calculateResults(testQuestions: TestQuestion[]) {
 
     results.answers.push({
       question: q.question,
-      userAnswer: q.userAnswer || "No answer",
+      userAnswer: q.userAnswer || "skipped",
       correctAnswer: q.answer,
     });
   });
 
+  // Calculate score based on correct answers only
   results.score = (results.correct / results.total) * 100;
-
   return results;
 }
 
@@ -130,10 +134,13 @@ export function TestInterface({
   const [testQuestions, setTestQuestions] = useState<TestQuestion[]>([]);
   const [timeRemaining, setTimeRemaining] = useState(settings.timeLimit * 60);
   const [isComplete, setIsComplete] = useState(false);
+  const [results, setResults] = useState<any>(null);
+  const [timeTaken, setTimeTaken] = useState(0);
 
   useEffect(() => {
     // Generate test questions based on selected types and count
     const generatedQuestions = generateQuestions(questions, settings);
+    console.log("Generated Questions:", generatedQuestions); // Debug log
     setTestQuestions(generatedQuestions);
   }, [questions, settings]);
 
@@ -170,13 +177,39 @@ export function TestInterface({
 
   const handleTestComplete = () => {
     const results = calculateResults(testQuestions);
+    setResults(results);
     setIsComplete(true);
+    setTimeTaken(settings.timeLimit * 60 - timeRemaining);
+
+    // Only show confetti for 100% score
+    if (results.score === 100) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
     onComplete(results);
+  };
+
+  const handleRestart = () => {
+    onComplete(null);
   };
 
   const isAllAnswered = testQuestions.every(
     (q) => q.userAnswer || q.userAnswer === ""
   );
+
+  if (isComplete && results) {
+    return (
+      <TestResults
+        results={results}
+        timeTaken={timeTaken}
+        timeLimit={settings.timeLimit * 60}
+        onRestart={handleRestart}
+      />
+    );
+  }
 
   return (
     <div className={styles.testContainer}>

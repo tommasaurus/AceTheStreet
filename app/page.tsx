@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/hero-section";
 import { Navbar } from "@/components/ui/navbar";
 import { PartnersSection } from "@/components/partners-section";
-import { DemoSection } from "@/components/demo-section";
+import { DemoSection } from "@/components/testimonials-section";
 import { WhyUsSection } from "@/components/why-us-section";
 import { PricingSection } from "@/components/pricing-section";
 

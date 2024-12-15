@@ -10,99 +10,233 @@ import {
   RotateCcw,
   Volume2,
   Bookmark,
-  Settings,
-  Palette,
-  Eye,
-  Info,
-  HelpCircle,
-  Download,
-  LogOut,
-  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BankFilter } from "@/components/bank-filter";
+import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
+import Link from "next/link";
+
+interface Question {
+  id: number;
+  type: string;
+  question: string;
+  answer: string;
+  completed: boolean;
+  bookmarked: boolean;
+}
+
+interface BankContent {
+  bank: string;
+  questions: Question[];
+}
+
+interface CategoryContent {
+  category: string;
+  questions: Question[];
+}
+
+type QuestionsData = {
+  banks: {
+    [key: string]: BankContent;
+  };
+  "m-and-i": {
+    [key: string]: CategoryContent;
+  };
+};
 
 // Sample data - replace with your actual data
-const sampleQuestions = {
-  banks: [
-    {
-      id: 1,
-      question: "What is WACC and why is it important?",
-      answer:
-        "WACC (Weighted Average Cost of Capital) represents the average cost a company pays for capital, including both debt and equity. It's important because it's used as a hurdle rate for investment decisions and valuations.",
-      difficulty: "Medium",
+const sampleQuestions: QuestionsData = {
+  banks: {
+    "goldman-sachs-1": {
+      bank: "Goldman Sachs",
+      questions: [
+        {
+          id: 1,
+          type: "Technical",
+          question: "Walk me through a DCF for a SaaS company",
+          answer:
+            "Key components for a SaaS DCF:\n\n1. Revenue Growth: Focus on user growth and ARPU\n2. Margins: Consider R&D and S&M spend\n3. Working Capital: Usually minimal for SaaS\n4. Terminal Value: Use revenue or EBITDA multiples\n5. Discount Rate: Higher for early-stage companies",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 2,
+          type: "Technical",
+          question: "How would you value a pre-revenue startup?",
+          answer:
+            "Valuation approaches for pre-revenue startups:\n1. Comparable company analysis using alternative metrics\n2. Recent funding rounds and valuations\n3. Bottom-up market sizing and penetration\n4. Quality of team and IP\n5. Strategic value to potential acquirers",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 3,
+          type: "Technical",
+          question: "What's the impact of increasing depreciation by $10?",
+          answer:
+            "Impact of $10 increase in depreciation:\n1. Income Statement: EBIT decreases by $10, Net Income decreases by $10*(1-tax rate)\n2. Balance Sheet: Accumulated depreciation increases by $10\n3. Cash Flow: No impact on cash flow, add back to get FCFF\n4. Valuation: No direct impact on enterprise value",
+          completed: false,
+          bookmarked: false,
+        },
+      ],
+    },
+    "morgan-stanley-1": {
+      bank: "Morgan Stanley",
+      questions: [
+        {
+          id: 1,
+          type: "Technical",
+          question: "Walk me through a leveraged buyout model",
+          answer:
+            "Key LBO components:\n1. Purchase Price and Capital Structure\n2. Debt Schedule and Interest Expense\n3. Operational Projections\n4. Cash Flow Available for Debt Paydown\n5. Exit Multiple and Returns Analysis",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 2,
+          type: "Technical",
+          question: "What makes a good LBO candidate?",
+          answer:
+            "Ideal LBO characteristics:\n1. Stable Cash Flows\n2. Strong Market Position\n3. Low Capital Expenditure Requirements\n4. Operational Improvement Opportunities\n5. Clear Exit Strategy",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 3,
+          type: "Behavioral",
+          question: "Why Morgan Stanley?",
+          answer:
+            "Key points to address:\n1. Strong M&A and Capital Markets Platform\n2. Sector Expertise and Market Leadership\n3. Training and Development Programs\n4. Culture and Team Dynamic\n5. Recent Notable Transactions",
+          completed: false,
+          bookmarked: false,
+        },
+      ],
+    },
+    "jpmorgan-1": {
+      bank: "JP Morgan",
+      questions: [
+        {
+          id: 1,
+          type: "Technical",
+          question: "How do you calculate WACC?",
+          answer:
+            "WACC Calculation:\n1. Cost of Equity (using CAPM)\n2. After-tax Cost of Debt\n3. Target Capital Structure Weights\n4. Weighted Average Calculation\n5. Consider Market Conditions",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 2,
+          type: "Technical",
+          question: "What's the difference between IPO and Direct Listing?",
+          answer:
+            "Key differences:\n1. New Shares: IPO issues new shares, Direct Listing doesn't\n2. Underwriting: IPO has underwriters, Direct Listing doesn't\n3. Price Discovery: IPO uses book building, Direct Listing uses market forces\n4. Lock-up: IPO typically has lock-up, Direct Listing may not\n5. Costs: IPO more expensive due to underwriting fees",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 3,
+          type: "Behavioral",
+          question: "What deals have you been following?",
+          answer:
+            "Structure response around:\n1. Recent Notable Transaction\n2. Strategic Rationale\n3. Deal Structure and Financing\n4. Market Impact\n5. Personal Interest in the Deal",
+          completed: false,
+          bookmarked: false,
+        },
+      ],
+    },
+  },
+  "m-and-i": {
+    "valuation-1": {
       category: "Valuation",
-      bank: "gs",
+      questions: [
+        {
+          id: 1,
+          type: "Technical",
+          question: "What are the three main valuation methodologies?",
+          answer:
+            "The three main valuation methodologies are:\n\n1. Comparable Company Analysis (Trading Multiples)\n2. Precedent Transactions Analysis\n3. Discounted Cash Flow Analysis (DCF)",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 2,
+          type: "Technical",
+          question: "What multiples would you use for different industries?",
+          answer:
+            "Industry-specific multiples:\n1. Tech: Revenue, EV/Sales, EV/Users\n2. Manufacturing: EV/EBITDA, P/E\n3. Real Estate: P/FFO, Price/Square Foot\n4. Retail: EV/EBITDAR, Sales/Square Foot\n5. Banks: P/B, P/E",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 3,
+          type: "Technical",
+          question: "How do you select comparable companies?",
+          answer:
+            "Selection criteria:\n1. Similar Business Model\n2. Comparable Size\n3. Same Geographic Markets\n4. Similar Growth and Margins\n5. Comparable Capital Structure",
+          completed: false,
+          bookmarked: false,
+        },
+      ],
     },
-    {
-      id: 2,
-      question: "Walk me through a DCF.",
-      answer:
-        "A DCF (Discounted Cash Flow) analysis involves projecting future free cash flows and discounting them back to present value using WACC. Steps include: 1) Project future cash flows, 2) Calculate terminal value, 3) Discount all values to present, 4) Sum to get enterprise value.",
-      difficulty: "Hard",
-      category: "Valuation",
-      bank: "ms",
+    "accounting-1": {
+      category: "Accounting",
+      questions: [
+        {
+          id: 1,
+          type: "Technical",
+          question:
+            "Walk me through the impact of depreciation on financial statements",
+          answer:
+            "Impact across statements:\n1. Income Statement: Reduces EBIT\n2. Balance Sheet: Reduces PP&E, Retained Earnings\n3. Cash Flow: Added back in CFO\n4. No direct cash impact",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 2,
+          type: "Technical",
+          question: "What's the difference between LIFO and FIFO?",
+          answer:
+            "Key differences:\n1. Cost Flow Assumption\n2. Impact on COGS and Inventory Value\n3. Effect on Financial Ratios\n4. Tax Implications\n5. International Accounting Standards",
+          completed: false,
+          bookmarked: false,
+        },
+        {
+          id: 3,
+          type: "Technical",
+          question: "How do operating leases differ from capital leases?",
+          answer:
+            "Main differences:\n1. Balance Sheet Treatment\n2. Income Statement Impact\n3. Cash Flow Classification\n4. Financial Ratios Effect\n5. New Lease Accounting Standards",
+          completed: false,
+          bookmarked: false,
+        },
+      ],
     },
-    {
-      id: 3,
-      question: "What happens to WACC when leverage increases?",
-      answer:
-        "As leverage increases, WACC typically decreases initially due to the tax benefits of debt and debt being cheaper than equity. However, at higher levels of leverage, WACC may increase due to higher financial risk and cost of both debt and equity.",
-      difficulty: "Medium",
-      category: "Capital Structure",
-      bank: "jpm",
-    },
-  ],
-  "m-and-i": [
-    {
-      id: 1,
-      question: "Explain the concept of Enterprise Value.",
-      answer:
-        "Enterprise Value (EV) represents the total value of a company, calculated as market cap plus debt, minority interest and preferred shares, minus cash and cash equivalents. It's considered a more comprehensive measure of a company's total value than market capitalization.",
-      difficulty: "Medium",
-      category: "Valuation",
-    },
-    {
-      id: 2,
-      question:
-        "What are the key differences between commercial and investment banking?",
-      answer:
-        "Commercial banking focuses on deposits, lending, and basic financial services for individuals and businesses. Investment banking focuses on capital markets activities, M&A advisory, securities underwriting, and complex financial transactions for corporations and institutions.",
-      difficulty: "Easy",
-      category: "Industry Overview",
-    },
-    {
-      id: 3,
-      question: "What is the difference between diluted and basic EPS?",
-      answer:
-        "Basic EPS only considers currently outstanding common shares, while diluted EPS includes all potential common shares that could be issued through conversion of convertible securities, exercise of stock options, and other dilutive instruments.",
-      difficulty: "Medium",
-      category: "Financial Metrics",
-    },
-  ],
+  },
 };
+
+interface FlashcardsContentProps {
+  category: "banks" | "m-and-i";
+  bankId?: string;
+  categoryId?: string;
+}
 
 export function FlashcardsContent({
   category,
-}: {
-  category: "banks" | "m-and-i";
-}) {
+  bankId,
+  categoryId,
+}: FlashcardsContentProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [completedCards, setCompletedCards] = useState<number[]>([]);
-  const [selectedBank, setSelectedBank] = useState("all");
   const [fontSize, setFontSize] = useState(16);
 
-  const questions = sampleQuestions[category];
-  const remainingCards = questions.filter((q) => {
-    if (category === "banks" && selectedBank !== "all") {
-      return !completedCards.includes(q.id) && q.bank === selectedBank;
-    }
-    return !completedCards.includes(q.id);
-  });
+  const id = category === "banks" ? bankId : categoryId;
+  const content = sampleQuestions[category][id as string];
+  const questions = content?.questions || [];
+
+  const remainingCards = questions.filter(
+    (q) => !completedCards.includes(q.id)
+  );
 
   const handleNext = () => {
     setShowAnswer(false);
@@ -140,6 +274,10 @@ export function FlashcardsContent({
 
   const progress = (completedCards.length / questions.length) * 100;
 
+  if (!content) {
+    return <div>Content not found</div>;
+  }
+
   if (remainingCards.length === 0) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
@@ -172,19 +310,23 @@ export function FlashcardsContent({
         {/* Header Section */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Avatar>
-              <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
+            <Button variant="ghost" asChild>
+              <Link
+                href={category === "banks" ? "/study/banks" : "/study/m&i400"}
+                className="flex items-center gap-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Back
+              </Link>
+            </Button>
             <div>
               <h2 className="font-semibold text-lg">
-                {category === "banks" ? "Investment Banking" : "M&I 400"}
+                {category === "banks" ? content.bank : content.category}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {currentCard.category}
+                {currentCard.type}
               </p>
             </div>
-            {category === "banks" && <BankFilter onSelect={setSelectedBank} />}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">
@@ -197,18 +339,20 @@ export function FlashcardsContent({
         {/* Cards Section */}
         <div className="relative min-h-[500px] flex items-center justify-center">
           {/* Previous Card */}
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 0.5, x: 0 }}
-            className="absolute left-0 w-80 h-[300px] -ml-18 cursor-pointer"
-            onClick={handlePrevious}
-          >
-            <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full">
-              <div className="text-base font-medium truncate">
-                {prevCard.question}
+          {remainingCards.length > 1 && (
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 0.5, x: 0 }}
+              className="absolute left-0 w-80 h-[300px] -ml-18 cursor-pointer"
+              onClick={handlePrevious}
+            >
+              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full">
+                <div className="text-base font-medium truncate">
+                  {prevCard.question}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
 
           {/* Current Card */}
           <AnimatePresence mode="wait">
@@ -222,9 +366,13 @@ export function FlashcardsContent({
             >
               <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg h-full relative">
                 <div className="flex justify-between items-start mb-6">
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                    {currentCard.difficulty}
-                  </span>
+                  <Badge
+                    variant={
+                      currentCard.type === "Technical" ? "default" : "secondary"
+                    }
+                  >
+                    {currentCard.type}
+                  </Badge>
                   <div className="flex items-center gap-4">
                     {/* Font size slider */}
                     <div className="flex items-center gap-2">
@@ -334,18 +482,20 @@ export function FlashcardsContent({
           </AnimatePresence>
 
           {/* Next Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 0.5, x: 0 }}
-            className="absolute right-0 w-80 h-[300px] -mr-8 cursor-pointer"
-            onClick={handleNext}
-          >
-            <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full">
-              <div className="text-base font-medium truncate">
-                {nextCard.question}
+          {remainingCards.length > 1 && (
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 0.5, x: 0 }}
+              className="absolute right-0 w-80 h-[300px] -mr-18 cursor-pointer"
+              onClick={handleNext}
+            >
+              <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full">
+                <div className="text-base font-medium truncate">
+                  {nextCard.question}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>

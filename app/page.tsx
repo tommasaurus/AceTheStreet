@@ -1,11 +1,11 @@
-import { HeroSection } from "@/components/hero-section";
-import { Navbar } from "@/components/ui/navbar";
-import { PartnersSection } from "@/components/partners-section";
-import { TestimonialsSection } from "@/components/testimonials-section";
-import { DemoSection } from "@/components/demo-section";
-import { PricingSection } from "@/components/pricing-section";
-import { FAQSection } from "@/components/faq-section";
-import { Footer } from "@/components/footer";
+import { HeroSection } from "@/components/frontpage/hero-section";
+import { Navbar } from "@/components/frontpage/navbar";
+import { PartnersSection } from "@/components/frontpage/partners-section";
+import { TestimonialsSection } from "@/components/frontpage/testimonials-section";
+import { DemoSection } from "@/components/frontpage/demo-section";
+import { PricingSection } from "@/components/frontpage/pricing-section";
+import { FAQSection } from "@/components/frontpage/faq-section";
+import { Footer } from "@/components/frontpage/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 

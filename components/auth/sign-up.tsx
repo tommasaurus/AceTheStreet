@@ -79,7 +79,7 @@ export function SignUp() {
                 placeholder='Name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500'
+                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-black dark:focus:ring-white focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white focus-visible:ring-offset-0'
               />
             </div>
 
@@ -89,7 +89,7 @@ export function SignUp() {
                 placeholder='Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500'
+                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-black dark:focus:ring-white focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white focus-visible:ring-offset-0'
               />
             </div>
 
@@ -99,7 +99,7 @@ export function SignUp() {
                 placeholder='Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500'
+                className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 rounded-xl text-black dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-black dark:focus:ring-white focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white focus-visible:ring-offset-0'
               />
               <button
                 type='button'

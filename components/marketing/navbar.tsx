@@ -3,11 +3,34 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Get the current theme, accounting for system theme
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
+  if (!mounted) {
+    return (
+      <nav className='fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-white/80 dark:bg-[#151e2a]/80'>
+        <div className='container mx-auto px-4'>
+          <div className='flex items-center justify-between h-16'>
+            <div className='relative w-[140px] h-[45px]' />
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -22,11 +45,20 @@ export function Navbar() {
       <div className='container mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           {/* Logo */}
-          <Link
-            href='/'
-            className='font-bold text-xl text-black dark:text-white'
-          >
-            PrepIB
+          <Link href='/' className='flex items-center'>
+            <div className='relative w-[140px] h-[45px]'>
+              <Image
+                src={
+                  currentTheme === "dark"
+                    ? "/images/logoLight.png"
+                    : "/images/logoDark.png"
+                }
+                alt='PrepIB Logo'
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

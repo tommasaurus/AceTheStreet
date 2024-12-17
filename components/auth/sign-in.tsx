@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
@@ -36,11 +37,21 @@ export function SignIn() {
       <div className='w-full max-w-md space-y-8'>
         {/* Logo and Title */}
         <div className='text-center'>
-          <Link
-            href='/'
-            className='text-2xl font-bold text-black dark:text-white'
-          >
-            PrepIB
+          <Link href='/' className='text-2xl'>
+            <Image
+              src='/images/logoLight.png'
+              alt='PrepIB Logo'
+              width={180}
+              height={60}
+              className='hidden dark:block mx-auto'
+            />
+            <Image
+              src='/images/logoDark.png'
+              alt='PrepIB Logo'
+              width={180}
+              height={60}
+              className='block dark:hidden mx-auto'
+            />
           </Link>
           <h2 className='mt-6 text-3xl font-bold text-black dark:text-white'>
             Sign in to your account

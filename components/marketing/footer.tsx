@@ -3,8 +3,34 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 export function Footer() {
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
+  if (!mounted) {
+    return (
+      <footer className='border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#151e2a]'>
+        <div className='container mx-auto px-4'>
+          <div className='py-8'>
+            <div className='flex flex-col sm:flex-row justify-between items-center gap-6 mb-8'>
+              <div className='relative w-[130px] h-[42px]' />
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -19,11 +45,19 @@ export function Footer() {
           {/* Top section with logo and buttons */}
           <div className='flex flex-col sm:flex-row justify-between items-center gap-6 mb-8'>
             {/* Logo */}
-            <Link
-              href='/'
-              className='text-xl font-bold text-black dark:text-white'
-            >
-              PrepIB
+            <Link href='/' className='flex items-center'>
+              <div className='relative w-[130px] h-[42px]'>
+                <Image
+                  src={
+                    currentTheme === "dark"
+                      ? "/images/logoLight.png"
+                      : "/images/logoDark.png"
+                  }
+                  alt='PrepIB Logo'
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
             </Link>
 
             {/* Action Buttons */}

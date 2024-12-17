@@ -25,12 +25,11 @@ interface PricingPlan {
   title: string;
   price: string;
   period: string;
-  total: string;
   duration: string;
-  popular?: boolean;
-  bestValue?: boolean;
   stripeUrl?: string;
   features: Feature[];
+  popular?: boolean;
+  bestValue?: boolean;
 }
 
 const PRICING_PLANS: PricingPlan[] = [
@@ -39,14 +38,13 @@ const PRICING_PLANS: PricingPlan[] = [
     title: "Basic Plan",
     price: "$20",
     period: "month",
-    total: "$20 total",
-    duration: "1 month",
+    duration: "1 MONTH",
     stripeUrl: "https://buy.stripe.com/test_8wMcNE6SBea2eGseUU",
     features: [
-      { included: false, text: "Bank specific questions" },
+      { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
-      { included: true, text: "Community access" },
-      { included: true, text: "Interview guides" },
+      { included: true, text: "Test modes" },
+      { included: true, text: "Email support" },
     ],
   },
   {
@@ -54,15 +52,14 @@ const PRICING_PLANS: PricingPlan[] = [
     title: "Pro Plan",
     price: "$13.33",
     period: "month",
-    total: "$40 total",
-    duration: "3 months",
+    duration: "3 MONTHS",
     popular: true,
     stripeUrl: "https://buy.stripe.com/dR66rna5w93AfqU6op",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
-      { included: true, text: "Community access" },
-      { included: true, text: "Interview guides" },
+      { included: true, text: "Test modes" },
+      { included: true, text: "Email support" },
     ],
   },
   {
@@ -70,15 +67,14 @@ const PRICING_PLANS: PricingPlan[] = [
     title: "Max Plan",
     price: "$6.67",
     period: "month",
-    total: "$80 total",
-    duration: "12 months",
+    duration: "12 MONTHS",
     bestValue: true,
     stripeUrl: "https://buy.stripe.com/00g5nj3H83JgceIaEG",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
-      { included: true, text: "Community access" },
-      { included: true, text: "Interview guides" },
+      { included: true, text: "Test modes" },
+      { included: true, text: "Email support" },
     ],
   },
 ];
@@ -122,25 +118,27 @@ export function PricingSection() {
           )}
           <div className={`${plan.popular ? "relative z-10" : ""}`}>
             <CardHeader className='p-0 space-y-6'>
-              <div className='w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center'>
-                <Icon className='w-6 h-6 text-black dark:text-white' />
+              <div className='flex items-center justify-between'>
+                <div className='w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center'>
+                  <Icon className='w-6 h-6 text-black dark:text-white' />
+                </div>
+                <span className='text-lg font-medium text-gray-500 dark:text-gray-400'>
+                  {plan.duration}
+                </span>
               </div>
               <div className='space-y-2'>
                 <CardTitle className='text-2xl font-medium text-black dark:text-white'>
                   {plan.title}
                 </CardTitle>
                 <div className='flex flex-col'>
-                  <div className='flex items-baseline gap-1'>
-                    <span className='text-3xl font-semibold text-black dark:text-white'>
+                  <div className='flex items-baseline gap-2'>
+                    <span className='text-5xl font-semibold text-black dark:text-white'>
                       {plan.price}
                     </span>
-                    <span className='text-gray-500 dark:text-gray-400'>
+                    <span className='text-xl text-gray-500 dark:text-gray-400'>
                       /{plan.period}
                     </span>
                   </div>
-                  <span className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                    {plan.duration} • {plan.total}
-                  </span>
                 </div>
               </div>
             </CardHeader>

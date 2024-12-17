@@ -10,8 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Investment Banking Prep",
+  title: "AceTheStreet",
   description: "Prepare for your investment banking interviews",
+  icons: {
+    icon: "/images/spade.png",
+  },
 };
 
 export default function RootLayout({

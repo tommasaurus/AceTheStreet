@@ -11,18 +11,30 @@ import { TestResults } from "./TestResults";
 import styles from "./test.module.css";
 import confetti from "canvas-confetti";
 
+interface Question {
+  id: number;
+  type: string;
+  question: string;
+  answer: string;
+  completed?: boolean;
+  bookmarked?: boolean;
+}
+
 interface TestQuestion {
   id: string;
   type: "trueFalse" | "multipleChoice" | "matching";
   question: string;
   answer: string;
-  options?: string[];
   userAnswer?: string | null;
+  options?:
+    | string[] // multipleChoice
+    | { term: string; definition: string } // trueFalse
+    | { terms: string[]; answers: string[] }; // matching
 }
 
 interface TestInterfaceProps {
   settings: TestSettings;
-  questions: Question[]; // Your question type from flashcards
+  questions: Question[];
   onComplete: (results: any) => void;
 }
 
@@ -33,7 +45,6 @@ function generateQuestions(
   const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
   const selectedQuestions = shuffledQuestions.slice(0, settings.questionCount);
 
-  // Get array of enabled question types
   const enabledTypes = Object.entries(settings.questionTypes)
     .filter(([_, enabled]) => enabled)
     .map(([type]) => type as "trueFalse" | "multipleChoice" | "matching");
@@ -52,7 +63,7 @@ function generateQuestions(
     };
 
     switch (questionType) {
-      case "trueFalse":
+      case "trueFalse": {
         const isTrue = Math.random() > 0.5;
         const randomWrongAnswer = shuffledQuestions.filter(
           (wrong) => wrong.answer !== q.answer
@@ -60,15 +71,15 @@ function generateQuestions(
 
         return {
           ...baseQuestion,
-          question: q.question,
           answer: isTrue ? "true" : "false",
           options: {
             term: q.question,
             definition: isTrue ? q.answer : randomWrongAnswer,
           },
         };
+      }
 
-      case "multipleChoice":
+      case "multipleChoice": {
         const wrongAnswers = shuffledQuestions
           .filter((wrong) => wrong.answer !== q.answer)
           .slice(0, 5)
@@ -78,9 +89,9 @@ function generateQuestions(
           ...baseQuestion,
           options: [...wrongAnswers, q.answer].sort(() => Math.random() - 0.5),
         };
+      }
 
-      case "matching":
-        // Get unique pairs for matching, excluding the current question
+      case "matching": {
         const availableQuestions = shuffledQuestions.filter(
           (otherQ) =>
             otherQ.id !== q.id &&
@@ -89,11 +100,9 @@ function generateQuestions(
               .some((usedQ) => usedQ.id === otherQ.id)
         );
 
-        // Get 3 random unique pairs
         const matchingPairs = availableQuestions.slice(0, 3).concat([q]);
 
         if (matchingPairs.length < 4) {
-          // Fallback to multiple choice if we don't have enough unique questions
           return {
             ...baseQuestion,
             type: "multipleChoice",
@@ -116,6 +125,7 @@ function generateQuestions(
             answers,
           },
         };
+      }
 
       default:
         return baseQuestion;
@@ -153,7 +163,6 @@ function calculateResults(testQuestions: TestQuestion[]) {
     });
   });
 
-  // Calculate score based on correct answers only
   results.score = (results.correct / results.total) * 100;
   return results;
 }
@@ -170,14 +179,12 @@ export function TestInterface({
   const [timeTaken, setTimeTaken] = useState(0);
 
   useEffect(() => {
-    // Generate test questions based on selected types and count
     const generatedQuestions = generateQuestions(questions, settings);
-    console.log("Generated Questions:", generatedQuestions); // Debug log
     setTestQuestions(generatedQuestions);
   }, [questions, settings]);
 
   useEffect(() => {
-    if (settings.timeLimit === 0) return; // No time limit
+    if (settings.timeLimit === 0) return;
 
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -213,7 +220,6 @@ export function TestInterface({
     setIsComplete(true);
     setTimeTaken(settings.timeLimit * 60 - timeRemaining);
 
-    // Only show confetti for 100% score
     if (results.score === 100) {
       confetti({
         particleCount: 100,
@@ -253,10 +259,21 @@ export function TestInterface({
         {testQuestions.map((question, index) => {
           switch (question.type) {
             case "trueFalse":
+              // We know from the generateQuestions function that when type === "trueFalse",
+              // options are {term: string; definition: string}, so we can safely cast here.
               return (
                 <TrueFalseQuestion
                   key={question.id}
-                  question={question}
+                  question={
+                    question as {
+                      id: string;
+                      type: "trueFalse";
+                      question: string;
+                      answer: string;
+                      userAnswer?: string | null;
+                      options: { term: string; definition: string };
+                    }
+                  }
                   questionNumber={index + 1}
                   onAnswer={handleAnswerChange}
                   onDontKnow={handleDontKnow}

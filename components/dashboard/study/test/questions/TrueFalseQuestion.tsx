@@ -3,17 +3,21 @@
 import { Button } from "@/components/ui/button";
 import styles from "../test.module.css";
 
-interface TrueFalseQuestionProps {
-  question: {
-    id: string;
-    question: string;
-    answer: string;
-    options: {
-      term: string;
-      definition: string;
-    };
-    userAnswer?: string | null;
+// A specialized interface for a True/False question variant
+interface TrueFalseTestQuestion {
+  id: string;
+  type: "trueFalse";
+  question: string;
+  answer: string;
+  options: {
+    term: string;
+    definition: string;
   };
+  userAnswer?: string | null;
+}
+
+interface TrueFalseQuestionProps {
+  question: TrueFalseTestQuestion;
   questionNumber: number;
   onAnswer: (id: string, answer: string) => void;
   onDontKnow: (id: string) => void;
@@ -26,8 +30,9 @@ export function TrueFalseQuestion({
   onDontKnow,
 }: TrueFalseQuestionProps) {
   const handleDontKnow = () => {
-    onAnswer(question.id, question.answer); // Set the correct answer first
-    onDontKnow(question.id); // Then mark as "don't know"
+    // Set the correct answer first, then mark as don't know
+    onAnswer(question.id, question.answer);
+    onDontKnow(question.id);
   };
 
   return (

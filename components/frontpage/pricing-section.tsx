@@ -29,6 +29,7 @@ interface PricingPlan {
   duration: string;
   popular?: boolean;
   bestValue?: boolean;
+  stripeUrl?: string;
   features: Feature[];
 }
 
@@ -40,6 +41,7 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     total: "$20 total",
     duration: "1 month",
+    stripeUrl: "https://buy.stripe.com/test_8wMcNE6SBea2eGseUU",
     features: [
       { included: false, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -55,6 +57,7 @@ const PRICING_PLANS: PricingPlan[] = [
     total: "$40 total",
     duration: "3 months",
     popular: true,
+    stripeUrl: "https://buy.stripe.com/dR66rna5w93AfqU6op",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -70,6 +73,7 @@ const PRICING_PLANS: PricingPlan[] = [
     total: "$80 total",
     duration: "12 months",
     bestValue: true,
+    stripeUrl: "https://buy.stripe.com/00g5nj3H83JgceIaEG",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -156,9 +160,16 @@ export function PricingSection() {
                   </li>
                 ))}
               </ul>
-              <Button className='w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90'>
-                Subscribe
-              </Button>
+              <a
+                href={plan.stripeUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='w-full'
+              >
+                <Button className='w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90'>
+                  Subscribe
+                </Button>
+              </a>
             </CardContent>
           </div>
         </Card>

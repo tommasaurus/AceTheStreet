@@ -32,31 +32,56 @@ export function MatchingQuestion({
     : {};
 
   const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
+    if (!result.destination) {
+      // If dropped outside any droppable area, remove the answer from its current position
+      if (result.source.droppableId !== "answerBank") {
+        const newAnswers = { ...currentAnswers };
+        delete newAnswers[result.source.droppableId];
+        onAnswer(question.id, JSON.stringify(newAnswers));
+      }
+      return;
+    }
 
-    // Handle the drop and update answers
     const { source, destination } = result;
-    const newAnswers = {
-      ...currentAnswers,
-      [destination.droppableId]: result.draggableId,
-    };
+
+    // Handle swapping if destination already has an answer
+    if (currentAnswers[destination.droppableId]) {
+      const newAnswers = { ...currentAnswers };
+
+      // If coming from another answer box (swapping)
+      if (source.droppableId !== "answerBank") {
+        newAnswers[source.droppableId] =
+          currentAnswers[destination.droppableId];
+      } else {
+        // If coming from answer bank, remove the previous answer
+        delete newAnswers[destination.droppableId];
+      }
+
+      newAnswers[destination.droppableId] = result.draggableId;
+      onAnswer(question.id, JSON.stringify(newAnswers));
+      return;
+    }
+
+    // Handle normal placement
+    const newAnswers = { ...currentAnswers };
+    if (source.droppableId !== "answerBank") {
+      delete newAnswers[source.droppableId];
+    }
+    newAnswers[destination.droppableId] = result.draggableId;
     onAnswer(question.id, JSON.stringify(newAnswers));
   };
 
   const handleDontKnow = () => {
-    // Create correct answer mapping - match each term with its corresponding answer
-    const correctAnswers = question.options?.terms.reduce(
-      (acc, _, index) => ({
-        ...acc,
-        [`answer-${index}`]: `answer-${index}`,
-      }),
-      {}
-    );
+    if (!question.options) return;
 
-    if (correctAnswers) {
-      onAnswer(question.id, JSON.stringify(correctAnswers));
-      onDontKnow(question.id);
-    }
+    // Create correct answer mapping
+    const correctAnswers = {};
+    question.options.terms.forEach((_, index) => {
+      correctAnswers[`answer-${index}`] = `answer-${index}`;
+    });
+
+    onAnswer(question.id, JSON.stringify(correctAnswers));
+    onDontKnow(question.id);
   };
 
   return (
@@ -87,21 +112,38 @@ export function MatchingQuestion({
                     }`}
                   >
                     {currentAnswers[`answer-${index}`] && (
-                      <div
-                        className={`${styles.answerOption} ${
-                          question.userAnswer === "dontknow"
-                            ? styles.correctAnswer
-                            : ""
-                        }`}
+                      <Draggable
+                        key={currentAnswers[`answer-${index}`]}
+                        draggableId={currentAnswers[`answer-${index}`]}
+                        index={0}
                       >
-                        {
-                          question.options?.answers[
-                            parseInt(
-                              currentAnswers[`answer-${index}`].split("-")[1]
-                            )
-                          ]
-                        }
-                      </div>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`${styles.answerOption} ${
+                              snapshot.isDragging ? styles.dragging : ""
+                            } ${
+                              question.userAnswer === "dontknow"
+                                ? styles.correctAnswer
+                                : ""
+                            }`}
+                          >
+                            <span>
+                              {
+                                question.options?.answers[
+                                  parseInt(
+                                    currentAnswers[`answer-${index}`].split(
+                                      "-"
+                                    )[1]
+                                  )
+                                ]
+                              }
+                            </span>
+                          </div>
+                        )}
+                      </Draggable>
                     )}
                     {provided.placeholder}
                   </div>
@@ -141,7 +183,7 @@ export function MatchingQuestion({
                           snapshot.isDragging ? styles.dragging : ""
                         }`}
                       >
-                        {answer}
+                        <span>{answer}</span>
                       </div>
                     )}
                   </Draggable>

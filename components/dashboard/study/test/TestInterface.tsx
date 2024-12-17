@@ -30,7 +30,6 @@ function generateQuestions(
   questions: Question[],
   settings: TestSettings
 ): TestQuestion[] {
-  // Get a random subset of questions based on settings.questionCount
   const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
   const selectedQuestions = shuffledQuestions.slice(0, settings.questionCount);
 
@@ -41,8 +40,7 @@ function generateQuestions(
 
   if (enabledTypes.length === 0) return [];
 
-  return selectedQuestions.map((q) => {
-    // Randomly select a question type from enabled types
+  return selectedQuestions.map((q, index) => {
     const questionType =
       enabledTypes[Math.floor(Math.random() * enabledTypes.length)];
 
@@ -82,11 +80,29 @@ function generateQuestions(
         };
 
       case "matching":
-        // Get 4 random pairs for matching
-        const matchingPairs = shuffledQuestions
-          .filter((q) => q.id !== baseQuestion.id)
-          .slice(0, 3)
-          .concat([q]);
+        // Get unique pairs for matching, excluding the current question
+        const availableQuestions = shuffledQuestions.filter(
+          (otherQ) =>
+            otherQ.id !== q.id &&
+            !selectedQuestions
+              .slice(0, index)
+              .some((usedQ) => usedQ.id === otherQ.id)
+        );
+
+        // Get 3 random unique pairs
+        const matchingPairs = availableQuestions.slice(0, 3).concat([q]);
+
+        if (matchingPairs.length < 4) {
+          // Fallback to multiple choice if we don't have enough unique questions
+          return {
+            ...baseQuestion,
+            type: "multipleChoice",
+            options: [
+              ...availableQuestions.slice(0, 3).map((q) => q.answer),
+              q.answer,
+            ].sort(() => Math.random() - 0.5),
+          };
+        }
 
         const terms = matchingPairs.map((p) => p.question);
         const answers = matchingPairs

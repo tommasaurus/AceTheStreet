@@ -113,6 +113,18 @@ export default function MatchContent() {
     // Default practice questions
     return [
       {
+        question:
+          "What is the primary difference between Internal Rate of Return (IRR) and Modified Internal Rate of Return (MIRR) when evaluating investment opportunities, particularly in scenarios with unconventional cash flows and multiple sign changes?",
+        answer:
+          "MIRR addresses the reinvestment rate assumption inherent in traditional IRR calculations by explicitly allowing for different reinvestment and finance rates, providing a more realistic evaluation of project returns. This is particularly important in scenarios where cash flows switch between positive and negative multiple times, as IRR can produce multiple or misleading results in such cases.",
+      },
+      {
+        question:
+          "What is Working Capital Management and why is it crucial for a company's operational efficiency and short-term financial health in the context of day-to-day business operations?",
+        answer:
+          "Working Capital Management involves optimizing the balance between current assets and current liabilities to ensure operational efficiency while maintaining adequate liquidity. This includes managing inventory levels, accounts receivable collection periods, accounts payable timing, and cash conversion cycle to minimize financing costs and maximize return on current assets while ensuring sufficient liquidity for daily operations.",
+      },
+      {
         question: "What affects Operating Cash Flow?",
         answer: "Changes in Working Capital and Net Income",
       },
@@ -147,5 +159,10 @@ export default function MatchContent() {
     ];
   };
 
-  return <MatchGame questions={getQuestions()} />;
+  return (
+    <>
+      <MatchGame questions={getQuestions()} />
+      <hr className={styles.separator} />
+    </>
+  );
 }

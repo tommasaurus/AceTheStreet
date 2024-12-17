@@ -216,6 +216,26 @@ export default function StudyLayout({
                         completed: false,
                         bookmarked: false,
                       },
+                      {
+                        id: 11,
+                        type: "Technical",
+                        question:
+                          "What are the key differences between Enterprise Value (EV) and Equity Value, and how do intercompany investments and minority interests impact these calculations in complex corporate structures with multiple subsidiaries?",
+                        answer:
+                          "Enterprise Value represents the total value of a company's operations, while Equity Value represents shareholders' claim. The key differences include treatment of debt, cash, and other items. In complex structures, intercompany investments must be eliminated to avoid double-counting, and minority interests are added to EV but excluded from Equity Value to reflect the parent company's true ownership stake and prevent valuation distortions.",
+                        completed: false,
+                        bookmarked: false,
+                      },
+                      {
+                        id: 12,
+                        type: "Technical",
+                        question:
+                          "How does the implementation of ASC 842 (new lease accounting standards) affect financial statements and key valuation metrics, particularly in industries with significant operating lease obligations like retail and airlines?",
+                        answer:
+                          "ASC 842 requires operating leases to be capitalized on the balance sheet as right-of-use assets with corresponding lease liabilities. This impacts key metrics including EBITDA, debt ratios, and return measures. The change particularly affects capital-intensive industries by increasing reported assets and liabilities, potentially altering covenant calculations, and requiring adjustments to traditional valuation approaches to maintain comparability across periods and companies.",
+                        completed: false,
+                        bookmarked: false,
+                      },
                     ]}
                     onComplete={handleTestComplete}
                   />

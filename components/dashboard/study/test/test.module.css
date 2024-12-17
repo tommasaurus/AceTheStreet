@@ -331,15 +331,15 @@
 
 .matchingContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(auto, 1fr) 400px;
   gap: 2rem;
   margin-bottom: 2rem;
+  max-width: 100%;
 }
 
 .termsColumn,
 .answersColumn {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1rem;
 }
 
@@ -349,6 +349,7 @@
   border-radius: 6px;
   padding: 1rem;
   min-height: 60px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,20 +358,37 @@
 
 .answerBox {
   background-color: hsl(var(--muted) / 0.2);
-  border: 2px dashed hsl(var(--border));
+  border: 2px dashed rgba(205, 205, 205, 0.339);
   border-radius: 6px;
   padding: 1rem;
   min-height: 60px;
+  height: auto;
+  width: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+:global(.dark) .termBox {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:global(.dark) .answerBox {
+  background-color: hsl(var(--muted) / 0.4);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
 }
 
 .answerBox.dragOver {
   background-color: hsl(var(--muted) / 0.4);
   border-style: solid;
-  border-color: #4461f2;
+  border-color: hsl(var(--primary));
+}
+
+:global(.dark) .answerBox.dragOver {
+  background-color: hsl(var(--muted) / 0.6);
+  border-color: hsl(var(--primary));
 }
 
 .answerBank {
@@ -381,6 +399,7 @@
   background-color: hsl(var(--muted) / 0.1);
   border-radius: 8px;
   margin-top: 2rem;
+  justify-content: center;
 }
 
 .answerOption {
@@ -391,9 +410,81 @@
   cursor: grab;
   user-select: none;
   transition: all 0.2s ease;
+  width: 400px;
+  min-height: 58px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 1px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.answerBox .answerOption {
+  width: calc(100% - 2px);
+  border-color: transparent;
+}
+
+:global(.dark) .answerOption {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Add this for dark mode */
+:global(.dark) .answerBox .answerOption {
+  border-color: transparent;
 }
 
 .answerOption.dragging {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Add this new style for the text inside answer options */
+.answerOption span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.answerBank .answerOption {
+  white-space: normal;
+  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
+  height: auto;
+  min-height: 58px;
+}
+
+.answerBank .answerOption span {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* Keep existing styles for answers in boxes */
+.answerBox .answerOption {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 2px);
+  height: 58px;
+}
+
+.answerBox .answerOption span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.separator {
+  border: none;
+  height: 2px;
+  background-color: hsl(var(--border));
+  margin: 1rem 0;
 }

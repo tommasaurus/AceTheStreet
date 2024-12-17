@@ -1,6 +1,20 @@
 "use client";
 
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import React, { useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+} from "@dnd-kit/core";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { Button } from "@/components/ui/button";
 import styles from "../test.module.css";
 
@@ -20,66 +34,139 @@ interface MatchingQuestionProps {
   onDontKnow: (id: string) => void;
 }
 
+interface DraggableAnswer {
+  id: string;
+  text: string;
+}
+
+function DraggableItem({
+  answer,
+  isInAnswerBank = false,
+}: {
+  answer: DraggableAnswer;
+  isInAnswerBank?: boolean;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: answer.id,
+    });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        opacity: isDragging ? 0 : undefined,
+      }
+    : undefined;
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className={`${styles.answerOption} ${
+        isInAnswerBank ? styles.bankAnswer : ""
+      }`}
+      style={style}
+    >
+      <span>{answer.text}</span>
+    </div>
+  );
+}
+
+function DroppableSpot({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`${styles.answerBox} ${isOver ? styles.dragOver : ""}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function MatchingQuestion({
   question,
   questionNumber,
   onAnswer,
   onDontKnow,
 }: MatchingQuestionProps) {
-  // Parse current answers from userAnswer string
-  const currentAnswers = question.userAnswer
-    ? JSON.parse(question.userAnswer)
-    : {};
+  const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>>(
+    () => (question.userAnswer ? JSON.parse(question.userAnswer) : {})
+  );
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) {
-      // If dropped outside any droppable area, remove the answer from its current position
-      if (result.source.droppableId !== "answerBank") {
-        const newAnswers = { ...currentAnswers };
-        delete newAnswers[result.source.droppableId];
-        onAnswer(question.id, JSON.stringify(newAnswers));
-      }
-      return;
-    }
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
 
-    const { source, destination } = result;
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
 
-    // Handle swapping if destination already has an answer
-    if (currentAnswers[destination.droppableId]) {
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
+    const { active, over } = event;
+
+    if (!over || over.id === "answerBank") {
+      // If dropped outside or on answer bank, remove from current position
       const newAnswers = { ...currentAnswers };
-
-      // If coming from another answer box (swapping)
-      if (source.droppableId !== "answerBank") {
-        newAnswers[source.droppableId] =
-          currentAnswers[destination.droppableId];
-      } else {
-        // If coming from answer bank, remove the previous answer
-        delete newAnswers[destination.droppableId];
-      }
-
-      newAnswers[destination.droppableId] = result.draggableId;
+      Object.keys(newAnswers).forEach((key) => {
+        if (newAnswers[key] === active.id) {
+          delete newAnswers[key];
+        }
+      });
+      setCurrentAnswers(newAnswers);
       onAnswer(question.id, JSON.stringify(newAnswers));
       return;
     }
 
-    // Handle normal placement
+    const answerId = active.id as string;
+    const dropzoneId = over.id as string;
+
+    // Handle dropping in a new spot
     const newAnswers = { ...currentAnswers };
-    if (source.droppableId !== "answerBank") {
-      delete newAnswers[source.droppableId];
+
+    // Remove from previous position if it was already placed
+    Object.keys(newAnswers).forEach((key) => {
+      if (newAnswers[key] === answerId) {
+        delete newAnswers[key];
+      }
+    });
+
+    // If there's already an answer in the target spot
+    if (newAnswers[dropzoneId]) {
+      const existingAnswer = newAnswers[dropzoneId];
+      const sourceSpot = Object.entries(newAnswers).find(
+        ([_, v]) => v === answerId
+      )?.[0];
+      if (sourceSpot) {
+        newAnswers[sourceSpot] = existingAnswer;
+      }
     }
-    newAnswers[destination.droppableId] = result.draggableId;
+
+    newAnswers[dropzoneId] = answerId;
+    setCurrentAnswers(newAnswers);
     onAnswer(question.id, JSON.stringify(newAnswers));
   };
 
   const handleDontKnow = () => {
     if (!question.options) return;
-
-    // Create correct answer mapping
-    const correctAnswers = {};
+    const correctAnswers: Record<string, string> = {};
     question.options.terms.forEach((_, index) => {
       correctAnswers[`answer-${index}`] = `answer-${index}`;
     });
-
+    setCurrentAnswers(correctAnswers);
     onAnswer(question.id, JSON.stringify(correctAnswers));
     onDontKnow(question.id);
   };
@@ -88,7 +175,13 @@ export function MatchingQuestion({
     <div className={styles.questionCard}>
       <div className={styles.questionNumber}>Question {questionNumber}</div>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToWindowEdges]}
+      >
         <div className={styles.matchingContainer}>
           {/* Terms Column */}
           <div className={styles.termsColumn}>
@@ -102,98 +195,55 @@ export function MatchingQuestion({
           {/* Answer Boxes Column */}
           <div className={styles.answersColumn}>
             {question.options?.terms.map((_, index) => (
-              <Droppable key={index} droppableId={`answer-${index}`}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`${styles.answerBox} ${
-                      snapshot.isDraggingOver ? styles.dragOver : ""
-                    }`}
-                  >
-                    {currentAnswers[`answer-${index}`] && (
-                      <Draggable
-                        key={currentAnswers[`answer-${index}`]}
-                        draggableId={currentAnswers[`answer-${index}`]}
-                        index={0}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={`${styles.answerOption} ${
-                              snapshot.isDragging ? styles.dragging : ""
-                            } ${
-                              question.userAnswer === "dontknow"
-                                ? styles.correctAnswer
-                                : ""
-                            }`}
-                          >
-                            <span>
-                              {
-                                question.options?.answers[
-                                  parseInt(
-                                    currentAnswers[`answer-${index}`].split(
-                                      "-"
-                                    )[1]
-                                  )
-                                ]
-                              }
-                            </span>
-                          </div>
-                        )}
-                      </Draggable>
-                    )}
-                    {provided.placeholder}
-                  </div>
+              <DroppableSpot key={index} id={`answer-${index}`}>
+                {currentAnswers[`answer-${index}`] && (
+                  <DraggableItem
+                    answer={{
+                      id: currentAnswers[`answer-${index}`],
+                      text: question.options!.answers[
+                        parseInt(
+                          currentAnswers[`answer-${index}`].split("-")[1]
+                        )
+                      ],
+                    }}
+                  />
                 )}
-              </Droppable>
+              </DroppableSpot>
             ))}
           </div>
         </div>
 
         {/* Answer Bank */}
-        <Droppable droppableId="answerBank" direction="horizontal">
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className={styles.answerBank}
-            >
-              {question.options?.answers.map((answer, index) => {
-                // Don't show answers that are already placed
-                const isPlaced = Object.values(currentAnswers).includes(
-                  `answer-${index}`
-                );
-                if (isPlaced) return null;
+        <DroppableSpot id="answerBank">
+          <div className={styles.answerBank}>
+            {question.options?.answers.map((answer, index) => {
+              const answerId = `answer-${index}`;
+              const isPlaced = Object.values(currentAnswers).includes(answerId);
 
+              if (!isPlaced) {
                 return (
-                  <Draggable
-                    key={`answer-${index}`}
-                    draggableId={`answer-${index}`}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`${styles.answerOption} ${
-                          snapshot.isDragging ? styles.dragging : ""
-                        }`}
-                      >
-                        <span>{answer}</span>
-                      </div>
-                    )}
-                  </Draggable>
+                  <DraggableItem
+                    key={answerId}
+                    answer={{ id: answerId, text: answer }}
+                    isInAnswerBank={true}
+                  />
                 );
-              })}
-              {provided.placeholder}
+              }
+              return null;
+            })}
+          </div>
+        </DroppableSpot>
+
+        <DragOverlay dropAnimation={null}>
+          {activeId ? (
+            <div className={`${styles.answerOption} ${styles.dragging}`}>
+              <span>
+                {question.options?.answers[parseInt(activeId.split("-")[1])]}
+              </span>
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       <Button
         variant="ghost"

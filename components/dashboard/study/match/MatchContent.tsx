@@ -2,9 +2,26 @@
 
 import { usePathname } from "next/navigation";
 import MatchGame from "./MatchGame";
+import styles from "./match.module.css";
 
-// Sample questions - will be replaced with database content
-const sampleQuestions = {
+interface Question {
+  question: string;
+  answer: string;
+}
+
+interface BankMap {
+  [key: string]: {
+    questions: Question[];
+  };
+}
+
+interface QuestionsData {
+  banks: BankMap;
+  "m-and-i": BankMap;
+}
+
+// Explicitly type sampleQuestions as QuestionsData
+const sampleQuestions: QuestionsData = {
   banks: {
     "goldman-sachs-1": {
       questions: [
@@ -105,10 +122,17 @@ export default function MatchContent() {
   const getQuestions = () => {
     if (pathname.includes("/banks/")) {
       const bankId = pathname.split("/banks/")[1]?.split("/")[0];
-      return sampleQuestions.banks[bankId]?.questions || [];
+      // Check if bankId exists and is a valid key before indexing
+      if (bankId && bankId in sampleQuestions.banks) {
+        return sampleQuestions.banks[bankId].questions;
+      }
+      return [];
     } else if (pathname.includes("/m&i400/")) {
       const categoryId = pathname.split("/m&i400/")[1]?.split("/")[0];
-      return sampleQuestions["m-and-i"][categoryId]?.questions || [];
+      if (categoryId && categoryId in sampleQuestions["m-and-i"]) {
+        return sampleQuestions["m-and-i"][categoryId].questions;
+      }
+      return [];
     }
     // Default practice questions
     return [

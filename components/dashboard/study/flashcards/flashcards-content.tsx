@@ -38,14 +38,14 @@ interface CategoryContent {
 
 type QuestionsData = {
   banks: {
-    [key: string]: BankContent;
+    [key: string]: BankContent; // Index signature allows arbitrary string keys
   };
   "m-and-i": {
-    [key: string]: CategoryContent;
+    [key: string]: CategoryContent; // Same here
   };
 };
 
-// Sample data - replace with your actual data
+// Explicitly type the sampleQuestions object as QuestionsData:
 const sampleQuestions: QuestionsData = {
   banks: {
     "goldman-sachs-1": {
@@ -112,38 +112,6 @@ const sampleQuestions: QuestionsData = {
         },
       ],
     },
-    "jpmorgan-1": {
-      bank: "JP Morgan",
-      questions: [
-        {
-          id: 1,
-          type: "Technical",
-          question: "How do you calculate WACC?",
-          answer:
-            "WACC Calculation:\n1. Cost of Equity (using CAPM)\n2. After-tax Cost of Debt\n3. Target Capital Structure Weights\n4. Weighted Average Calculation\n5. Consider Market Conditions",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 2,
-          type: "Technical",
-          question: "What's the difference between IPO and Direct Listing?",
-          answer:
-            "Key differences:\n1. New Shares: IPO issues new shares, Direct Listing doesn't\n2. Underwriting: IPO has underwriters, Direct Listing doesn't\n3. Price Discovery: IPO uses book building, Direct Listing uses market forces\n4. Lock-up: IPO typically has lock-up, Direct Listing may not\n5. Costs: IPO more expensive due to underwriting fees",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 3,
-          type: "Behavioral",
-          question: "What deals have you been following?",
-          answer:
-            "Structure response around:\n1. Recent Notable Transaction\n2. Strategic Rationale\n3. Deal Structure and Financing\n4. Market Impact\n5. Personal Interest in the Deal",
-          completed: false,
-          bookmarked: false,
-        },
-      ],
-    },
   },
   "m-and-i": {
     "valuation-1": {
@@ -155,57 +123,6 @@ const sampleQuestions: QuestionsData = {
           question: "What are the three main valuation methodologies?",
           answer:
             "The three main valuation methodologies are:\n\n1. Comparable Company Analysis (Trading Multiples)\n2. Precedent Transactions Analysis\n3. Discounted Cash Flow Analysis (DCF)",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 2,
-          type: "Technical",
-          question: "What multiples would you use for different industries?",
-          answer:
-            "Industry-specific multiples:\n1. Tech: Revenue, EV/Sales, EV/Users\n2. Manufacturing: EV/EBITDA, P/E\n3. Real Estate: P/FFO, Price/Square Foot\n4. Retail: EV/EBITDAR, Sales/Square Foot\n5. Banks: P/B, P/E",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 3,
-          type: "Technical",
-          question: "How do you select comparable companies?",
-          answer:
-            "Selection criteria:\n1. Similar Business Model\n2. Comparable Size\n3. Same Geographic Markets\n4. Similar Growth and Margins\n5. Comparable Capital Structure",
-          completed: false,
-          bookmarked: false,
-        },
-      ],
-    },
-    "accounting-1": {
-      category: "Accounting",
-      questions: [
-        {
-          id: 1,
-          type: "Technical",
-          question:
-            "Walk me through the impact of depreciation on financial statements",
-          answer:
-            "Impact across statements:\n1. Income Statement: Reduces EBIT\n2. Balance Sheet: Reduces PP&E, Retained Earnings\n3. Cash Flow: Added back in CFO\n4. No direct cash impact",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 2,
-          type: "Technical",
-          question: "What's the difference between LIFO and FIFO?",
-          answer:
-            "Key differences:\n1. Cost Flow Assumption\n2. Impact on COGS and Inventory Value\n3. Effect on Financial Ratios\n4. Tax Implications\n5. International Accounting Standards",
-          completed: false,
-          bookmarked: false,
-        },
-        {
-          id: 3,
-          type: "Technical",
-          question: "How do operating leases differ from capital leases?",
-          answer:
-            "Main differences:\n1. Balance Sheet Treatment\n2. Income Statement Impact\n3. Cash Flow Classification\n4. Financial Ratios Effect\n5. New Lease Accounting Standards",
           completed: false,
           bookmarked: false,
         },
@@ -232,7 +149,14 @@ export function FlashcardsContent({
   const [prevIndex, setPrevIndex] = useState(0);
 
   const id = category === "banks" ? bankId : categoryId;
-  const content = sampleQuestions[category][id as string];
+
+  let content;
+  if (category === "banks" && id && id in sampleQuestions.banks) {
+    content = sampleQuestions.banks[id];
+  } else if (category === "m-and-i" && id && id in sampleQuestions["m-and-i"]) {
+    content = sampleQuestions["m-and-i"][id];
+  }
+
   const questions = content?.questions || [];
 
   const remainingCards = questions.filter(
@@ -324,7 +248,13 @@ export function FlashcardsContent({
             </Button>
             <div>
               <h2 className="font-semibold text-lg">
-                {category === "banks" ? content.bank : content.category}
+                {category === "banks"
+                  ? "bank" in content
+                    ? content.bank
+                    : ""
+                  : "category" in content
+                  ? content.category
+                  : ""}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {currentCard.type}

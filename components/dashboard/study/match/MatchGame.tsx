@@ -127,17 +127,20 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
     if (gameStarted) {
       const pairs = questions
         .map((q, index) => [
-          { id: `q${index}`, content: q.question, type: "question" },
-          { id: `a${index}`, content: q.answer, type: "answer" },
+          { id: `q${index}`, content: q.question, type: "question" as const },
+          { id: `a${index}`, content: q.answer, type: "answer" as const },
         ])
         .flat();
 
       const blanksNeeded = Math.max(0, 16 - pairs.length);
-      const blankCards = Array.from({ length: blanksNeeded }, (_, i) => ({
-        id: `blank${i}`,
-        content: "",
-        type: "blank" as const,
-      }));
+      const blankCards: Card[] = Array.from(
+        { length: blanksNeeded },
+        (_, i) => ({
+          id: `blank${i}`,
+          content: "",
+          type: "blank" as const,
+        })
+      );
 
       setShuffledCards(
         [...pairs, ...blankCards].sort(() => Math.random() - 0.5)

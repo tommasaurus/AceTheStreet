@@ -20,17 +20,45 @@ interface Question {
   bookmarked?: boolean;
 }
 
-interface TestQuestion {
+// Specialized interfaces for each question type
+interface TrueFalseTestQuestion {
   id: string;
-  type: "trueFalse" | "multipleChoice" | "matching";
+  type: "trueFalse";
   question: string;
   answer: string;
   userAnswer?: string | null;
-  options?:
-    | string[] // multipleChoice
-    | { term: string; definition: string } // trueFalse
-    | { terms: string[]; answers: string[] }; // matching
+  options: {
+    term: string;
+    definition: string;
+  };
 }
+
+interface MultipleChoiceTestQuestion {
+  id: string;
+  type: "multipleChoice";
+  question: string;
+  answer: string;
+  userAnswer?: string | null;
+  options: string[];
+}
+
+interface MatchingTestQuestion {
+  id: string;
+  type: "matching";
+  question: string;
+  answer: string;
+  userAnswer?: string | null;
+  options: {
+    terms: string[];
+    answers: string[];
+  };
+}
+
+// Union type for TestQuestion
+type TestQuestion =
+  | TrueFalseTestQuestion
+  | MultipleChoiceTestQuestion
+  | MatchingTestQuestion;
 
 interface TestInterfaceProps {
   settings: TestSettings;
@@ -69,14 +97,16 @@ function generateQuestions(
           (wrong) => wrong.answer !== q.answer
         )[Math.floor(Math.random() * (shuffledQuestions.length - 1))].answer;
 
-        return {
+        const tfQuestion: TrueFalseTestQuestion = {
           ...baseQuestion,
+          type: "trueFalse",
           answer: isTrue ? "true" : "false",
           options: {
             term: q.question,
             definition: isTrue ? q.answer : randomWrongAnswer,
           },
         };
+        return tfQuestion;
       }
 
       case "multipleChoice": {
@@ -85,10 +115,12 @@ function generateQuestions(
           .slice(0, 5)
           .map((wrong) => wrong.answer);
 
-        return {
+        const mcQuestion: MultipleChoiceTestQuestion = {
           ...baseQuestion,
+          type: "multipleChoice",
           options: [...wrongAnswers, q.answer].sort(() => Math.random() - 0.5),
         };
+        return mcQuestion;
       }
 
       case "matching": {
@@ -103,14 +135,15 @@ function generateQuestions(
         const matchingPairs = availableQuestions.slice(0, 3).concat([q]);
 
         if (matchingPairs.length < 4) {
-          return {
+          const fallbackMC: MultipleChoiceTestQuestion = {
             ...baseQuestion,
             type: "multipleChoice",
             options: [
-              ...availableQuestions.slice(0, 3).map((q) => q.answer),
+              ...availableQuestions.slice(0, 3).map((x) => x.answer),
               q.answer,
             ].sort(() => Math.random() - 0.5),
           };
+          return fallbackMC;
         }
 
         const terms = matchingPairs.map((p) => p.question);
@@ -118,17 +151,26 @@ function generateQuestions(
           .map((p) => p.answer)
           .sort(() => Math.random() - 0.5);
 
-        return {
+        const matchQuestion: MatchingTestQuestion = {
           ...baseQuestion,
+          type: "matching",
           options: {
             terms,
             answers,
           },
         };
+        return matchQuestion;
       }
 
       default:
-        return baseQuestion;
+        // Should never hit here because we've enumerated all types
+        // Just return a multipleChoice question by fallback
+        const fallbackMC: MultipleChoiceTestQuestion = {
+          ...baseQuestion,
+          type: "multipleChoice",
+          options: [q.answer],
+        };
+        return fallbackMC;
     }
   });
 }
@@ -259,21 +301,10 @@ export function TestInterface({
         {testQuestions.map((question, index) => {
           switch (question.type) {
             case "trueFalse":
-              // We know from the generateQuestions function that when type === "trueFalse",
-              // options are {term: string; definition: string}, so we can safely cast here.
               return (
                 <TrueFalseQuestion
                   key={question.id}
-                  question={
-                    question as {
-                      id: string;
-                      type: "trueFalse";
-                      question: string;
-                      answer: string;
-                      userAnswer?: string | null;
-                      options: { term: string; definition: string };
-                    }
-                  }
+                  question={question}
                   questionNumber={index + 1}
                   onAnswer={handleAnswerChange}
                   onDontKnow={handleDontKnow}

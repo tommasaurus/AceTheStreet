@@ -9,7 +9,7 @@ import {
   MessageSquare,
   Zap,
 } from "lucide-react";
-import { StudySidebar } from "@/components/study-sidebar";
+import { StudySidebar } from "@/components/dashboard/study-sidebar";
 import MatchContent from "@/components/dashboard/study/match/MatchContent";
 import {
   TestSetup,

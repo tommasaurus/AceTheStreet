@@ -6,21 +6,3 @@ import { DemoSection } from "@/components/marketing/demo-section";
 import { PricingSection } from "@/components/marketing/pricing-section";
 import { FAQSection } from "@/components/marketing/faq-section";
 import { Footer } from "@/components/marketing/footer";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-
-// app/page.tsx
-export default function Home() {
-  return (
-    <main className="relative bg-background">
-      <Navbar />
-      <HeroSection />
-      <PartnersSection />
-      <TestimonialsSection />
-      <DemoSection />
-      <PricingSection />
-      <FAQSection />
-      <Footer />
-    </main>
-  );
-}

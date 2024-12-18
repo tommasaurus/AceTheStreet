@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 interface Feature {
   included: boolean;
@@ -26,7 +28,8 @@ interface PricingPlan {
   price: string;
   period: string;
   duration: string;
-  stripeUrl?: string;
+  stripePriceId?: string;
+  type?: string;
   features: Feature[];
   popular?: boolean;
   bestValue?: boolean;
@@ -39,7 +42,8 @@ const PRICING_PLANS: PricingPlan[] = [
     price: "$20",
     period: "month",
     duration: "1 MONTH",
-    stripeUrl: "https://buy.stripe.com/test_8wMcNE6SBea2eGseUU",
+    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    type: "basic",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -54,7 +58,8 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "3 MONTHS",
     popular: true,
-    stripeUrl: "https://buy.stripe.com/dR66rna5w93AfqU6op",
+    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    type: "pro",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -69,7 +74,8 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "12 MONTHS",
     bestValue: true,
-    stripeUrl: "https://buy.stripe.com/00g5nj3H83JgceIaEG",
+    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    type: "max",
     features: [
       { included: true, text: "Bank specific questions" },
       { included: true, text: "M&I questions" },
@@ -87,6 +93,55 @@ export function PricingSection() {
 
   const PricingCard = ({ plan, isRelative = false }: PricingCardProps) => {
     const Icon = plan.icon;
+    const router = useRouter();
+
+    const handleSubscribe = async (plan: PricingPlan) => {
+      try {
+        const supabase = createClientComponentClient();
+
+        // Get current user
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          // Redirect to signup instead of signin
+          router.push("/signup");
+          return;
+        }
+
+        // Create Stripe Checkout Session with metadata
+        const response = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            priceId: plan.stripePriceId,
+            userId: user.id,
+            planType: plan.type,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create checkout session");
+        }
+
+        const { sessionUrl, error } = await response.json();
+
+        if (error) {
+          console.error("Checkout error:", error);
+          return;
+        }
+
+        if (sessionUrl) {
+          router.push(sessionUrl);
+        }
+      } catch (error) {
+        console.error("Subscribe error:", error);
+      }
+    };
+
     return (
       <div className='relative' style={{ zIndex: 1 }}>
         {(plan.popular || plan.bestValue) && (
@@ -158,16 +213,12 @@ export function PricingSection() {
                   </li>
                 ))}
               </ul>
-              <a
-                href={plan.stripeUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='w-full'
+              <Button
+                className='w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90'
+                onClick={() => handleSubscribe(plan)}
               >
-                <Button className='w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90'>
-                  Subscribe
-                </Button>
-              </a>
+                Subscribe
+              </Button>
             </CardContent>
           </div>
         </Card>
@@ -196,8 +247,8 @@ export function PricingSection() {
             transition={{ delay: 0.2 }}
             className='mt-4 text-xl text-gray-600 dark:text-gray-300 italic'
           >
-            "PrepIB helped me land offers at Morgan Stanely and PJT NY M&A! –
-            Sophomore from UChicago"
+            "AceTheStreet helped me land an offer at Goldman Sachs! – Junior
+            from UMich"
           </motion.p>
         </div>
 

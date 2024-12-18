@@ -53,7 +53,7 @@ export function Footer() {
                       ? "/images/logoLight.png"
                       : "/images/logoDark.png"
                   }
-                  alt='PrepIB Logo'
+                  alt='AceTheStreet Logo'
                   fill
                   style={{ objectFit: "contain" }}
                 />
@@ -74,7 +74,7 @@ export function Footer() {
                 className='bg-black hover:bg-black/90 text-white rounded-full dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90'
                 asChild
               >
-                <Link href='/signup'>Try for free</Link>
+                <Link href='/signup'>Get Started</Link>
               </Button>
             </div>
           </div>
@@ -82,7 +82,7 @@ export function Footer() {
           {/* Bottom section with links and copyright */}
           <div className='flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600 dark:text-gray-400'>
             {/* Copyright */}
-            <div>© 2024 PrepIB. All rights reserved.</div>
+            <div>© 2024 AceTheStreet. All rights reserved.</div>
 
             {/* Links */}
             <div className='flex flex-wrap items-center gap-6'>

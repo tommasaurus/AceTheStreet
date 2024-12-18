@@ -53,7 +53,7 @@ export function Navbar() {
                     ? "/images/logoLight.png"
                     : "/images/logoDark.png"
                 }
-                alt='PrepIB Logo'
+                alt='AceTheStreet Logo'
                 fill
                 style={{ objectFit: "contain" }}
                 priority
@@ -96,7 +96,7 @@ export function Navbar() {
               className='bg-black hover:bg-black/90 text-white rounded-full dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90'
               asChild
             >
-              <Link href='/signup'>Try for free</Link>
+              <Link href='/signup'>Get Started</Link>
             </Button>
           </div>
 
@@ -148,7 +148,7 @@ export function Navbar() {
                 className='bg-black hover:bg-black/90 text-white dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90 px-4 py-2 rounded-lg text-center'
                 onClick={() => setIsMenuOpen(false)}
               >
-                Try for free
+                Get Started
               </Link>
             </div>
           </div>

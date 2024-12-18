@@ -67,7 +67,9 @@ export function StudySidebar() {
         <div className='flex h-full flex-col'>
           <div className='flex h-[64px] items-center justify-between border-b px-4'>
             <div className='flex-1 min-w-0'>
-              {!isCollapsed && <span className='font-semibold'>PrepIB</span>}
+              {!isCollapsed && (
+                <span className='font-semibold'>AceTheStreet</span>
+              )}
             </div>
             <div className='flex items-center gap-2'>
               {!isCollapsed && <ThemeToggle />}

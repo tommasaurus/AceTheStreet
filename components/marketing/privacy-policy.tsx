@@ -22,11 +22,11 @@ export function PrivacyPolicy() {
               </p>
               <h2 className='text-2xl font-bold'>Introduction</h2>
               <p className='text-gray-600 dark:text-gray-300 leading-relaxed'>
-                This Privacy Policy outlines how PrepIB ("we," "us," or "our")
-                collects, uses, discloses, and protects your information when
-                you access and use our website prepib.com (the "Website") and
-                associated services (the "Service"). By using our Service, you
-                agree to the terms of this Privacy Policy.
+                This Privacy Policy outlines how AceTheStreet ("we," "us," or
+                "our") collects, uses, discloses, and protects your information
+                when you access and use our website acethestreet.com (the
+                "Website") and associated services (the "Service"). By using our
+                Service, you agree to the terms of this Privacy Policy.
               </p>
             </div>
 
@@ -222,10 +222,10 @@ export function PrivacyPolicy() {
                 If you have any questions or concerns about this Privacy Policy,
                 please contact us at{" "}
                 <a
-                  href='mailto:support@prepib.com'
+                  href='mailto:quronventures@gmail.com'
                   className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300'
                 >
-                  support@prepib.com
+                  quronventures@gmail.com
                 </a>
                 .
               </p>

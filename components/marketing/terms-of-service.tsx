@@ -20,11 +20,12 @@ export function TermsOfService() {
               <h2 className='text-2xl font-bold'>1. Acceptance of Terms</h2>
               <p className='text-gray-600 dark:text-gray-300 leading-relaxed'>
                 This document sets forth the Terms of Service (the "Terms") for
-                PrepIB (the "Service"), which is owned and operated by PrepIB
-                ("we", "us", or "our"). The Service is hosted on prepib.com (the
-                "Website"). By accessing or using the Service, you agree to be
-                bound by these Terms. If you disagree with any part of the
-                terms, then you do not have permission to access the Service.
+                AceTheStreet (the "Service"), which is owned and operated by
+                AceTheStreet ("we", "us", or "our"). The Service is hosted on
+                acethestreet.com (the "Website"). By accessing or using the
+                Service, you agree to be bound by these Terms. If you disagree
+                with any part of the terms, then you do not have permission to
+                access the Service.
               </p>
             </div>
 
@@ -161,12 +162,12 @@ export function TermsOfService() {
             <div className='space-y-4'>
               <h2 className='text-2xl font-bold'>9. Indemnification</h2>
               <p className='text-gray-600 dark:text-gray-300 leading-relaxed'>
-                Users agree to indemnify, defend, and hold harmless PrepIB and
-                its affiliates, officers, directors, employees, and agents from
-                and against any and all claims, liabilities, damages, losses, or
-                expenses, including reasonable attorneys' fees and costs,
-                arising out of or in any way connected with your access to or
-                use of the Service or your violation of these Terms.
+                Users agree to indemnify, defend, and hold harmless AceTheStreet
+                and its affiliates, officers, directors, employees, and agents
+                from and against any and all claims, liabilities, damages,
+                losses, or expenses, including reasonable attorneys' fees and
+                costs, arising out of or in any way connected with your access
+                to or use of the Service or your violation of these Terms.
               </p>
             </div>
 
@@ -177,8 +178,8 @@ export function TermsOfService() {
               </h2>
               <p className='text-gray-600 dark:text-gray-300 leading-relaxed'>
                 To cancel your subscription, click "Manage Subscription" in the
-                website footer. Please email support@prepib.com if you have any
-                issues canceling your subscription.
+                website footer. Please email quronventures@gmail.com if you have
+                any issues canceling your subscription.
               </p>
               <p className='text-gray-600 dark:text-gray-300 leading-relaxed'>
                 Upon subscribing to our service, users are granted access to the
@@ -211,10 +212,10 @@ export function TermsOfService() {
                 If you have any questions or concerns about these Terms, please
                 contact us at{" "}
                 <a
-                  href='mailto:support@prepib.com'
+                  href='mailto:quronventures@gmail.com'
                   className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300'
                 >
-                  support@prepib.com
+                  quronventures@gmail.com
                 </a>
                 .
               </p>

@@ -6,29 +6,49 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
-  const handleGoogleSignIn = async () => {
+  const handleSignIn = async (provider: "google" | "email") => {
     try {
-      const response = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      setError(null);
 
-      const { url } = await response.json();
+      if (provider === "google") {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+          },
+        });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (url) {
-        router.push(url);
+        if (error) throw error;
+
+        // Check subscription status and redirect
+        const { data: subscription } = await supabase
+          .from("subscriptions")
+          .select("*")
+          .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+          .eq("status", "active")
+          .single();
+
+        router.push(subscription ? "/study" : "/pricing");
       }
-    } catch (error) {
-      console.error("Sign in error:", error);
+    } catch (error: any) {
+      setError(error.message);
+      console.error("Error:", error);
     }
   };
 
@@ -40,14 +60,14 @@ export function SignIn() {
           <Link href='/' className='text-2xl'>
             <Image
               src='/images/logoLight.png'
-              alt='PrepIB Logo'
+              alt='AceTheStreet Logo'
               width={180}
               height={60}
               className='hidden dark:block mx-auto'
             />
             <Image
               src='/images/logoDark.png'
-              alt='PrepIB Logo'
+              alt='AceTheStreet Logo'
               width={180}
               height={60}
               className='block dark:hidden mx-auto'
@@ -63,7 +83,7 @@ export function SignIn() {
           {/* Google Sign In */}
           <Button
             className='w-full bg-[#ECECEC] hover:bg-[#E0E0E0] text-black border border-gray-300 dark:border-gray-700 dark:bg-[#1c2936] dark:hover:bg-[#2a3744] dark:text-white h-12 rounded-full flex items-center justify-center gap-2'
-            onClick={handleGoogleSignIn}
+            onClick={() => handleSignIn("google")}
           >
             <svg className='w-5 h-5' viewBox='0 0 24 24'>
               <path
@@ -151,6 +171,10 @@ export function SignIn() {
               </Link>
             </p>
           </div>
+
+          {error && (
+            <div className='text-red-500 text-sm text-center'>{error}</div>
+          )}
         </div>
       </div>
     </div>

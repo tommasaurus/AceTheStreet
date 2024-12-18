@@ -41,14 +41,14 @@ export function SignUp() {
           <Link href='/' className='text-2xl'>
             <Image
               src='/images/logoLight.png'
-              alt='PrepIB Logo'
+              alt='AceTheStreet Logo'
               width={180}
               height={60}
               className='hidden dark:block mx-auto'
             />
             <Image
               src='/images/logoDark.png'
-              alt='PrepIB Logo'
+              alt='AceTheStreet Logo'
               width={180}
               height={60}
               className='block dark:hidden mx-auto'

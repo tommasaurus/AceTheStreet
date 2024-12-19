@@ -29,6 +29,7 @@ export async function POST(req: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err: any) {
+    console.error("Webhook signature verification failed:", err.message);
     return NextResponse.json(
       { error: `Webhook Error: ${err.message}` },
       { status: 400 }
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        console.log("Session data:", session);
+        console.log("Full session data:", JSON.stringify(session, null, 2));
 
         // Verify payment was successful
         if (session.payment_status !== "paid") {

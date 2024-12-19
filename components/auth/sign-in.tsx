@@ -16,6 +16,22 @@ export function SignIn() {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
+  const handleGoogleSignIn = async () => {
+    try {
+      setError(null);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      setError(error.message);
+      console.error("Error:", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -73,7 +89,7 @@ export function SignIn() {
           {/* Google Sign In */}
           <Button
             className='w-full bg-[#ECECEC] hover:bg-[#E0E0E0] text-black border border-gray-300 dark:border-gray-700 dark:bg-[#1c2936] dark:hover:bg-[#2a3744] dark:text-white h-12 rounded-full flex items-center justify-center gap-2'
-            onClick={() => handleSignIn("google")}
+            onClick={handleGoogleSignIn}
           >
             <svg className='w-5 h-5' viewBox='0 0 24 24'>
               <path

@@ -54,7 +54,7 @@ const sampleQuestions: QuestionsData = {
         {
           id: 1,
           type: "Technical",
-          question: "Walk me through a DCF for a SaaS company",
+          question: "Walk me through a DCF for a SaaS companys",
           answer:
             "Key components for a SaaS DCF:\n\n1. Revenue Growth: Focus on user growth and ARPU\n2. Margins: Consider R&D and S&M spend\n3. Working Capital: Usually minimal for SaaS\n4. Terminal Value: Use revenue or EBITDA multiples\n5. Discount Rate: Higher for early-stage companies",
           completed: false,

@@ -6,13 +6,17 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "sonner";
 
 export function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleGoogleSignIn = async () => {
     try {
@@ -30,6 +34,42 @@ export function SignUp() {
       }
     } catch (error) {
       console.error("Sign up error:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          },
+        },
+      });
+
+      if (authError) {
+        if (authError.message.includes("already registered")) {
+          toast.error("An account with this email already exists");
+        } else {
+          throw authError;
+        }
+        return;
+      }
+
+      if (authData.user) {
+        toast.success("Account created successfully!");
+        router.push("/pricing");
+      }
+    } catch (error: any) {
+      console.error("Error signing up:", error);
+      toast.error(error.message || "Error creating account. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,13 +141,14 @@ export function SignUp() {
           </div>
 
           {/* Email Sign Up Form */}
-          <form className='space-y-6'>
+          <form className='space-y-6' onSubmit={handleSubmit}>
             <div>
               <Input
                 type='text'
                 placeholder='Name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
                 className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 focus:border focus:border-black dark:focus:border-white rounded-xl text-black dark:text-white placeholder:text-gray-500 outline-none focus:ring-0'
               />
             </div>
@@ -117,6 +158,7 @@ export function SignUp() {
                 placeholder='Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
                 className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 focus:border focus:border-black dark:focus:border-white rounded-xl text-black dark:text-white placeholder:text-gray-500 outline-none focus:ring-0'
               />
             </div>
@@ -127,6 +169,8 @@ export function SignUp() {
                 placeholder='Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
                 className='h-12 bg-[#ECECEC] dark:bg-[#1c2936] border-0 focus:border focus:border-black dark:focus:border-white rounded-xl text-black dark:text-white placeholder:text-gray-500 outline-none focus:ring-0'
               />
               <button
@@ -138,8 +182,12 @@ export function SignUp() {
               </button>
             </div>
 
-            <Button className='w-full bg-black hover:bg-black/90 text-white dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90 h-12 rounded-full'>
-              Create account
+            <Button
+              type='submit'
+              disabled={loading}
+              className='w-full bg-black hover:bg-black/90 text-white dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90 h-12 rounded-full'
+            >
+              {loading ? "Creating account..." : "Create account"}
             </Button>
           </form>
 

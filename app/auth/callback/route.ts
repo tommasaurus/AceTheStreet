@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         if (!subscription) {
           return NextResponse.redirect(new URL("/pricing", requestUrl.origin));
         }
-        
+
         return NextResponse.redirect(new URL("/study", requestUrl.origin));
       } catch (error) {
         console.error("Error in callback:", error);

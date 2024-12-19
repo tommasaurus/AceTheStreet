@@ -21,9 +21,12 @@ export function InfiniteCarousel({
   className,
 }: InfiniteCarouselProps) {
   const speedClass = {
-    slow: "animate-scroll-slow",
+    slow: "animate-scroll",
     normal: "animate-scroll",
-    fast: "animate-scroll-fast",
+    fast:
+      direction === "left"
+        ? "animate-scroll-left-fast"
+        : "animate-scroll-right-fast",
   }[speed];
 
   const content = (
@@ -53,13 +56,8 @@ export function InfiniteCarousel({
 
   return (
     <div className={cn("relative overflow-hidden", className)}>
-      <div
-        className={cn(
-          "flex whitespace-nowrap",
-          speedClass,
-          direction === "right" ? "animate-scroll-right" : "animate-scroll-left"
-        )}
-      >
+      <div className={cn("flex whitespace-nowrap", speedClass)}>
+        {content}
         {content}
         {content}
         {content}

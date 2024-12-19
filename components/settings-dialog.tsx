@@ -88,7 +88,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                     <Input
                       id="fullName"
                       placeholder="Enter your full name"
-                      defaultValue="Tommy Qu"
+                      defaultValue="Tommy"
                     />
                   </div>
                   <div className="space-y-2">

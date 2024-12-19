@@ -16,36 +16,26 @@ export function SignIn() {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
-  const handleSignIn = async (provider: "google" | "email") => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       setError(null);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      if (provider === "google") {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "google",
-          options: {
-            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-          },
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      if (error) throw error;
 
-        if (error) throw error;
+      // Check subscription status and redirect
+      const { data: subscription } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+        .eq("status", "active")
+        .single();
 
-        // Check subscription status and redirect
-        const { data: subscription } = await supabase
-          .from("subscriptions")
-          .select("*")
-          .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
-          .eq("status", "active")
-          .single();
-
-        router.push(subscription ? "/study" : "/pricing");
-      }
+      router.push(subscription ? "/study" : "/pricing");
     } catch (error: any) {
       setError(error.message);
       console.error("Error:", error);
@@ -118,7 +108,7 @@ export function SignIn() {
           </div>
 
           {/* Email Sign In Form */}
-          <form className='space-y-6'>
+          <form className='space-y-6' onSubmit={handleSubmit}>
             <div>
               <Input
                 type='email'
@@ -146,7 +136,10 @@ export function SignIn() {
               </button>
             </div>
 
-            <Button className='w-full bg-black hover:bg-black/90 text-white dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90 h-12 rounded-full'>
+            <Button
+              type='submit'
+              className='w-full bg-black hover:bg-black/90 text-white dark:bg-white dark:text-[#151e2a] dark:hover:bg-white/90 h-12 rounded-full'
+            >
               Sign in
             </Button>
           </form>

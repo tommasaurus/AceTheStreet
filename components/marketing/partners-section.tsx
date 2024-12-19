@@ -128,7 +128,7 @@ export function PartnersSection() {
                 ),
               }))}
               direction='left'
-              speed='normal'
+              speed='fast'
             />
           </div>
         </div>
@@ -150,7 +150,7 @@ export function PartnersSection() {
                 ),
               }))}
               direction='right'
-              speed='normal'
+              speed='fast'
             />
           </div>
         </div>

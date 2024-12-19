@@ -227,24 +227,8 @@ export function TestimonialsSection() {
             </div>
           </div>
 
-          {/* Updated Carousel Controls */}
+          {/* Updated Carousel Controls - Mobile */}
           <div className='flex justify-center items-center gap-4 mt-6'>
-            <button
-              onClick={prevSlide}
-              className={`p-2 rounded-full transition-all ${
-                currentIndex === 0
-                  ? "bg-[#DADADA] dark:bg-[#1c2936] opacity-50"
-                  : "bg-[#ECECEC] dark:bg-[#1c2936] opacity-100"
-              }`}
-              disabled={currentIndex === 0}
-            >
-              <ChevronLeft
-                size={20}
-                className={`text-black dark:text-white ${
-                  currentIndex === 0 ? "opacity-50" : "opacity-100"
-                }`}
-              />
-            </button>
             <div className='flex gap-2'>
               {TESTIMONIALS.map((_, index) => (
                 <button
@@ -258,24 +242,6 @@ export function TestimonialsSection() {
                 />
               ))}
             </div>
-            <button
-              onClick={nextSlide}
-              className={`p-2 rounded-full transition-all ${
-                currentIndex === TESTIMONIALS.length - 1
-                  ? "bg-[#DADADA] dark:bg-[#1c2936] opacity-50"
-                  : "bg-[#ECECEC] dark:bg-[#1c2936] opacity-100"
-              }`}
-              disabled={currentIndex === TESTIMONIALS.length - 1}
-            >
-              <ChevronRight
-                size={20}
-                className={`text-black dark:text-white ${
-                  currentIndex === TESTIMONIALS.length - 1
-                    ? "opacity-50"
-                    : "opacity-100"
-                }`}
-              />
-            </button>
           </div>
         </div>
       </div>

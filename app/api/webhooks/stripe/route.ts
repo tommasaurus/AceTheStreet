@@ -23,11 +23,19 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
-    console.log("Webhook endpoint hit");
+    console.log("=================== WEBHOOK START ===================");
+    console.log("Method:", req.method);
+    console.log("URL:", req.url);
+
+    // Log all headers
+    const allHeaders = Object.fromEntries(req.headers);
+    console.log("Headers:", JSON.stringify(allHeaders, null, 2));
+
     let rawBody;
     try {
       rawBody = await req.text();
-      console.log("Raw body:", rawBody);
+      // Only log a portion of the body for security
+      console.log("Raw body (first 100 chars):", rawBody.substring(0, 100));
     } catch (error) {
       console.error("Error reading request body:", error);
       return NextResponse.json(
@@ -38,25 +46,33 @@ export async function POST(req: Request) {
 
     const signature = headers().get("Stripe-Signature");
     if (!signature) {
-      console.error("No Stripe signature found");
+      console.error("No Stripe signature found in headers");
       return NextResponse.json(
         { error: "No Stripe signature" },
         { status: 400 }
       );
     }
 
-    console.log("Stripe signature:", signature);
-    console.log(
-      "Webhook secret being used:",
-      webhookSecret.slice(0, 10) + "..."
-    );
-    let event: Stripe.Event;
+    // Verify webhook secret is present
+    if (!webhookSecret) {
+      console.error("Webhook secret is not configured");
+      return NextResponse.json(
+        { error: "Webhook secret not configured" },
+        { status: 500 }
+      );
+    }
 
+    let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+      console.log("Event constructed successfully:", event.type);
     } catch (err: any) {
       console.error("Webhook signature verification failed:", err.message);
-      console.error("Webhook Secret used:", webhookSecret);
+      console.error("Signature received:", signature);
+      console.error(
+        "Webhook secret first 10 chars:",
+        webhookSecret.slice(0, 10)
+      );
       return NextResponse.json(
         { error: `Webhook Error: ${err.message}` },
         { status: 400 }

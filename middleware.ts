@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  // Allow webhook endpoint to bypass middleware
-  if (req.nextUrl.pathname === "/api/webhooks/stripe") {
+  // Allow webhook endpoints to bypass middleware
+  if (req.nextUrl.pathname.startsWith("/api/webhooks/")) {
     return NextResponse.next();
   }
 
@@ -54,5 +54,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|images|api/webhook).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|images|api/webhooks).*)",
+  ],
 };

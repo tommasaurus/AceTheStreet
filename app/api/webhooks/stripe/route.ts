@@ -201,3 +201,10 @@ export async function POST(req: Request) {
     );
   }
 }
+
+// Disable body parsing, need raw body for Stripe webhook signature verification
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

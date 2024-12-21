@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Check, X, Camera, CreditCard, ArrowLeft } from "lucide-react";
+import { Check, X, Camera, CreditCard, ArrowLeft, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormattedInput } from "@/components/ui/formatted-input";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "sonner";
 
 interface Profile {
   id: string;
@@ -21,18 +22,72 @@ interface SettingsDialogProps {
   isOpen: boolean;
   onClose: () => void;
   profile: Profile | null;
+  hasSubscription: boolean;
 }
 
 export function SettingsDialog({
   isOpen,
   onClose,
   profile,
+  hasSubscription,
 }: SettingsDialogProps) {
   const [activeTab, setActiveTab] = useState("profile");
-  const [showPayment, setShowPayment] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
+  const [fullName, setFullName] = useState(profile?.full_name || "");
+  const [preferredName, setPreferredName] = useState(
+    profile?.preferred_name || profile?.full_name || ""
+  );
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const nameChanged = fullName !== profile?.full_name;
+    const preferredChanged = preferredName !== profile?.preferred_name;
+    setHasChanges(nameChanged || preferredChanged);
+  }, [fullName, preferredName, profile]);
+
+  const handleSave = async () => {
+    if (!profile?.id) return;
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: fullName,
+          preferred_name: preferredName,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", profile.id);
+
+      if (error) throw error;
+      toast.success("Profile updated successfully");
+      setHasChanges(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleManagePayment = async () => {
+    try {
+      const response = await fetch("/api/create-portal-session", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create portal session");
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error: any) {
+      console.error("Error creating portal session:", error);
+      toast.error(error.message || "Failed to open billing portal");
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -57,16 +112,6 @@ export function SettingsDialog({
     return profile.email.substring(0, 2).toUpperCase();
   };
 
-  const handleUpdateBilling = () => {
-    setShowPayment(true);
-    setActiveTab("payment");
-  };
-
-  const handleBackToBilling = () => {
-    setShowPayment(false);
-    setActiveTab("billing");
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -89,12 +134,9 @@ export function SettingsDialog({
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="px-6 pt-4">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
-              <TabsTrigger value="payment" disabled={!showPayment}>
-                Payment
-              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -123,7 +165,8 @@ export function SettingsDialog({
                     <Input
                       id="fullName"
                       placeholder="Enter your full name"
-                      defaultValue={profile?.full_name || ""}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -131,11 +174,35 @@ export function SettingsDialog({
                     <Input
                       id="nickname"
                       placeholder="Enter your preferred name"
-                      defaultValue={
-                        profile?.preferred_name || profile?.full_name || ""
-                      }
+                      value={preferredName}
+                      onChange={(e) => setPreferredName(e.target.value)}
                     />
                   </div>
+
+                  {/* Save Button */}
+                  {hasChanges && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="mt-4"
+                    >
+                      <Button
+                        className="w-full"
+                        onClick={handleSave}
+                        disabled={isSaving}
+                      >
+                        {isSaving ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          "Save Changes"
+                        )}
+                      </Button>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </TabsContent>
@@ -145,125 +212,83 @@ export function SettingsDialog({
                 <div className="rounded-lg border bg-card p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">Professional Plan</h3>
+                      <h3 className="font-medium">
+                        {hasSubscription ? "Professional Plan" : "Free Plan"}
+                      </h3>
                       <p className="text-sm text-muted-foreground">
-                        $20/month, billed monthly
+                        {hasSubscription
+                          ? "$20/month, billed monthly"
+                          : "Limited access"}
                       </p>
                     </div>
-                    <span className="text-xs bg-primary/20 text-primary px-2.5 py-0.5 rounded-full font-medium">
-                      Current Plan
-                    </span>
+                    {hasSubscription && (
+                      <span className="text-xs bg-primary/20 text-primary px-2.5 py-0.5 rounded-full font-medium">
+                        Current Plan
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">
-                        Unlimited access to all features
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">Priority support</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">Advanced analytics</span>
-                    </div>
+                    {hasSubscription ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">
+                            Unlimited access to all features
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">Priority support</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">Advanced analytics</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">
+                            Access to M&I 400 questions
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">Basic features</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 <div className="mt-auto flex flex-col gap-2">
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={handleUpdateBilling}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Update billing info
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/20 dark:hover:bg-destructive/20"
-                  >
-                    Cancel subscription
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="payment" className="mt-0 h-full">
-              <div className="flex h-full flex-col gap-4">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-2"
-                    onClick={handleBackToBilling}
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    Back to billing
-                  </Button>
-                </div>
-
-                <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <Label>Card information</Label>
-                    <div className="rounded-md border">
-                      <FormattedInput
-                        format="card"
-                        className="border-0 border-b rounded-none"
-                        placeholder="Card number"
-                        value={cardNumber}
-                        onChange={setCardNumber}
-                      />
-                      <div className="flex">
-                        <FormattedInput
-                          format="expiry"
-                          className="border-0 border-r rounded-none"
-                          placeholder="MM / YY"
-                          value={expiry}
-                          onChange={setExpiry}
-                        />
-                        <Input
-                          className="border-0 rounded-none w-[100px]"
-                          placeholder="CVC"
-                          maxLength={4}
-                          value={cvc}
-                          onChange={(e) =>
-                            setCvc(
-                              e.target.value.replace(/\D/g, "").slice(0, 4)
-                            )
-                          }
-                          inputMode="numeric"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Name on card</Label>
-                    <Input placeholder="Name as shown on card" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Billing address</Label>
-                    <Input placeholder="Street address" />
-                    <div className="grid grid-cols-3 gap-2">
-                      <Input placeholder="City" className="col-span-2" />
-                      <Input placeholder="State" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Input placeholder="ZIP code" />
-                      <Input placeholder="Country" />
-                    </div>
-                  </div>
-
-                  <div className="mt-auto">
-                    <Button className="w-full">
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Update payment method
+                  {hasSubscription ? (
+                    <>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={handleManagePayment}
+                      >
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        Manage billing
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/20 dark:hover:bg-destructive/20"
+                        onClick={handleManagePayment}
+                      >
+                        Cancel subscription
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      className="w-full"
+                      onClick={() => (window.location.href = "/pricing")}
+                    >
+                      Upgrade to Pro
                     </Button>
-                  </div>
+                  )}
                 </div>
               </div>
             </TabsContent>

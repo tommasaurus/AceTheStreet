@@ -349,6 +349,7 @@ export function StudySidebar() {
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
           profile={profile}
+          hasSubscription={hasSubscription}
         />
       </AnimatePresence>
     </>

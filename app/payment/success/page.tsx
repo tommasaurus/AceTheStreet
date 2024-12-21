@@ -61,14 +61,14 @@ export default function PaymentSuccessPage() {
     checkSubscription();
   }, []);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Processing your payment...</h1>
-        <p className="text-gray-600">
-          Please wait while we confirm your subscription.
-        </p>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white mb-4" />
+        <p className="text-lg">Processing your subscription...</p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 }

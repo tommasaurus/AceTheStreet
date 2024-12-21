@@ -186,6 +186,24 @@ export async function POST(req: Request) {
           }
           break;
         }
+
+        case "customer.subscription.created": {
+          const subscription = event.data.object as Stripe.Subscription;
+          const userId = subscription.metadata.userId;
+          const customerId = subscription.customer as string;
+
+          if (userId) {
+            await supabase
+              .from("subscriptions")
+              .update({
+                status: "active",
+                stripe_customer_id: customerId,
+                updated_at: new Date().toISOString(),
+              })
+              .eq("user_id", userId);
+          }
+          break;
+        }
       }
 
       return NextResponse.json({ received: true });

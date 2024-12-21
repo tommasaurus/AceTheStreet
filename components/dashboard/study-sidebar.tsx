@@ -37,6 +37,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
+interface Profile {
+  id: string;
+  email: string;
+  full_name: string;
+  preferred_name: string;
+}
+
 export function StudySidebar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -44,15 +51,17 @@ export function StudySidebar() {
   const [showSettings, setShowSettings] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const checkSubscription = async () => {
+    const fetchUserData = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (session) {
+        // Fetch subscription status
         const { data: subscription } = await supabase
           .from("subscriptions")
           .select("*")
@@ -61,11 +70,52 @@ export function StudySidebar() {
           .single();
 
         setHasSubscription(!!subscription);
+
+        // Fetch profile data
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profileData) {
+          setProfile(profileData);
+        }
       }
     };
 
-    checkSubscription();
+    fetchUserData();
   }, [supabase]);
+
+  // Function to get initials from name
+  const getInitials = () => {
+    if (!profile) return "??";
+    if (profile.preferred_name) {
+      return profile.preferred_name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (profile.full_name) {
+      return profile.full_name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return profile.email.substring(0, 2).toUpperCase();
+  };
+
+  // Get display name
+  const getDisplayName = () => {
+    if (!profile) return "User";
+    return (
+      profile.preferred_name || profile.full_name || profile.email.split("@")[0]
+    );
+  };
 
   const handleLogout = () => {
     setShowProfileMenu(false);
@@ -171,7 +221,7 @@ export function StudySidebar() {
             <div
               className={cn(
                 "relative bg-card/50 backdrop-blur-sm border rounded-lg shadow-sm cursor-pointer overflow-hidden transition-all duration-200 hover:bg-accent/50 hover:shadow-md",
-                isCollapsed ? "w-[40px] p-0" : "w-full"
+                isCollapsed ? "p-2" : "w-full"
               )}
               onClick={() =>
                 !isCollapsed && setShowProfileMenu(!showProfileMenu)
@@ -185,7 +235,7 @@ export function StudySidebar() {
               >
                 <Avatar className="h-[24px] w-[24px] shrink-0">
                   <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>TQ</AvatarFallback>
+                  <AvatarFallback>{getInitials()}</AvatarFallback>
                 </Avatar>
                 <div
                   className={cn(
@@ -194,18 +244,12 @@ export function StudySidebar() {
                   )}
                 >
                   <p className="text-xs font-medium leading-none mb-0.5 truncate">
-                    Professional plan
+                    {hasSubscription ? "Professional plan" : "Free plan"}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">
-                    tommyqu03@gmail.com
+                    {profile?.email}
                   </p>
                 </div>
-                <ChevronRight
-                  className={cn(
-                    "h-4 w-4 text-muted-foreground shrink-0 transition-all duration-300",
-                    isCollapsed ? "w-0 opacity-0" : "w-4 opacity-100"
-                  )}
-                />
               </div>
             </div>
 
@@ -221,19 +265,23 @@ export function StudySidebar() {
                   {/* Header */}
                   <div className="p-4 border-b">
                     <p className="text-sm text-muted-foreground">
-                      tommyqu03@gmail.com
+                      {profile?.email}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="h-6 w-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-xs">
-                        TQ
+                        {getInitials()}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">Personal</p>
+                        <p className="text-sm font-medium">
+                          {getDisplayName()}
+                        </p>
                         <p className="text-xs text-muted-foreground">
-                          Pro plan
+                          {hasSubscription ? "Pro plan" : "Free plan"}
                         </p>
                       </div>
-                      <Check className="h-4 w-4 text-green-500" />
+                      {hasSubscription && (
+                        <Check className="h-4 w-4 text-green-500" />
+                      )}
                     </div>
                   </div>
 
@@ -300,6 +348,7 @@ export function StudySidebar() {
         <SettingsDialog
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
+          profile={profile}
         />
       </AnimatePresence>
     </>

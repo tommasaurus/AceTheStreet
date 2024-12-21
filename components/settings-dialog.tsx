@@ -10,12 +10,24 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormattedInput } from "@/components/ui/formatted-input";
 
+interface Profile {
+  id: string;
+  email: string;
+  full_name: string;
+  preferred_name: string;
+}
+
 interface SettingsDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  profile: Profile | null;
 }
 
-export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
+export function SettingsDialog({
+  isOpen,
+  onClose,
+  profile,
+}: SettingsDialogProps) {
   const [activeTab, setActiveTab] = useState("profile");
   const [showPayment, setShowPayment] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
@@ -23,6 +35,27 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
   const [cvc, setCvc] = useState("");
 
   if (!isOpen) return null;
+
+  const getInitials = () => {
+    if (!profile) return "??";
+    if (profile.preferred_name) {
+      return profile.preferred_name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (profile.full_name) {
+      return profile.full_name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return profile.email.substring(0, 2).toUpperCase();
+  };
 
   const handleUpdateBilling = () => {
     setShowPayment(true);
@@ -71,7 +104,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                 <div className="relative">
                   <Avatar className="h-32 w-32">
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="text-3xl">TQ</AvatarFallback>
+                    <AvatarFallback className="text-3xl">
+                      {getInitials()}
+                    </AvatarFallback>
                   </Avatar>
                   <Button
                     size="icon"
@@ -88,7 +123,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                     <Input
                       id="fullName"
                       placeholder="Enter your full name"
-                      defaultValue="Tommy Q"
+                      defaultValue={profile?.full_name || ""}
                     />
                   </div>
                   <div className="space-y-2">
@@ -96,7 +131,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                     <Input
                       id="nickname"
                       placeholder="Enter your preferred name"
-                      defaultValue="Tommy"
+                      defaultValue={
+                        profile?.preferred_name || profile?.full_name || ""
+                      }
                     />
                   </div>
                 </div>

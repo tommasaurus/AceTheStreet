@@ -288,6 +288,20 @@ export function PricingSection() {
             Privacy Policy
           </Link>
         </div>
+
+        {/* Add this at the bottom */}
+        <div className="text-center pt-8 border-t">
+          <Button
+            variant="ghost"
+            asChild
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <Link href="/study">
+              Continue without subscribing
+              <span className="text-sm ml-2">(Limited access)</span>
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

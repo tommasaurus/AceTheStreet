@@ -21,6 +21,9 @@ const supabase = createClient(
   }
 );
 
+export const runtime = "nodejs";
+
+// This disables body parsing, as we need the raw body for Stripe webhook verification
 export async function POST(req: Request) {
   try {
     console.log("=================== WEBHOOK START ===================");
@@ -201,10 +204,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-// Disable body parsing, need raw body for Stripe webhook signature verification
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

@@ -33,10 +33,14 @@ export async function middleware(req: NextRequest) {
         .from("subscriptions")
         .select("*")
         .eq("user_id", session.user.id)
-        .or(`status.eq.active,status.eq.pending`)
+        .eq("status", "active")
         .single();
 
-      if (!subscription || error) {
+      if (
+        !subscription ||
+        error ||
+        subscription.current_period_end < new Date().toISOString()
+      ) {
         return NextResponse.redirect(new URL("/pricing", req.url));
       }
     }

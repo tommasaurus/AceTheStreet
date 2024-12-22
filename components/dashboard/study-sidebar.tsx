@@ -61,15 +61,19 @@ export function StudySidebar() {
       } = await supabase.auth.getSession();
 
       if (session) {
-        // Fetch subscription status
+        // Fetch subscription status - check for active status and not expired
         const { data: subscription } = await supabase
           .from("subscriptions")
           .select("*")
           .eq("user_id", session.user.id)
-          .or(`status.eq.active,status.eq.pending`)
+          .eq("status", "active")
           .single();
 
-        setHasSubscription(!!subscription);
+        // Only set hasSubscription to true if subscription is active and not expired
+        setHasSubscription(
+          !!subscription &&
+            subscription.current_period_end > new Date().toISOString()
+        );
 
         // Fetch profile data
         const { data: profileData } = await supabase

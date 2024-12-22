@@ -38,7 +38,37 @@ export function SettingsDialog({
   );
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
   const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        const { data: subscription } = await supabase
+          .from("subscriptions")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .eq("status", "active")
+          .single();
+
+        // Set subscription status based on active subscription and expiration
+        if (
+          subscription &&
+          subscription.current_period_end > new Date().toISOString()
+        ) {
+          setSubscriptionStatus(subscription.plan_type);
+        } else {
+          setSubscriptionStatus("free");
+        }
+      }
+    };
+
+    checkSubscription();
+  }, [supabase]);
 
   useEffect(() => {
     const nameChanged = fullName !== profile?.full_name;

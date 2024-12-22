@@ -89,21 +89,26 @@ export async function POST(req: Request) {
       switch (event.type) {
         case "checkout.session.completed": {
           const session = event.data.object as Stripe.Checkout.Session;
-          console.log("Full session data:", JSON.stringify(session, null, 2));
-          console.log("Payment status:", session.payment_status);
-          console.log("Metadata received:", session.metadata);
 
-          // Verify payment was successful
+          // Only proceed if payment was successful
           if (session.payment_status !== "paid") {
-            console.log("Payment not successful");
+            console.log(
+              "Payment not successful, status:",
+              session.payment_status
+            );
             return NextResponse.json({ received: true });
           }
 
+          const customerId = session.customer as string;
           const userId = session.metadata?.userId;
           const planType = session.metadata?.planType;
-          console.log("Metadata:", { userId, planType });
 
-          if (!userId || !planType) {
+          if (!userId || !planType || !customerId) {
+            console.error("Missing required data in webhook:", {
+              userId,
+              planType,
+              customerId,
+            });
             throw new Error("Missing required metadata");
           }
 
@@ -125,41 +130,32 @@ export async function POST(req: Request) {
               throw new Error("Invalid plan type");
           }
 
-          // Use supabase client with service role
-          try {
-            const { error } = await supabase.from("subscriptions").upsert({
-              user_id: userId,
+          // Update subscription to active
+          const { error } = await supabase
+            .from("subscriptions")
+            .update({
               status: "active",
-              plan_type: planType,
+              stripe_customer_id: customerId,
               current_period_start: now.toISOString(),
               current_period_end: periodEnd.toISOString(),
-            });
+            })
+            .eq("user_id", userId);
 
-            if (error) {
-              console.error("Supabase error:", error);
-              console.error("Attempted to insert/update with data:", {
-                user_id: userId,
-                status: "active",
-                plan_type: planType,
-                current_period_start: now.toISOString(),
-                current_period_end: periodEnd.toISOString(),
-              });
-              throw error;
-            }
-            console.log("Successfully updated subscription in Supabase");
-          } catch (error) {
-            console.error("Error updating Supabase:", error);
+          if (error) {
+            console.error("Error updating subscription in webhook:", error);
             throw error;
           }
 
+          console.log("Successfully activated subscription for user:", userId);
           break;
         }
 
-        case "invoice.payment_failed": {
-          const invoice = event.data.object as Stripe.Invoice;
-          const userId = invoice.metadata?.userId;
+        case "payment_intent.payment_failed": {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          const userId = paymentIntent.metadata?.userId;
 
           if (userId) {
+            // Update subscription to inactive
             await supabase
               .from("subscriptions")
               .update({
@@ -176,28 +172,11 @@ export async function POST(req: Request) {
           const userId = subscription.metadata.userId;
 
           if (userId) {
+            // Update subscription to cancelled
             await supabase
               .from("subscriptions")
               .update({
                 status: "cancelled",
-                updated_at: new Date().toISOString(),
-              })
-              .eq("user_id", userId);
-          }
-          break;
-        }
-
-        case "customer.subscription.created": {
-          const subscription = event.data.object as Stripe.Subscription;
-          const userId = subscription.metadata.userId;
-          const customerId = subscription.customer as string;
-
-          if (userId) {
-            await supabase
-              .from("subscriptions")
-              .update({
-                status: "active",
-                stripe_customer_id: customerId,
                 updated_at: new Date().toISOString(),
               })
               .eq("user_id", userId);

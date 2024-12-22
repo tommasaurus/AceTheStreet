@@ -33,7 +33,7 @@ export async function middleware(req: NextRequest) {
         .from("subscriptions")
         .select("*")
         .eq("user_id", session.user.id)
-        .eq("status", "active")
+        .or(`status.eq.active,status.eq.pending`)
         .single();
 
       if (!subscription || error) {

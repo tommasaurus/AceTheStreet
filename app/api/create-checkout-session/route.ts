@@ -25,25 +25,74 @@ export async function POST(req: Request) {
 
     // Create or get customer
     let customer;
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("stripe_customer_id")
-      .eq("user_id", userId)
-      .single();
+    try {
+      // First check if we already have a subscription with a customer ID
+      const { data: existingSubscription } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
 
-    if (subscription?.stripe_customer_id) {
-      customer = await stripe.customers.retrieve(
-        subscription.stripe_customer_id
-      );
-    } else {
-      customer = await stripe.customers.create({
-        email: userData.email,
-        metadata: {
-          userId: userId,
-        },
-      });
+      if (existingSubscription) {
+        console.log("Found existing subscription:", existingSubscription);
+
+        // If there's an existing subscription, update it instead of creating a new one
+        customer = await stripe.customers.retrieve(
+          existingSubscription.stripe_customer_id || ""
+        );
+
+        // Update existing subscription to pending
+        const { error: updateError } = await supabase
+          .from("subscriptions")
+          .update({
+            status: "pending",
+            plan_type: planType,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", userId);
+
+        if (updateError) {
+          console.error("Error updating subscription:", updateError);
+          throw updateError;
+        }
+      } else {
+        // Create new customer
+        console.log("Creating new customer for user:", userId);
+        customer = await stripe.customers.create({
+          email: userData.email,
+          metadata: {
+            userId: userId,
+          },
+        });
+        console.log("Created new customer:", customer.id);
+
+        // Create initial subscription record with temporary dates
+        const now = new Date();
+        const tempEndDate = new Date(now);
+        tempEndDate.setHours(now.getHours() + 1); // Set temporary end date 1 hour in the future
+
+        const { error: subscriptionError } = await supabase
+          .from("subscriptions")
+          .insert({
+            user_id: userId,
+            status: "pending",
+            plan_type: planType,
+            stripe_customer_id: customer.id,
+            current_period_start: now.toISOString(),
+            current_period_end: tempEndDate.toISOString(), // Temporary end date
+          });
+
+        if (subscriptionError) {
+          console.error("Error creating subscription:", subscriptionError);
+          throw subscriptionError;
+        }
+      }
+    } catch (error) {
+      console.error("Error handling customer:", error);
+      throw error;
     }
 
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customer.id,
       payment_method_types: ["card"],
@@ -60,6 +109,7 @@ export async function POST(req: Request) {
         userId,
         planType,
       },
+      client_reference_id: userId, // Add this to maintain session context
     });
 
     return NextResponse.json({ sessionUrl: session.url });

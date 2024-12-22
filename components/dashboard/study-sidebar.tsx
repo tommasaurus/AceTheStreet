@@ -66,7 +66,7 @@ export function StudySidebar() {
           .from("subscriptions")
           .select("*")
           .eq("user_id", session.user.id)
-          .eq("status", "active")
+          .or(`status.eq.active,status.eq.pending`)
           .single();
 
         setHasSubscription(!!subscription);

@@ -9,7 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface Profile {
   id: string;
@@ -28,18 +30,55 @@ interface SettingsDialogProps {
 export function SettingsDialog({
   isOpen,
   onClose,
-  profile,
+  profile: initialProfile,
   hasSubscription,
 }: SettingsDialogProps) {
   const [activeTab, setActiveTab] = useState("profile");
-  const [fullName, setFullName] = useState(profile?.full_name || "");
-  const [preferredName, setPreferredName] = useState(
-    profile?.preferred_name || profile?.full_name || ""
-  );
+  const [fullName, setFullName] = useState(initialProfile?.full_name || "");
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
+  const [mounted, setMounted] = useState(false);
+  const { theme, systemTheme } = useTheme();
   const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session?.user?.id) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+
+          if (profileData) {
+            setFullName(profileData.full_name || "");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    if (!initialProfile?.full_name) {
+      fetchProfile();
+    }
+  }, [supabase, initialProfile]);
+
+  // Get the actual theme
+  const currentTheme = !mounted
+    ? "dark"
+    : theme === "system"
+    ? systemTheme
+    : theme;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -71,23 +110,21 @@ export function SettingsDialog({
   }, [supabase]);
 
   useEffect(() => {
-    const nameChanged = fullName !== profile?.full_name;
-    const preferredChanged = preferredName !== profile?.preferred_name;
-    setHasChanges(nameChanged || preferredChanged);
-  }, [fullName, preferredName, profile]);
+    const nameChanged = fullName !== initialProfile?.full_name;
+    setHasChanges(nameChanged);
+  }, [fullName, initialProfile]);
 
   const handleSave = async () => {
-    if (!profile?.id) return;
+    if (!initialProfile?.id) return;
     setIsSaving(true);
     try {
       const { error } = await supabase
         .from("profiles")
         .update({
           full_name: fullName,
-          preferred_name: preferredName,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", profile.id);
+        .eq("id", initialProfile.id);
 
       if (error) throw error;
       toast.success("Profile updated successfully");
@@ -122,24 +159,16 @@ export function SettingsDialog({
   if (!isOpen) return null;
 
   const getInitials = () => {
-    if (!profile) return "??";
-    if (profile.preferred_name) {
-      return profile.preferred_name
+    if (!initialProfile) return "??";
+    if (initialProfile.full_name) {
+      return initialProfile.full_name
         .split(" ")
         .map((n) => n[0])
         .join("")
         .toUpperCase()
         .slice(0, 2);
     }
-    if (profile.full_name) {
-      return profile.full_name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
-    }
-    return profile.email.substring(0, 2).toUpperCase();
+    return initialProfile.email.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -147,176 +176,293 @@ export function SettingsDialog({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm"
+      className='fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm'
     >
-      <div className="fixed left-[50%] top-[50%] z-[100] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] border bg-background shadow-lg duration-200 sm:rounded-lg">
-        <div className="flex items-center justify-between border-b p-6">
-          <h2 className="text-lg font-semibold">Settings</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8"
+      <div
+        className={cn(
+          "fixed left-[50%] top-[50%] z-[100] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] border shadow-lg duration-200 sm:rounded-lg",
+          currentTheme === "dark" ? "bg-[#151e2a]" : "bg-white"
+        )}
+      >
+        <div className='flex items-center justify-between border-b p-6'>
+          <h2
+            className={cn(
+              "text-lg font-semibold",
+              currentTheme === "dark" ? "text-white" : "text-black"
+            )}
           >
-            <X className="h-4 w-4" />
+            Settings
+          </h2>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={onClose}
+            className={cn(
+              "h-8 w-8",
+              currentTheme === "dark"
+                ? "hover:bg-[#1c2936] text-white"
+                : "hover:bg-[#ECECEC] text-black"
+            )}
+          >
+            <X className='h-4 w-4' />
           </Button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="px-6 pt-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="billing">Billing</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+          <div className='px-6 pt-4'>
+            <TabsList
+              className={cn(
+                "grid w-full grid-cols-2 p-0.5 rounded-lg",
+                currentTheme === "dark" ? "bg-[#1c2936]" : "bg-[#ECECEC]"
+              )}
+            >
+              <TabsTrigger
+                value='profile'
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                  currentTheme === "dark"
+                    ? "text-white/70 hover:text-white data-[state=active]:bg-[#151e2a] data-[state=active]:text-white"
+                    : "text-black/70 hover:text-black data-[state=active]:bg-white data-[state=active]:text-black"
+                )}
+              >
+                Profile
+              </TabsTrigger>
+              <TabsTrigger
+                value='billing'
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+                  currentTheme === "dark"
+                    ? "text-white/70 hover:text-white data-[state=active]:bg-[#151e2a] data-[state=active]:text-white"
+                    : "text-black/70 hover:text-black data-[state=active]:bg-white data-[state=active]:text-black"
+                )}
+              >
+                Billing
+              </TabsTrigger>
             </TabsList>
           </div>
 
-          <div className="h-[400px] overflow-y-auto px-6 py-4">
-            <TabsContent value="profile" className="mt-0 h-full">
-              <div className="flex h-full flex-col items-center gap-6">
-                <div className="relative">
-                  <Avatar className="h-32 w-32">
-                    <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="text-3xl">
-                      {getInitials()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bottom-0 right-0 h-8 w-8 rounded-full"
-                  >
-                    <Camera className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <div className="grid w-full gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full name</Label>
+          <div className='h-[350px] overflow-y-auto px-6 py-4'>
+            <TabsContent value='profile' className='mt-0 h-full'>
+              <div className='flex h-full flex-col gap-6'>
+                <div className='grid w-full gap-4'>
+                  <div className='space-y-2'>
+                    <Label
+                      htmlFor='fullName'
+                      className={
+                        currentTheme === "dark" ? "text-white" : "text-black"
+                      }
+                    >
+                      Name
+                    </Label>
                     <Input
-                      id="fullName"
-                      placeholder="Enter your full name"
+                      id='fullName'
+                      placeholder='Enter your name'
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="nickname">What should we call you?</Label>
-                    <Input
-                      id="nickname"
-                      placeholder="Enter your preferred name"
-                      value={preferredName}
-                      onChange={(e) => setPreferredName(e.target.value)}
+                      className={cn(
+                        currentTheme === "dark"
+                          ? "bg-[#1c2936] text-white border-white/10 focus:border-white/20"
+                          : "bg-white text-black"
+                      )}
                     />
                   </div>
 
-                  {/* Save Button */}
-                  {hasChanges && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="mt-4"
-                    >
-                      <Button
-                        className="w-full"
-                        onClick={handleSave}
-                        disabled={isSaving}
-                      >
-                        {isSaving ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
-                          </>
-                        ) : (
-                          "Save Changes"
-                        )}
-                      </Button>
-                    </motion.div>
-                  )}
+                  <Button
+                    className={cn(
+                      "w-full",
+                      currentTheme === "dark"
+                        ? "bg-white text-black hover:bg-white"
+                        : "bg-black text-white hover:bg-black"
+                    )}
+                    onClick={handleSave}
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </Button>
                 </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="billing" className="mt-0 h-full">
-              <div className="flex h-full flex-col gap-4">
-                <div className="rounded-lg border bg-card p-4 space-y-4">
-                  <div className="flex items-center justify-between">
+            <TabsContent value='billing' className='mt-0 h-full'>
+              <div className='flex h-full flex-col gap-4'>
+                <div
+                  className={cn(
+                    "rounded-lg p-4 space-y-4",
+                    currentTheme === "dark"
+                      ? "border-white/10"
+                      : "border-gray-200"
+                  )}
+                >
+                  <div className='flex items-center justify-between'>
                     <div>
-                      <h3 className="font-medium">
-                        {hasSubscription ? "Professional Plan" : "Free Plan"}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <h3
+                        className={cn(
+                          "font-medium",
+                          currentTheme === "dark" ? "text-white" : "text-black"
+                        )}
+                      >
                         {hasSubscription
-                          ? "$20/month, billed monthly"
+                          ? `${
+                              subscriptionStatus.charAt(0).toUpperCase() +
+                              subscriptionStatus.slice(1)
+                            } Plan`
+                          : "Free Plan"}
+                      </h3>
+                      <p
+                        className={cn(
+                          "text-sm",
+                          currentTheme === "dark"
+                            ? "text-white/70"
+                            : "text-gray-600"
+                        )}
+                      >
+                        {hasSubscription
+                          ? subscriptionStatus === "pro"
+                            ? "$13.33/month, billed quarterly"
+                            : subscriptionStatus === "max"
+                            ? "$6.67/month, billed annually"
+                            : "$20/month, billed monthly"
                           : "Limited access"}
                       </p>
                     </div>
                     {hasSubscription && (
-                      <span className="text-xs bg-primary/20 text-primary px-2.5 py-0.5 rounded-full font-medium">
+                      <span
+                        className={cn(
+                          "text-xs px-2.5 py-0.5 rounded-full font-medium",
+                          currentTheme === "dark"
+                            ? "bg-white/10 text-white"
+                            : "bg-black/10 text-black"
+                        )}
+                      >
                         Current Plan
                       </span>
                     )}
                   </div>
-                  <div className="space-y-2">
+
+                  <div className='space-y-2'>
                     {hasSubscription ? (
                       <>
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">
-                            Unlimited access to all features
+                        <div className='flex items-center gap-2'>
+                          <Check className='h-4 w-4 text-green-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            M&I questions
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">Priority support</span>
+                        <div className='flex items-center gap-2'>
+                          <Check className='h-4 w-4 text-green-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            Bank specific questions
+                          </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">Advanced analytics</span>
+                        <div className='flex items-center gap-2'>
+                          <Check className='h-4 w-4 text-green-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            Test modes
+                          </span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <Check className='h-4 w-4 text-green-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            Email support
+                          </span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">
-                            Access to M&I 400 questions
+                        <div className='flex items-center gap-2'>
+                          <Check className='h-4 w-4 text-green-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            M&I questions
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">Basic features</span>
+                        <div className='flex items-center gap-2'>
+                          <X className='h-4 w-4 text-red-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            Bank specific questions
+                          </span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <X className='h-4 w-4 text-red-500' />
+                          <span
+                            className={
+                              currentTheme === "dark"
+                                ? "text-white/70"
+                                : "text-gray-600"
+                            }
+                          >
+                            Test modes
+                          </span>
                         </div>
                       </>
                     )}
                   </div>
-                </div>
 
-                <div className="mt-auto flex flex-col gap-2">
                   {hasSubscription ? (
-                    <>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={handleManagePayment}
-                      >
-                        <CreditCard className="h-4 w-4 mr-2" />
-                        Manage billing
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="text-destructive hover:text-destructive hover:bg-destructive/20 dark:hover:bg-destructive/20"
-                        onClick={handleManagePayment}
-                      >
-                        Cancel subscription
-                      </Button>
-                    </>
+                    <Button
+                      className={cn(
+                        "w-full transition-none border border-transparent",
+                        currentTheme === "dark"
+                          ? "bg-white text-black hover:bg-white hover:text-black hover:border-transparent"
+                          : "bg-black text-white hover:bg-black hover:text-white hover:border-transparent"
+                      )}
+                      onClick={handleManagePayment}
+                    >
+                      <CreditCard className='h-4 w-4 mr-2' />
+                      Manage billing
+                    </Button>
                   ) : (
                     <Button
-                      className="w-full"
+                      className={cn(
+                        "w-full",
+                        currentTheme === "dark"
+                          ? "bg-white text-black hover:bg-white"
+                          : "bg-black text-white hover:bg-black"
+                      )}
                       onClick={() => (window.location.href = "/pricing")}
                     >
-                      Upgrade to Pro
+                      Upgrade plan
                     </Button>
                   )}
                 </div>

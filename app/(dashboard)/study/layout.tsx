@@ -2,13 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  LightbulbIcon,
-  BookOpen,
-  GraduationCap,
-  MessageSquare,
-  Zap,
-} from "lucide-react";
+import { LightbulbIcon, GraduationCap, Zap } from "lucide-react";
 import { StudySidebar } from "@/components/dashboard/study-sidebar";
 import MatchContent from "@/components/dashboard/study/match/MatchContent";
 import {
@@ -78,7 +72,7 @@ export default function StudyLayout({
       <StudySidebar />
 
       {/* Main Content */}
-      <div className="pl-64">
+      <div>
         <div className="container mx-auto px-4 py-6">
           {shouldHideNav ? (
             children
@@ -88,7 +82,7 @@ export default function StudyLayout({
               className="w-full"
               onValueChange={handleTabChange}
             >
-              <TabsList className="grid w-full grid-cols-5 h-auto gap-4">
+              <TabsList className="grid w-full grid-cols-3 h-auto gap-4">
                 <TabsTrigger
                   value="flashcards"
                   className="flex flex-col py-4 gap-2"
@@ -97,12 +91,6 @@ export default function StudyLayout({
                     <LightbulbIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <span>Flashcards</span>
-                </TabsTrigger>
-                <TabsTrigger value="learn" className="flex flex-col py-4 gap-2">
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <span>Learn</span>
                 </TabsTrigger>
                 <TabsTrigger value="test" className="flex flex-col py-4 gap-2">
                   <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
@@ -116,20 +104,9 @@ export default function StudyLayout({
                   </div>
                   <span>Match</span>
                 </TabsTrigger>
-                <TabsTrigger value="chat" className="flex flex-col py-4 gap-2">
-                  <div className="w-12 h-12 rounded-xl bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center">
-                    <MessageSquare className="w-6 h-6 text-pink-600 dark:text-pink-400" />
-                  </div>
-                  <span>Q-Chat</span>
-                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="flashcards">{children}</TabsContent>
-              <TabsContent value="learn">
-                <div className="p-4 text-center text-muted-foreground">
-                  Learn content coming soon...
-                </div>
-              </TabsContent>
               <TabsContent value="test">
                 {isTestMode && testSettings ? (
                   <TestInterface
@@ -245,11 +222,6 @@ export default function StudyLayout({
               </TabsContent>
               <TabsContent value="match">
                 <MatchContent />
-              </TabsContent>
-              <TabsContent value="chat">
-                <div className="p-4 text-center text-muted-foreground">
-                  Q-Chat content coming soon...
-                </div>
               </TabsContent>
             </Tabs>
           )}

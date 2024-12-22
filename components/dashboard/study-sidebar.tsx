@@ -436,7 +436,7 @@ export function StudySidebar() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
                       className={cn(
-                        "absolute rounded-2xl shadow-xl overflow-visible w-[280px] pointer-events-auto",
+                        "absolute rounded-2xl shadow-xl overflow-hidden w-[280px] pointer-events-auto",
                         "left-[16px]",
                         "bottom-[80px]",
                         currentTheme === "dark" ? "bg-[#1c2936]" : "bg-white"
@@ -447,7 +447,7 @@ export function StudySidebar() {
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className='py-1'>
+                      <div className='flex flex-col'>
                         <div className='px-4 py-2.5 text-base text-gray-600 dark:text-white/70'>
                           {profile?.email}
                         </div>
@@ -597,7 +597,12 @@ export function StudySidebar() {
 
                         <button
                           onClick={handleSignOut}
-                          className='w-full px-4 py-2.5 text-base flex items-center gap-3 text-red-400 hover:bg-white/[0.06]'
+                          className={cn(
+                            "w-full px-4 py-2.5 text-base flex items-center gap-3 text-red-400",
+                            currentTheme === "dark"
+                              ? "hover:bg-white/[0.06]"
+                              : "hover:bg-black/[0.06]"
+                          )}
                         >
                           <LogOut className='h-[18px] w-[18px] text-red-400' />
                           Log out

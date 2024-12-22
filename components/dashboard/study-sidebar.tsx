@@ -128,8 +128,24 @@ export function StudySidebar() {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
+    try {
+      const supabase = createClientComponentClient();
+
+      // Sign out from Supabase (this clears Supabase session)
+      await supabase.auth.signOut();
+
+      // Clear all cookies by setting them to expire
+      const cookies = document.cookie.split(";");
+      for (let cookie of cookies) {
+        const cookieName = cookie.split("=")[0].trim();
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      }
+
+      // Redirect to home page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   const navigationItems = [

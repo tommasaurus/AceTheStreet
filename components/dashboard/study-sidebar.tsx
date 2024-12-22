@@ -59,6 +59,8 @@ export function StudySidebar() {
   const [subscriptionStatus, setSubscriptionStatus] = useState("free");
   const [profile, setProfile] = useState<Profile | null>(null);
   const supabase = createClientComponentClient();
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Handle initial theme mounting
   useEffect(() => {
@@ -199,23 +201,64 @@ export function StudySidebar() {
     },
   ];
 
+  // Handle mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <>
+      {/* Mobile Menu Button - Only visible on mobile */}
+      {isMobile && (
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className='fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]'
+        >
+          {isMobileMenuOpen ? (
+            <X className='h-6 w-6' />
+          ) : (
+            <Menu className='h-6 w-6' />
+          )}
+        </button>
+      )}
+
+      {/* Mobile Overlay */}
+      {isMobile && isMobileMenuOpen && (
+        <div
+          className='fixed inset-0 bg-black/50 z-40'
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       <div
         className={cn(
-          "fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] transition-all duration-150 border-r border-[#ECECEC] dark:border-[#1c2936]",
-          isCollapsed ? "w-20" : "w-64"
+          "fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] transition-all duration-150 border-r border-[#ECECEC] dark:border-[#1c2936] z-50",
+          !isMobile && (isCollapsed ? "w-20" : "w-64"),
+          isMobile && "w-64",
+          // Mobile styles
+          isMobile && !isMobileMenuOpen && "-translate-x-full",
+          isMobile && "shadow-xl"
         )}
       >
         <div className='flex h-full flex-col'>
           <div
             className={cn(
               "flex h-[80px] items-center justify-between",
-              isCollapsed ? "px-5" : "px-6"
+              !isMobile && (isCollapsed ? "px-5" : "px-6"),
+              isMobile && "px-6"
             )}
           >
             <div className='flex-1 min-w-0'>
-              {!isCollapsed && (
+              {(!isCollapsed || isMobile) && (
                 <div className='h-8 relative'>
                   <Image
                     src={
@@ -231,18 +274,32 @@ export function StudySidebar() {
                 </div>
               )}
             </div>
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
-            >
-              {isCollapsed ? (
-                <Menu className='h-6 w-6' />
-              ) : (
-                <ChevronLeft className='h-6 w-6' />
-              )}
-            </Button>
+            {/* Only show collapse button on desktop */}
+            {!isMobile && (
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+              >
+                {isCollapsed ? (
+                  <Menu className='h-6 w-6' />
+                ) : (
+                  <ChevronLeft className='h-6 w-6' />
+                )}
+              </Button>
+            )}
+            {/* Show close button on mobile */}
+            {isMobile && (
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={() => setIsMobileMenuOpen(false)}
+                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+              >
+                <X className='h-6 w-6' />
+              </Button>
+            )}
           </div>
 
           <nav className='flex-1 space-y-3 px-4 mt-4'>
@@ -267,19 +324,19 @@ export function StudySidebar() {
                         ? "bg-[#ECECEC] dark:bg-[#1c2936] text-black dark:text-white"
                         : "text-gray-600 dark:text-gray-300 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]",
                       isLocked && "opacity-75",
-                      isCollapsed && "justify-center px-3 group"
+                      !isMobile && isCollapsed && "justify-center px-3 group"
                     )}
                   >
                     <ItemIcon
                       className={cn(
                         "shrink-0",
-                        isCollapsed ? "h-6 w-6" : "h-5 w-5"
+                        !isMobile && isCollapsed ? "h-6 w-6" : "h-5 w-5"
                       )}
                     />
-                    {!isCollapsed && (
+                    {(!isCollapsed || isMobile) && (
                       <span className='truncate'>{item.name}</span>
                     )}
-                    {isCollapsed && (
+                    {!isMobile && isCollapsed && (
                       <div className='absolute left-full ml-2 hidden group-hover:block'>
                         <div
                           className={cn(

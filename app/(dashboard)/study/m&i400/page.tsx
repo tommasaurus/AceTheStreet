@@ -33,7 +33,7 @@ const categories = [
 
 export default function M_and_I_Page() {
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl">
       <h1 className="text-3xl font-bold mb-2">M&I 400</h1>
       <p className="text-muted-foreground mb-8">
         The complete Mergers & Inquisitions 400 interview questions

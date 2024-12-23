@@ -3,5 +3,5 @@ export default function BanksLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return <div className="container mx-auto px-6">{children}</div>;
 }

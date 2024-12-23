@@ -338,9 +338,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  animation: spinFlip 6s linear infinite;
+  animation: floatAndSpin 12s ease-in-out infinite;
   transform-style: preserve-3d;
   transform-origin: center;
+  perspective: 1000px;
 }
 
 .matchIconCard {
@@ -353,44 +354,125 @@
   font-weight: bold;
   color: white;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(68, 97, 242, 0.2);
+  animation: cardPulse 3s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
-/* Position Q and A diagonally */
-.matchIconCard:nth-child(1),
-.matchIconCard:nth-child(4) {
-  content: "Q";
+/* Shimmering effect */
+.matchIconCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.8),
+    transparent 70%
+  );
+  opacity: 0;
+  animation: spotlight 4s ease-in-out infinite;
 }
 
-.matchIconCard:nth-child(2),
+.matchIconCard::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmerRotate 8s linear infinite;
+}
+
+/* Individual card animations with 3D transforms */
+.matchIconCard:nth-child(1) {
+  animation: cardPulse 3s ease-in-out infinite;
+  transform-origin: bottom right;
+}
+
+.matchIconCard:nth-child(2) {
+  animation: cardPulse 3s ease-in-out infinite 0.4s;
+  transform-origin: bottom left;
+}
+
 .matchIconCard:nth-child(3) {
-  content: "A";
+  animation: cardPulse 3s ease-in-out infinite 0.8s;
+  transform-origin: top right;
 }
 
-@keyframes spinFlip {
+.matchIconCard:nth-child(4) {
+  animation: cardPulse 3s ease-in-out infinite 1.2s;
+  transform-origin: top left;
+}
+
+@keyframes floatAndSpin {
   0% {
-    transform: rotateY(0deg) scale(1);
+    transform: translateY(0) rotateY(0deg) rotateX(10deg) scale(1);
+  }
+  25% {
+    transform: translateY(-15px) rotateY(90deg) rotateX(-10deg) scale(1.1);
   }
   50% {
-    transform: rotateY(180deg) scale(1.1);
+    transform: translateY(0) rotateY(180deg) rotateX(10deg) scale(1);
+  }
+  75% {
+    transform: translateY(15px) rotateY(270deg) rotateX(-10deg) scale(1.1);
   }
   100% {
-    transform: rotateY(360deg) scale(1);
+    transform: translateY(0) rotateY(360deg) rotateX(10deg) scale(1);
   }
 }
 
-/* Enhanced hover glow effect */
+@keyframes cardPulse {
+  0%,
+  100% {
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 0 20px rgba(68, 97, 242, 0.3);
+  }
+  50% {
+    transform: scale(1.05) translateZ(20px);
+    box-shadow: 0 0 40px rgba(68, 97, 242, 0.5), 0 0 60px rgba(68, 97, 242, 0.3);
+  }
+}
+
+@keyframes spotlight {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes shimmerRotate {
+  0% {
+    transform: rotate(0deg) scale(1.5);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.5);
+  }
+}
+
+/* Enhanced hover effects */
 .gameIcon:hover .matchIconCard {
-  box-shadow: 0 0 30px rgba(68, 97, 242, 0.4), 0 0 60px rgba(68, 97, 242, 0.2),
-    inset 0 0 20px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 40px rgba(68, 97, 242, 0.6), 0 0 80px rgba(68, 97, 242, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.5);
+  filter: brightness(1.2) contrast(1.1);
 }
 
 :global(.dark) .matchIconCard {
   background: linear-gradient(135deg, #4461f2, #60a5fa);
-  box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
+  box-shadow: 0 0 40px rgba(68, 97, 242, 0.4);
 }
 
 :global(.dark) .gameIcon:hover .matchIconCard {
-  box-shadow: 0 0 40px rgba(68, 97, 242, 0.5), 0 0 80px rgba(68, 97, 242, 0.3),
-    inset 0 0 25px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 50px rgba(68, 97, 242, 0.7), 0 0 100px rgba(68, 97, 242, 0.5),
+    inset 0 0 35px rgba(255, 255, 255, 0.6);
 }

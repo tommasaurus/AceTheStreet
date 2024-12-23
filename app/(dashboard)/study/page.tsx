@@ -1,58 +1,111 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, Building2, BookText } from "lucide-react";
+import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 
 const sections = [
   {
-    title: "Technical Problems",
-    description:
-      "Practice with real technical interview problems. Each problem comes with a detailed solution and explanation.",
-    href: "/study/problems",
-    count: "50+ Problems",
-  },
-  {
-    title: "Bank Questions",
-    description:
-      "Bank-specific interview questions from top investment banks. Organized by institution.",
-    href: "/study/banks",
-    count: "200+ Questions",
-  },
-  {
+    id: "m&i400",
     title: "M&I 400",
     description:
       "The complete Mergers & Inquisitions 400 interview questions with detailed answers.",
     href: "/study/m&i400",
     count: "400 Questions",
+    icon: BookText,
+  },
+  {
+    id: "banks",
+    title: "Bank Questions",
+    description:
+      "Bank-specific interview questions from top investment banks. Organized by institution.",
+    href: "/study/banks",
+    count: "200+ Questions",
+    icon: Building2,
+  },
+  {
+    id: "problems",
+    title: "Technical Problems",
+    description:
+      "Practice with real technical interview problems. Each problem comes with a detailed solution and explanation.",
+    href: "/study/problems",
+    count: "50+ Problems",
+    icon: TrendingUp,
   },
 ];
 
 export default function StudyPage() {
-  return (
-    <div className="max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2 text-black dark:text-white">
-        Study Materials
-      </h1>
-      <p className="text-black/60 dark:text-white/60 mb-8">
-        Choose a section below to start practicing.
-      </p>
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {sections.map((section) => (
-          <Link
-            key={section.href}
-            href={section.href}
-            className="block p-6 rounded-xl border border-black/5 hover:border-black/10 bg-white/50 hover:bg-white/80 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:hover:border-white/20 transition-colors"
-          >
-            <h2 className="text-xl font-semibold mb-2 text-black dark:text-white">
-              {section.title}
-            </h2>
-            <p className="text-sm text-black/60 dark:text-white/60 mb-4">
-              {section.description}
-            </p>
-            <div className="text-sm font-medium text-blue-500 dark:text-blue-400">
-              {section.count}
-            </div>
-          </Link>
-        ))}
+  return (
+    <div className='relative min-h-screen w-full'>
+      <div className='relative max-w-6xl mx-auto space-y-12 px-4 sm:px-6 pt-8'>
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className='space-y-4 text-center'
+        >
+          <h1 className='text-4xl sm:text-6xl font-bold text-black dark:text-white'>
+            Study Materials
+          </h1>
+          <p className='text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto'>
+            Ace your investment banking interviews with our comprehensive
+            question bank and practice problems.
+          </p>
+        </motion.div>
+
+        {/* Cards Grid */}
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3 py-8'>
+          {sections.map((section, index) => {
+            const Icon = section.icon;
+            return (
+              <motion.div
+                key={section.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.2 + index * 0.1,
+                }}
+              >
+                <Link href={section.href} className='block'>
+                  <Card className='relative h-[320px] rounded-3xl border-0 bg-[#ECECEC] dark:bg-[#1c2936] p-8'>
+                    <CardHeader className='p-0 h-full'>
+                      <div className='flex h-full flex-col justify-between'>
+                        <div className='space-y-6'>
+                          <div className='w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center'>
+                            <Icon className='w-6 h-6 text-black dark:text-white' />
+                          </div>
+                          <div className='space-y-3'>
+                            <CardTitle className='text-2xl font-medium text-black dark:text-white'>
+                              {section.title}
+                            </CardTitle>
+                            <p className='text-[15px] text-gray-600 dark:text-gray-300 leading-relaxed'>
+                              {section.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <Badge
+                          variant='secondary'
+                          className='w-fit text-sm py-1.5 px-4 rounded-full bg-[#E0E0E0] dark:bg-[#2a3744] text-gray-600 dark:text-gray-300'
+                        >
+                          {section.count}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

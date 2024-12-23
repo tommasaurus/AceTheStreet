@@ -41,20 +41,30 @@
 }
 
 .startGameButton {
-  background-color: #4461f2;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
+  height: 56px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #4461f2, #60a5fa);
   border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 0 32px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 24px;
-  transition: all 0.2s ease;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
 }
 
 .startGameButton:hover {
-  background-color: #3451d2;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(68, 97, 242, 0.3);
+}
+
+:global(.dark) .startGameButton {
+  color: white;
+}
+
+:global(.dark) .startGameButton:hover {
+  box-shadow: 0 4px 12px rgba(68, 97, 242, 0.5);
 }
 
 .matchGameGrid {

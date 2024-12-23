@@ -1,22 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { GraduationCap, CheckCircle2, XCircle, Timer } from "lucide-react";
 import styles from "./test.module.css";
-import { toast } from "sonner";
-
-interface TestSetupProps {
-  maxQuestions: number;
-  onStartTest: (settings: TestSettings) => void;
-}
 
 export interface TestSettings {
   questionCount: number;
-  timeLimit: number;
   questionTypes: {
     trueFalse: boolean;
     multipleChoice: boolean;
@@ -24,176 +16,116 @@ export interface TestSettings {
   };
 }
 
+interface TestSetupProps {
+  maxQuestions: number;
+  onStartTest: (settings: TestSettings) => void;
+}
+
 export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
   const [settings, setSettings] = useState<TestSettings>({
-    questionCount: 20,
-    timeLimit: 10,
+    questionCount: 10,
     questionTypes: {
-      trueFalse: false,
-      multipleChoice: false,
-      matching: false,
+      trueFalse: true,
+      multipleChoice: true,
+      matching: true,
     },
   });
-  const [error, setError] = useState<string | null>(null);
-
-  const handleAnimationEnd = () => {
-    setTimeout(() => {
-      setError(null);
-    }, 500);
-  };
-
-  const handleQuestionCountChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    setSettings({
-      ...settings,
-      questionCount:
-        value === "" ? 0 : Math.min(parseInt(value) || 0, maxQuestions),
-    });
-  };
-
-  const handleTimeLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const parsedValue = value === "" ? 0 : parseFloat(value);
-    // Format number to always show leading zero
-    const formattedValue = parsedValue === 0 ? "" : parsedValue.toString();
-    setSettings({
-      ...settings,
-      timeLimit: parsedValue,
-    });
-  };
 
   const handleStartTest = () => {
-    if (!Object.values(settings.questionTypes).some(Boolean)) {
-      setError("questionTypes");
-      toast.error("Please select at least one question type");
-      return;
-    }
-
-    if (settings.questionCount === 0) {
-      setError("questionCount");
-      toast.error("Please enter the number of questions");
-      return;
-    }
-
-    setError(null);
     onStartTest(settings);
   };
 
-  return (
-    <div className={styles.setupContainer}>
-      <h1 className={styles.setupTitle}>Set up your test</h1>
+  const handleCheckedChange = (
+    field: keyof TestSettings["questionTypes"],
+    checked: boolean | "indeterminate"
+  ) => {
+    setSettings({
+      ...settings,
+      questionTypes: {
+        ...settings.questionTypes,
+        [field]: checked === true,
+      },
+    });
+  };
 
-      <div className={styles.setupForm}>
-        <div
-          className={`${styles.formGroup} ${
-            error === "questionCount" ? styles.error : ""
-          }`}
-          onAnimationEnd={handleAnimationEnd}
-        >
-          <Label htmlFor="questionCount">Questions (max {maxQuestions})</Label>
+  return (
+    <div className={styles.testSetupContainer}>
+      <div className={styles.testIcon}>
+        <div className={styles.iconGrid}>
+          <div className={styles.iconCard}>
+            <CheckCircle2 className="w-8 h-8" />
+          </div>
+          <div className={styles.iconCard}>
+            <XCircle className="w-8 h-8" />
+          </div>
+          <div className={styles.iconCard}>
+            <Timer className="w-8 h-8" />
+          </div>
+          <div className={styles.iconCard}>
+            <GraduationCap className="w-8 h-8" />
+          </div>
+        </div>
+      </div>
+
+      <h1 className={styles.readyText}>Ready to test your knowledge?</h1>
+
+      <div className={styles.optionsContainer}>
+        <div className={styles.optionCard}>
+          <h3 className={styles.optionTitle}>Number of Questions</h3>
           <Input
-            id="questionCount"
             type="number"
             min={1}
             max={maxQuestions}
-            value={settings.questionCount || ""}
-            onChange={handleQuestionCountChange}
+            value={settings.questionCount}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                questionCount: parseInt(e.target.value) || 0,
+              })
+            }
+            className={styles.numberInput}
           />
+          <span className={styles.maxQuestions}>Maximum: {maxQuestions}</span>
         </div>
 
-        <div
-          className={`${styles.formGroup} ${
-            error === "timeLimit" ? styles.error : ""
-          }`}
-          onAnimationEnd={handleAnimationEnd}
-        >
-          <Label htmlFor="timeLimit">
-            Time limit (minutes, blank for no limit)
-          </Label>
-          <Input
-            id="timeLimit"
-            type="number"
-            min={0}
-            step="any"
-            value={settings.timeLimit || ""}
-            onChange={handleTimeLimitChange}
-            onBlur={(e) => {
-              // On blur, format decimal numbers to show leading zero
-              const value = e.target.value;
-              if (value.startsWith(".")) {
-                e.target.value = `0${value}`;
-                handleTimeLimitChange(e as any);
-              }
-            }}
-          />
-        </div>
-
-        <div
-          className={`${styles.questionTypes} ${
-            error === "questionTypes" ? styles.error : ""
-          }`}
-          onAnimationEnd={handleAnimationEnd}
-        >
-          <div className={styles.switchGroup}>
-            <Switch
-              id="trueFalse"
-              checked={settings.questionTypes.trueFalse}
-              onCheckedChange={(checked) =>
-                setSettings({
-                  ...settings,
-                  questionTypes: {
-                    ...settings.questionTypes,
-                    trueFalse: checked,
-                  },
-                })
-              }
-            />
-            <Label htmlFor="trueFalse">True/False</Label>
-          </div>
-
-          <div className={styles.switchGroup}>
-            <Switch
-              id="multipleChoice"
-              checked={settings.questionTypes.multipleChoice}
-              onCheckedChange={(checked) =>
-                setSettings({
-                  ...settings,
-                  questionTypes: {
-                    ...settings.questionTypes,
-                    multipleChoice: checked,
-                  },
-                })
-              }
-            />
-            <Label htmlFor="multipleChoice">Multiple choice</Label>
-          </div>
-
-          <div className={styles.switchGroup}>
-            <Switch
-              id="matching"
-              checked={settings.questionTypes.matching}
-              onCheckedChange={(checked) =>
-                setSettings({
-                  ...settings,
-                  questionTypes: {
-                    ...settings.questionTypes,
-                    matching: checked,
-                  },
-                })
-              }
-            />
-            <Label htmlFor="matching">Matching</Label>
+        <div className={styles.optionCard}>
+          <h3 className={styles.optionTitle}>Question Types</h3>
+          <div className={styles.checkboxGroup}>
+            <div className={styles.checkboxOption}>
+              <Checkbox
+                checked={settings.questionTypes.trueFalse}
+                onCheckedChange={(checked) =>
+                  handleCheckedChange("trueFalse", checked)
+                }
+                className={styles.checkbox}
+              />
+              <label className={styles.checkboxLabel}>True/False</label>
+            </div>
+            <div className={styles.checkboxOption}>
+              <Checkbox
+                checked={settings.questionTypes.multipleChoice}
+                onCheckedChange={(checked) =>
+                  handleCheckedChange("multipleChoice", checked)
+                }
+                className={styles.checkbox}
+              />
+              <label className={styles.checkboxLabel}>Multiple Choice</label>
+            </div>
+            <div className={styles.checkboxOption}>
+              <Checkbox
+                checked={settings.questionTypes.matching}
+                onCheckedChange={(checked) =>
+                  handleCheckedChange("matching", checked)
+                }
+                className={styles.checkbox}
+              />
+              <label className={styles.checkboxLabel}>Matching</label>
+            </div>
           </div>
         </div>
 
-        <Button
-          className={styles.startButton}
-          onClick={handleStartTest}
-          size="lg"
-        >
-          Start test
+        <Button onClick={handleStartTest} className={styles.startTestButton}>
+          Start Test
         </Button>
       </div>
     </div>

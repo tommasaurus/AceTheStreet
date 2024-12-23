@@ -25,10 +25,30 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
     <div className={styles.matchGameIntro}>
       <div className={styles.gameIcon}>
         <div className={styles.matchIconGrid}>
-          <div className={styles.matchIconCard}>Q</div>
-          <div className={styles.matchIconCard}>A</div>
-          <div className={styles.matchIconCard}>A</div>
-          <div className={styles.matchIconCard}>Q</div>
+          <div className={styles.matchIconCard} data-letter="Q">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className={styles.matchIconCard} data-letter="A">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className={styles.matchIconCard} data-letter="A">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className={styles.matchIconCard} data-letter="Q">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
       <div className={styles.introText}>

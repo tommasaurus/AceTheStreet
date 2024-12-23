@@ -345,47 +345,90 @@
 }
 
 .matchIconCard {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: cardPulse 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+/* Front face */
+.matchIconCard::before {
+  content: attr(data-letter);
+  position: absolute;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(135deg, #4461f2, #60a5fa);
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
   color: white;
-  transition: all 0.3s ease;
-  animation: cardPulse 3s ease-in-out infinite;
+  backface-visibility: hidden;
+  transform: translateZ(15px);
   box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(5px);
 }
 
-/* Shimmering effect */
-.matchIconCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.8),
-    transparent 70%
-  );
-  opacity: 0;
-  animation: spotlight 4s ease-in-out infinite;
-}
-
+/* Back face */
 .matchIconCard::after {
-  content: "";
+  content: attr(data-letter);
   position: absolute;
-  inset: -50%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  animation: shimmerRotate 8s linear infinite;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4461f2, #60a5fa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  backface-visibility: hidden;
+  transform: translateZ(-15px) rotateY(180deg);
+  box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
+}
+
+/* Side faces */
+.matchIconCard span {
+  position: absolute;
+  background: linear-gradient(135deg, #4461f2, #60a5fa);
+  backface-visibility: hidden;
+  box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
+}
+
+/* Right face */
+.matchIconCard span:nth-child(1) {
+  width: 30px;
+  height: 100%;
+  right: -15px;
+  top: 0;
+  transform: rotateY(90deg);
+}
+
+/* Left face */
+.matchIconCard span:nth-child(2) {
+  width: 30px;
+  height: 100%;
+  left: -15px;
+  top: 0;
+  transform: rotateY(-90deg);
+}
+
+/* Top face */
+.matchIconCard span:nth-child(3) {
+  width: 100%;
+  height: 30px;
+  top: -15px;
+  left: 0;
+  transform: rotateX(90deg);
+}
+
+/* Bottom face */
+.matchIconCard span:nth-child(4) {
+  width: 100%;
+  height: 30px;
+  bottom: -15px;
+  left: 0;
+  transform: rotateX(-90deg);
 }
 
 /* Individual card animations with 3D transforms */
@@ -431,11 +474,9 @@
   0%,
   100% {
     transform: scale(1) translateZ(0);
-    box-shadow: 0 0 20px rgba(68, 97, 242, 0.3);
   }
   50% {
     transform: scale(1.05) translateZ(20px);
-    box-shadow: 0 0 40px rgba(68, 97, 242, 0.5), 0 0 60px rgba(68, 97, 242, 0.3);
   }
 }
 
@@ -461,18 +502,22 @@
 }
 
 /* Enhanced hover effects */
-.gameIcon:hover .matchIconCard {
-  box-shadow: 0 0 40px rgba(68, 97, 242, 0.6), 0 0 80px rgba(68, 97, 242, 0.4),
-    inset 0 0 30px rgba(255, 255, 255, 0.5);
+.gameIcon:hover .matchIconCard::before,
+.gameIcon:hover .matchIconCard::after,
+.gameIcon:hover .matchIconCard span {
+  box-shadow: 0 0 50px rgba(68, 97, 242, 0.6);
   filter: brightness(1.2) contrast(1.1);
 }
 
-:global(.dark) .matchIconCard {
-  background: linear-gradient(135deg, #4461f2, #60a5fa);
+:global(.dark) .matchIconCard::before,
+:global(.dark) .matchIconCard::after,
+:global(.dark) .matchIconCard span {
   box-shadow: 0 0 40px rgba(68, 97, 242, 0.4);
 }
 
-:global(.dark) .gameIcon:hover .matchIconCard {
-  box-shadow: 0 0 50px rgba(68, 97, 242, 0.7), 0 0 100px rgba(68, 97, 242, 0.5),
-    inset 0 0 35px rgba(255, 255, 255, 0.6);
+:global(.dark) .gameIcon:hover .matchIconCard::before,
+:global(.dark) .gameIcon:hover .matchIconCard::after,
+:global(.dark) .gameIcon:hover .matchIconCard span {
+  box-shadow: 0 0 70px rgba(68, 97, 242, 0.7);
+  filter: brightness(1.2) contrast(1.1);
 }

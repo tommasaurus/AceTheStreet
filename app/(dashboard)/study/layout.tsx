@@ -78,7 +78,7 @@ export default function StudyLayout({
 
       {/* Main Content */}
       <div>
-        <div className="container mx-auto px-6 pl-[64px]">
+        <div className="container mx-auto px-6 pl-[64px] pt-4">
           {shouldHideNav ? (
             children
           ) : (

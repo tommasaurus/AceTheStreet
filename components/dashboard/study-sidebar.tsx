@@ -54,7 +54,7 @@ export function StudySidebar() {
   const [mounted, setMounted] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState("free");
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -221,12 +221,12 @@ export function StudySidebar() {
       {isMobile && (
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className='fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]'
+          className="fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]"
         >
           {isMobileMenuOpen ? (
-            <X className='h-6 w-6' />
+            <X className="h-6 w-6" />
           ) : (
-            <Menu className='h-6 w-6' />
+            <Menu className="h-6 w-6" />
           )}
         </button>
       )}
@@ -234,7 +234,7 @@ export function StudySidebar() {
       {/* Mobile Overlay */}
       {isMobile && isMobileMenuOpen && (
         <div
-          className='fixed inset-0 bg-black/50 z-40'
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -249,7 +249,7 @@ export function StudySidebar() {
           isMobile && "shadow-xl"
         )}
       >
-        <div className='flex h-full flex-col'>
+        <div className="flex h-full flex-col">
           <div
             className={cn(
               "flex h-[80px] items-center justify-between",
@@ -257,19 +257,19 @@ export function StudySidebar() {
               isMobile && "px-6"
             )}
           >
-            <div className='flex-1 min-w-0'>
+            <div className="flex-1 min-w-0">
               {(!isCollapsed || isMobile) && (
-                <div className='h-8 relative'>
+                <div className="h-8 relative">
                   <Image
                     src={
                       currentTheme === "dark"
                         ? "/images/logoLight.png"
                         : "/images/logoDark.png"
                     }
-                    alt='Logo'
+                    alt="Logo"
                     width={150}
                     height={32}
-                    className='object-contain'
+                    className="object-contain"
                   />
                 </div>
               )}
@@ -277,42 +277,42 @@ export function StudySidebar() {
             {/* Only show collapse button on desktop */}
             {!isMobile && (
               <Button
-                variant='ghost'
-                size='icon'
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
               >
                 {isCollapsed ? (
-                  <Menu className='h-6 w-6' />
+                  <Menu className="h-6 w-6" />
                 ) : (
-                  <ChevronLeft className='h-6 w-6' />
+                  <ChevronLeft className="h-6 w-6" />
                 )}
               </Button>
             )}
             {/* Show close button on mobile */}
             {isMobile && (
               <Button
-                variant='ghost'
-                size='icon'
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
               >
-                <X className='h-6 w-6' />
+                <X className="h-6 w-6" />
               </Button>
             )}
           </div>
 
-          <nav className='flex-1 space-y-3 px-4 mt-4'>
+          <nav className="flex-1 space-y-3 px-4 mt-4">
             {navigationItems.map((item) => {
               const isLocked = item.requiresSubscription && !hasSubscription;
               const ItemIcon = item.icon;
 
               return (
-                <div key={item.href} className='relative'>
+                <div key={item.href} className="relative">
                   {isLocked && (
-                    <Link href='/pricing' className='absolute inset-0 z-10'>
-                      <div className='absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group'>
-                        <Lock className='h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors' />
+                    <Link href="/pricing" className="absolute inset-0 z-10">
+                      <div className="absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group">
+                        <Lock className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                     </Link>
                   )}
@@ -334,10 +334,10 @@ export function StudySidebar() {
                       )}
                     />
                     {(!isCollapsed || isMobile) && (
-                      <span className='truncate'>{item.name}</span>
+                      <span className="truncate">{item.name}</span>
                     )}
                     {!isMobile && isCollapsed && (
-                      <div className='absolute left-full ml-2 hidden group-hover:block'>
+                      <div className="absolute left-full ml-2 hidden group-hover:block">
                         <div
                           className={cn(
                             "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -356,7 +356,7 @@ export function StudySidebar() {
             })}
           </nav>
 
-          <div className='px-2 pb-2 mt-auto relative'>
+          <div className="px-2 pb-2 mt-auto relative">
             {mounted && (
               <div
                 className={cn(
@@ -379,13 +379,13 @@ export function StudySidebar() {
                       "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                     )}
                   >
-                    <span className='text-sm font-medium text-white'>
+                    <span className="text-sm font-medium text-white">
                       {getInitials()}
                     </span>
                   </div>
                   {!isCollapsed && (
-                    <div className='flex-1 min-w-0'>
-                      <p className='text-sm font-medium leading-none mb-1 truncate text-black dark:text-white'>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium leading-none mb-1 truncate text-black dark:text-white">
                         {hasSubscription
                           ? `${
                               subscriptionStatus.charAt(0).toUpperCase() +
@@ -393,13 +393,13 @@ export function StudySidebar() {
                             } plan`
                           : "Free plan"}
                       </p>
-                      <p className='text-sm text-gray-600 dark:text-gray-300 truncate'>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
                         {profile?.email}
                       </p>
                     </div>
                   )}
                   {isCollapsed && (
-                    <div className='absolute left-full ml-2 hidden group-hover:block'>
+                    <div className="absolute left-full ml-2 hidden group-hover:block">
                       <div
                         className={cn(
                           "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -426,9 +426,9 @@ export function StudySidebar() {
               mounted &&
               showProfileMenu &&
               createPortal(
-                <div className='fixed inset-0 z-[999999] pointer-events-none'>
+                <div className="fixed inset-0 z-[999999] pointer-events-none">
                   <div
-                    className='absolute inset-0 pointer-events-auto'
+                    className="absolute inset-0 pointer-events-auto"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     <motion.div
@@ -447,19 +447,19 @@ export function StudySidebar() {
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className='flex flex-col'>
-                        <div className='px-4 py-2.5 text-base text-gray-600 dark:text-white/70'>
+                      <div className="flex flex-col">
+                        <div className="px-4 py-2.5 text-base text-gray-600 dark:text-white/70">
                           {profile?.email}
                         </div>
-                        <div className='px-4 pb-2.5 flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
+                        <div className="px-4 pb-2.5 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
                             <div
                               className={cn(
                                 "h-[30px] w-[30px] rounded-full flex items-center justify-center font-medium",
                                 "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                               )}
                             >
-                              <span className='text-sm font-medium text-white'>
+                              <span className="text-sm font-medium text-white">
                                 {getInitials()}
                               </span>
                             </div>
@@ -493,7 +493,7 @@ export function StudySidebar() {
                               </div>
                             </div>
                           </div>
-                          <Check className='h-5 w-5 text-green-400' />
+                          <Check className="h-5 w-5 text-green-400" />
                         </div>
 
                         <div
@@ -505,11 +505,11 @@ export function StudySidebar() {
                           )}
                         />
 
-                        <div className='px-4 py-2.5'>
-                          <div className='text-sm text-gray-600 dark:text-white/70 mb-2'>
+                        <div className="px-4 py-2.5">
+                          <div className="text-sm text-gray-600 dark:text-white/70 mb-2">
                             Theme
                           </div>
-                          <div className='flex gap-2'>
+                          <div className="flex gap-2">
                             <button
                               onClick={() => {
                                 setTheme("system");
@@ -582,7 +582,7 @@ export function StudySidebar() {
                           )}
                           onClick={handleSettingsClick}
                         >
-                          <Settings className='h-[18px] w-[18px]' />
+                          <Settings className="h-[18px] w-[18px]" />
                           Settings
                         </button>
 
@@ -604,7 +604,7 @@ export function StudySidebar() {
                               : "hover:bg-black/[0.06]"
                           )}
                         >
-                          <LogOut className='h-[18px] w-[18px] text-red-400' />
+                          <LogOut className="h-[18px] w-[18px] text-red-400" />
                           Log out
                         </button>
                       </div>

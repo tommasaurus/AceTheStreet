@@ -207,18 +207,87 @@ export function FlashcardsContent({
 
   if (remainingCards.length === 0) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <div className="max-w-md w-full space-y-6 text-center">
-          <h2 className="text-2xl font-bold text-foreground">
-            Congratulations! 🎉
-          </h2>
-          <p className="text-muted-foreground">
-            You've completed all the flashcards.
-          </p>
-          <Button onClick={handleReset} className="w-full">
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Start Over
-          </Button>
+      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div className="space-y-4 animate-fade-in">
+            <div className="relative inline-block">
+              <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%">
+                Congratulations! 🎉
+              </h2>
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse" />
+            </div>
+
+            <p className="text-lg text-muted-foreground animate-fade-in-slow">
+              You've completed all the flashcards
+            </p>
+
+            <div
+              className="pt-6 flex flex-col gap-4 animate-fade-in"
+              style={{ animationDelay: "0.4s" }}
+            >
+              {/* Start Over Button */}
+              <Button
+                onClick={handleReset}
+                className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+              >
+                {/* Background gradient base */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#4461F2] to-[#A855F7] opacity-100" />
+
+                {/* Glowing effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#4461F2]/40 to-[#FF1CF7]/40 blur-md group-hover:opacity-75 transition-opacity" />
+
+                {/* Content container */}
+                <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
+                  {/* Icon */}
+                  <span className="mr-3 animate-spin-slow">
+                    <RotateCcw className="h-5 w-5 text-[#4461F2]" />
+                  </span>
+
+                  {/* Text */}
+                  <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#4461F2] to-[#A855F7]">
+                    Start Over
+                  </span>
+                </div>
+
+                {/* Gradient borders */}
+                <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#4461F2] via-transparent to-[#A855F7]" />
+                <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#4461F2] via-transparent to-[#A855F7]" />
+              </Button>
+
+              {/* Back to Menu Button */}
+              <Button
+                asChild
+                className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+              >
+                <Link
+                  href={category === "banks" ? "/study/banks" : "/study/m&i400"}
+                >
+                  {/* Background gradient base */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#A855F7] to-[#4461F2] opacity-100" />
+
+                  {/* Glowing effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#A855F7]/40 to-[#4461F2]/40 blur-md group-hover:opacity-75 transition-opacity" />
+
+                  {/* Content container */}
+                  <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
+                    {/* Icon */}
+                    <span className="mr-3">
+                      <ChevronLeft className="h-5 w-5 text-[#A855F7]" />
+                    </span>
+
+                    {/* Text */}
+                    <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#A855F7] to-[#4461F2]">
+                      Back to Menu
+                    </span>
+                  </div>
+
+                  {/* Gradient borders */}
+                  <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#FF1CF7] via-transparent to-[#4461F2]" />
+                  <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#FF1CF7] via-transparent to-[#4461F2]" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -78,7 +78,7 @@ export default function StudyLayout({
 
       {/* Main Content */}
       <div>
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-6 pl-[64px]">
           {shouldHideNav ? (
             children
           ) : (
@@ -111,8 +111,10 @@ export default function StudyLayout({
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="flashcards">{children}</TabsContent>
-              <TabsContent value="test">
+              <TabsContent value="flashcards" className="mt-6">
+                {children}
+              </TabsContent>
+              <TabsContent value="test" className="mt-6">
                 {isTestMode && testSettings ? (
                   <TestInterface
                     settings={testSettings}

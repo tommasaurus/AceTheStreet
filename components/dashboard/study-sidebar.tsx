@@ -61,6 +61,7 @@ export function StudySidebar() {
   const supabase = createClientComponentClient();
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
 
   // Handle initial theme mounting
   useEffect(() => {
@@ -182,10 +183,10 @@ export function StudySidebar() {
 
   const navigationItems = [
     {
-      name: "Practice Problems",
-      href: "/study/problems",
-      icon: BookOpen,
-      requiresSubscription: true,
+      name: "M&I 400",
+      href: "/study/m&i400",
+      icon: GraduationCap,
+      requiresSubscription: false,
     },
     {
       name: "Banks",
@@ -194,10 +195,10 @@ export function StudySidebar() {
       requiresSubscription: true,
     },
     {
-      name: "M&I 400",
-      href: "/study/m&i400",
-      icon: GraduationCap,
-      requiresSubscription: false,
+      name: "Practice Problems",
+      href: "/study/problems",
+      icon: BookOpen,
+      requiresSubscription: true,
     },
   ];
 
@@ -221,12 +222,12 @@ export function StudySidebar() {
       {isMobile && (
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]"
+          className='fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]'
         >
           {isMobileMenuOpen ? (
-            <X className="h-6 w-6" />
+            <X className='h-6 w-6' />
           ) : (
-            <Menu className="h-6 w-6" />
+            <Menu className='h-6 w-6' />
           )}
         </button>
       )}
@@ -234,7 +235,7 @@ export function StudySidebar() {
       {/* Mobile Overlay */}
       {isMobile && isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40"
+          className='fixed inset-0 bg-black/50 z-40'
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -249,7 +250,7 @@ export function StudySidebar() {
           isMobile && "shadow-xl"
         )}
       >
-        <div className="flex h-full flex-col">
+        <div className='flex h-full flex-col'>
           <div
             className={cn(
               "flex h-[80px] items-center justify-between",
@@ -257,19 +258,19 @@ export function StudySidebar() {
               isMobile && "px-6"
             )}
           >
-            <div className="flex-1 min-w-0">
+            <div className='flex-1 min-w-0'>
               {(!isCollapsed || isMobile) && (
-                <div className="h-8 relative">
+                <div className='h-8 relative'>
                   <Image
                     src={
                       currentTheme === "dark"
                         ? "/images/logoLight.png"
                         : "/images/logoDark.png"
                     }
-                    alt="Logo"
+                    alt='Logo'
                     width={150}
                     height={32}
-                    className="object-contain"
+                    className='object-contain'
                   />
                 </div>
               )}
@@ -277,42 +278,42 @@ export function StudySidebar() {
             {/* Only show collapse button on desktop */}
             {!isMobile && (
               <Button
-                variant="ghost"
-                size="icon"
+                variant='ghost'
+                size='icon'
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
+                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
               >
                 {isCollapsed ? (
-                  <Menu className="h-6 w-6" />
+                  <Menu className='h-6 w-6' />
                 ) : (
-                  <ChevronLeft className="h-6 w-6" />
+                  <ChevronLeft className='h-6 w-6' />
                 )}
               </Button>
             )}
             {/* Show close button on mobile */}
             {isMobile && (
               <Button
-                variant="ghost"
-                size="icon"
+                variant='ghost'
+                size='icon'
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
+                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
               >
-                <X className="h-6 w-6" />
+                <X className='h-6 w-6' />
               </Button>
             )}
           </div>
 
-          <nav className="flex-1 space-y-3 px-4 mt-4">
+          <nav className='flex-1 space-y-3 px-4 mt-4'>
             {navigationItems.map((item) => {
               const isLocked = item.requiresSubscription && !hasSubscription;
               const ItemIcon = item.icon;
 
               return (
-                <div key={item.href} className="relative">
+                <div key={item.href} className='relative'>
                   {isLocked && (
-                    <Link href="/pricing" className="absolute inset-0 z-10">
-                      <div className="absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group">
-                        <Lock className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <Link href='/pricing' className='absolute inset-0 z-10'>
+                      <div className='absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group'>
+                        <Lock className='h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors' />
                       </div>
                     </Link>
                   )}
@@ -334,10 +335,10 @@ export function StudySidebar() {
                       )}
                     />
                     {(!isCollapsed || isMobile) && (
-                      <span className="truncate">{item.name}</span>
+                      <span className='truncate'>{item.name}</span>
                     )}
                     {!isMobile && isCollapsed && (
-                      <div className="absolute left-full ml-2 hidden group-hover:block">
+                      <div className='absolute left-full ml-2 hidden group-hover:block'>
                         <div
                           className={cn(
                             "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -356,7 +357,7 @@ export function StudySidebar() {
             })}
           </nav>
 
-          <div className="px-2 pb-2 mt-auto relative">
+          <div className='px-2 pb-2 mt-auto relative'>
             {mounted && (
               <div
                 className={cn(
@@ -379,13 +380,13 @@ export function StudySidebar() {
                       "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                     )}
                   >
-                    <span className="text-sm font-medium text-white">
+                    <span className='text-sm font-medium text-white'>
                       {getInitials()}
                     </span>
                   </div>
                   {!isCollapsed && (
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium leading-none mb-1 truncate text-black dark:text-white">
+                    <div className='flex-1 min-w-0'>
+                      <p className='text-sm font-medium leading-none mb-1 truncate text-black dark:text-white'>
                         {hasSubscription
                           ? `${
                               subscriptionStatus.charAt(0).toUpperCase() +
@@ -393,13 +394,13 @@ export function StudySidebar() {
                             } plan`
                           : "Free plan"}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                      <p className='text-sm text-gray-600 dark:text-gray-300 truncate'>
                         {profile?.email}
                       </p>
                     </div>
                   )}
                   {isCollapsed && (
-                    <div className="absolute left-full ml-2 hidden group-hover:block">
+                    <div className='absolute left-full ml-2 hidden group-hover:block'>
                       <div
                         className={cn(
                           "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -426,9 +427,9 @@ export function StudySidebar() {
               mounted &&
               showProfileMenu &&
               createPortal(
-                <div className="fixed inset-0 z-[999999] pointer-events-none">
+                <div className='fixed inset-0 z-[999999] pointer-events-none'>
                   <div
-                    className="absolute inset-0 pointer-events-auto"
+                    className='absolute inset-0 pointer-events-auto'
                     onClick={() => setShowProfileMenu(false)}
                   >
                     <motion.div
@@ -447,19 +448,19 @@ export function StudySidebar() {
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="flex flex-col">
-                        <div className="px-4 py-2.5 text-base text-gray-600 dark:text-white/70">
+                      <div className='flex flex-col'>
+                        <div className='px-4 py-2.5 text-base text-gray-600 dark:text-white/70'>
                           {profile?.email}
                         </div>
-                        <div className="px-4 pb-2.5 flex items-center justify-between">
-                          <div className="flex items-center gap-3">
+                        <div className='px-4 pb-2.5 flex items-center justify-between'>
+                          <div className='flex items-center gap-3'>
                             <div
                               className={cn(
                                 "h-[30px] w-[30px] rounded-full flex items-center justify-center font-medium",
                                 "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                               )}
                             >
-                              <span className="text-sm font-medium text-white">
+                              <span className='text-sm font-medium text-white'>
                                 {getInitials()}
                               </span>
                             </div>
@@ -493,85 +494,129 @@ export function StudySidebar() {
                               </div>
                             </div>
                           </div>
-                          <Check className="h-5 w-5 text-green-400" />
+                          <Check className='h-5 w-5 text-green-400' />
                         </div>
 
                         <div
-                          className={cn(
-                            "h-[1px] my-1",
-                            currentTheme === "dark"
-                              ? "bg-white/[0.08]"
-                              : "bg-gray-200"
-                          )}
-                        />
-
-                        <div className="px-4 py-2.5">
-                          <div className="text-sm text-gray-600 dark:text-white/70 mb-2">
-                            Theme
+                          className='px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white/[0.06] group relative'
+                          onMouseEnter={() => setShowThemeMenu(true)}
+                          onMouseLeave={(e) => {
+                            // Check if we're not hovering over the popup
+                            const popup =
+                              document.getElementById("theme-popup");
+                            if (!popup?.contains(e.relatedTarget as Node)) {
+                              setShowThemeMenu(false);
+                            }
+                          }}
+                        >
+                          <div className='flex items-center gap-3'>
+                            <Palette className='h-[18px] w-[18px]' />
+                            <span
+                              className={cn(
+                                "text-base",
+                                currentTheme === "dark"
+                                  ? "text-white"
+                                  : "text-black"
+                              )}
+                            >
+                              Appearance
+                            </span>
                           </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => {
-                                setTheme("system");
-                              }}
-                              className={cn(
-                                "flex-1 px-3 py-1.5 text-sm rounded-md transition-colors",
-                                theme === "system"
-                                  ? currentTheme === "dark"
-                                    ? "bg-[#151e2a] text-white"
-                                    : "bg-white text-black"
-                                  : currentTheme === "dark"
-                                  ? "text-white/70"
-                                  : "text-black/70"
-                              )}
-                            >
-                              System
-                            </button>
-                            <button
-                              onClick={() => {
-                                setTheme("light");
-                              }}
-                              className={cn(
-                                "flex-1 px-3 py-1.5 text-sm rounded-md transition-colors",
-                                theme === "light"
-                                  ? currentTheme === "dark"
-                                    ? "bg-[#151e2a] text-white"
-                                    : "bg-[#ECECEC] text-black"
-                                  : currentTheme === "dark"
-                                  ? "text-white/70"
-                                  : "text-black/70"
-                              )}
-                            >
-                              Light
-                            </button>
-                            <button
-                              onClick={() => {
-                                setTheme("dark");
-                              }}
-                              className={cn(
-                                "flex-1 px-3 py-1.5 text-sm rounded-md transition-colors",
-                                theme === "dark"
-                                  ? currentTheme === "dark"
-                                    ? "bg-[#151e2a] text-white"
-                                    : "bg-white text-black"
-                                  : currentTheme === "dark"
-                                  ? "text-white/70"
-                                  : "text-black/70"
-                              )}
-                            >
-                              Dark
-                            </button>
-                          </div>
+                          <ChevronRight className='h-4 w-4 text-gray-500' />
                         </div>
 
-                        <div
-                          className={cn(
-                            "h-[1px] my-1",
-                            currentTheme === "dark"
-                              ? "bg-white/[0.08]"
-                              : "bg-gray-200"
+                        {showThemeMenu &&
+                          createPortal(
+                            <div
+                              id='theme-popup'
+                              className='fixed inset-0 z-[9999999]'
+                              onClick={(e) => {
+                                if (e.target === e.currentTarget) {
+                                  setShowThemeMenu(false);
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                // Check if we're not hovering over the Appearance button
+                                const button = e.relatedTarget as Element;
+                                if (!button?.closest(".group")) {
+                                  setShowThemeMenu(false);
+                                }
+                              }}
+                            >
+                              <motion.div
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                                className={cn(
+                                  "absolute rounded-xl shadow-xl overflow-hidden w-[120px]",
+                                  "left-[300px]",
+                                  "bottom-[155px]",
+                                  currentTheme === "dark"
+                                    ? "bg-[#1c2936]"
+                                    : "bg-white"
+                                )}
+                                style={{
+                                  boxShadow:
+                                    "0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 16px rgba(0, 0, 0, 0.4)",
+                                }}
+                              >
+                                <div className='flex flex-col'>
+                                  <button
+                                    onClick={() => {
+                                      setTheme("system");
+                                      setShowThemeMenu(false);
+                                    }}
+                                    className={cn(
+                                      "w-full px-3 py-2 text-base flex items-center justify-between",
+                                      currentTheme === "dark"
+                                        ? "text-white hover:bg-white/[0.06]"
+                                        : "text-black hover:bg-black/[0.06]"
+                                    )}
+                                  >
+                                    <span>System</span>
+                                    {theme === "system" && (
+                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                    )}
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setTheme("light");
+                                      setShowThemeMenu(false);
+                                    }}
+                                    className={cn(
+                                      "w-full px-3 py-2 text-base flex items-center justify-between",
+                                      currentTheme === "dark"
+                                        ? "text-white hover:bg-white/[0.06]"
+                                        : "text-black hover:bg-black/[0.06]"
+                                    )}
+                                  >
+                                    <span>Light</span>
+                                    {theme === "light" && (
+                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                    )}
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setTheme("dark");
+                                      setShowThemeMenu(false);
+                                    }}
+                                    className={cn(
+                                      "w-full px-3 py-2 text-base flex items-center justify-between",
+                                      currentTheme === "dark"
+                                        ? "text-white hover:bg-white/[0.06]"
+                                        : "text-black hover:bg-black/[0.06]"
+                                    )}
+                                  >
+                                    <span>Dark</span>
+                                    {theme === "dark" && (
+                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                    )}
+                                  </button>
+                                </div>
+                              </motion.div>
+                            </div>,
+                            document.body
                           )}
-                        />
 
                         <button
                           className={cn(
@@ -582,7 +627,7 @@ export function StudySidebar() {
                           )}
                           onClick={handleSettingsClick}
                         >
-                          <Settings className="h-[18px] w-[18px]" />
+                          <Settings className='h-[18px] w-[18px]' />
                           Settings
                         </button>
 
@@ -604,7 +649,7 @@ export function StudySidebar() {
                               : "hover:bg-black/[0.06]"
                           )}
                         >
-                          <LogOut className="h-[18px] w-[18px] text-red-400" />
+                          <LogOut className='h-[18px] w-[18px] text-red-400' />
                           Log out
                         </button>
                       </div>

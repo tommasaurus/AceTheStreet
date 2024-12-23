@@ -21,10 +21,24 @@ interface MatchGameProps {
 }
 
 const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Delay animations until after initial render
+    const timer = requestAnimationFrame(() => {
+      setIsLoaded(true);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, []);
+
   return (
     <div className={styles.matchGameIntro}>
       <div className={styles.gameIcon}>
-        <div className={styles.matchIconGrid}>
+        <div
+          className={`${styles.matchIconGrid} ${
+            isLoaded ? styles.animate : ""
+          }`}
+        >
           <div className={styles.matchIconCard} data-letter="Q">
             <span></span>
             <span></span>

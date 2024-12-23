@@ -342,6 +342,26 @@
   transform-style: preserve-3d;
   transform-origin: center;
   perspective: 1000px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.matchIconGrid.animate {
+  opacity: 1;
+  transform: translateY(0);
+  animation: floatAndSpin 12s ease-in-out infinite;
+}
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  .matchIconGrid.animate {
+    animation-duration: 20s; /* Slower animation */
+  }
+
+  .matchIconCard {
+    transition-duration: 0.5s;
+  }
 }
 
 .matchIconCard {
@@ -520,4 +540,28 @@
 :global(.dark) .gameIcon:hover .matchIconCard span {
   box-shadow: 0 0 70px rgba(68, 97, 242, 0.7);
   filter: brightness(1.2) contrast(1.1);
+}
+
+/* Add hardware acceleration hints */
+.matchIconGrid,
+.iconGrid {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  perspective: 1000px;
+}
+
+/* Optimize box-shadows by using fewer layers */
+.matchIconCard::before,
+.matchIconCard::after,
+.matchIconCard span {
+  box-shadow: 0 0 30px rgba(68, 97, 242, 0.3);
+  will-change: transform, box-shadow;
+}
+
+/* More efficient glow effect using a single box-shadow */
+.gameIcon:hover .matchIconCard::before,
+.gameIcon:hover .matchIconCard::after,
+.gameIcon:hover .matchIconCard span {
+  box-shadow: 0 0 50px rgba(68, 97, 242, 0.5);
 }

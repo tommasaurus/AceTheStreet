@@ -42,6 +42,11 @@ export default function StudyLayout({
       return;
     }
 
+    if (settings.timeLimit < 1 || settings.timeLimit > 120) {
+      toast.error("Please enter a valid time limit between 1 and 120 minutes");
+      return;
+    }
+
     setTestSettings(settings);
     setIsTestMode(true);
   };

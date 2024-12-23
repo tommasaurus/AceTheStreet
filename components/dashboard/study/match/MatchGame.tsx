@@ -24,20 +24,20 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
   return (
     <div className={styles.matchGameIntro}>
       <div className={styles.gameIcon}>
-        <div className={styles.iconGrid}>
-          <div className={styles.iconCard}>Q</div>
-          <div className={styles.iconCard}>A</div>
-          <div className={styles.iconCard}>A</div>
-          <div className={styles.iconCard}>Q</div>
+        <div className={styles.matchIconGrid}>
+          <div className={styles.matchIconCard}>Q</div>
+          <div className={styles.matchIconCard}>A</div>
+          <div className={styles.matchIconCard}>A</div>
+          <div className={styles.matchIconCard}>Q</div>
         </div>
       </div>
       <div className={styles.introText}>
+        <h1 className={styles.readyText}>Ready to play?</h1>
         <p className={styles.gameDescription}>
           Match all the terms with their definitions
           <br />
           as fast as you can. Avoid wrong matches, they add extra time!
         </p>
-        <h2 className={styles.readyText}>Ready to play?</h2>
       </div>
       <button className={styles.startGameButton} onClick={onStartGame}>
         Start game

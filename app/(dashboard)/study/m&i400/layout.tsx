@@ -1,4 +1,4 @@
-export default function BanksLayout({
+export default function M_and_I_Layout({
   children,
 }: {
   children: React.ReactNode;

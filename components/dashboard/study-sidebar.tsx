@@ -63,26 +63,24 @@ export function StudySidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
 
-  // Handle initial theme mounting
+  // Get the actual theme - Move this before any conditional returns
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Get the actual theme
-  const currentTheme = !mounted
-    ? "dark"
-    : theme === "system"
-    ? systemTheme
-    : theme;
-
+  // Move all data fetching into a single useEffect
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!mounted) return;
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (session) {
-        // Fetch subscription status - check for active status and not expired
+        // Fetch subscription status
         const { data: subscription } = await supabase
           .from("subscriptions")
           .select("*")
@@ -90,19 +88,14 @@ export function StudySidebar() {
           .eq("status", "active")
           .single();
 
-        // Only set hasSubscription to true if subscription is active and not expired
         const isActive =
           !!subscription &&
           subscription.current_period_end > new Date().toISOString();
 
         setHasSubscription(isActive);
-
-        // Set subscription status
-        if (isActive && subscription.plan_type) {
-          setSubscriptionStatus(subscription.plan_type);
-        } else {
-          setSubscriptionStatus("free");
-        }
+        setSubscriptionStatus(
+          isActive && subscription.plan_type ? subscription.plan_type : "free"
+        );
 
         // Fetch profile data
         const { data: profileData } = await supabase
@@ -118,7 +111,36 @@ export function StudySidebar() {
     };
 
     fetchUserData();
-  }, [supabase]);
+  }, [mounted, supabase]);
+
+  // Handle mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] transition-all duration-150 border-r border-[#ECECEC] dark:border-[#1c2936] z-50 w-20">
+        <div className="animate-pulse">
+          <div className="h-[80px] bg-gray-200 dark:bg-gray-800" />
+          <div className="p-4 space-y-4">
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Function to get initials from name
   const getInitials = () => {
@@ -202,32 +224,18 @@ export function StudySidebar() {
     },
   ];
 
-  // Handle mobile detection
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
   return (
     <>
       {/* Mobile Menu Button - Only visible on mobile */}
       {isMobile && (
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className='fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]'
+          className="fixed top-6 left-6 z-50 p-2 rounded-lg bg-white dark:bg-[#151e2a] shadow-lg border border-[#ECECEC] dark:border-[#1c2936]"
         >
           {isMobileMenuOpen ? (
-            <X className='h-6 w-6' />
+            <X className="h-6 w-6" />
           ) : (
-            <Menu className='h-6 w-6' />
+            <Menu className="h-6 w-6" />
           )}
         </button>
       )}
@@ -235,7 +243,7 @@ export function StudySidebar() {
       {/* Mobile Overlay */}
       {isMobile && isMobileMenuOpen && (
         <div
-          className='fixed inset-0 bg-black/50 z-40'
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -250,7 +258,7 @@ export function StudySidebar() {
           isMobile && "shadow-xl"
         )}
       >
-        <div className='flex h-full flex-col'>
+        <div className="flex h-full flex-col">
           <div
             className={cn(
               "flex h-[80px] items-center justify-between",
@@ -258,19 +266,19 @@ export function StudySidebar() {
               isMobile && "px-6"
             )}
           >
-            <div className='flex-1 min-w-0'>
+            <div className="flex-1 min-w-0">
               {(!isCollapsed || isMobile) && (
-                <div className='h-8 relative'>
+                <div className="h-8 relative">
                   <Image
                     src={
                       currentTheme === "dark"
                         ? "/images/logoLight.png"
                         : "/images/logoDark.png"
                     }
-                    alt='Logo'
+                    alt="Logo"
                     width={150}
                     height={32}
-                    className='object-contain'
+                    className="object-contain"
                   />
                 </div>
               )}
@@ -278,42 +286,42 @@ export function StudySidebar() {
             {/* Only show collapse button on desktop */}
             {!isMobile && (
               <Button
-                variant='ghost'
-                size='icon'
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
               >
                 {isCollapsed ? (
-                  <Menu className='h-6 w-6' />
+                  <Menu className="h-6 w-6" />
                 ) : (
-                  <ChevronLeft className='h-6 w-6' />
+                  <ChevronLeft className="h-6 w-6" />
                 )}
               </Button>
             )}
             {/* Show close button on mobile */}
             {isMobile && (
               <Button
-                variant='ghost'
-                size='icon'
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className='h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]'
+                className="h-10 w-10 shrink-0 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]"
               >
-                <X className='h-6 w-6' />
+                <X className="h-6 w-6" />
               </Button>
             )}
           </div>
 
-          <nav className='flex-1 space-y-3 px-4 mt-4'>
+          <nav className="flex-1 space-y-3 px-4 mt-4">
             {navigationItems.map((item) => {
               const isLocked = item.requiresSubscription && !hasSubscription;
               const ItemIcon = item.icon;
 
               return (
-                <div key={item.href} className='relative'>
+                <div key={item.href} className="relative">
                   {isLocked && (
-                    <Link href='/pricing' className='absolute inset-0 z-10'>
-                      <div className='absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group'>
-                        <Lock className='h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors' />
+                    <Link href="/pricing" className="absolute inset-0 z-10">
+                      <div className="absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group">
+                        <Lock className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                     </Link>
                   )}
@@ -335,10 +343,10 @@ export function StudySidebar() {
                       )}
                     />
                     {(!isCollapsed || isMobile) && (
-                      <span className='truncate'>{item.name}</span>
+                      <span className="truncate">{item.name}</span>
                     )}
                     {!isMobile && isCollapsed && (
-                      <div className='absolute left-full ml-2 hidden group-hover:block'>
+                      <div className="absolute left-full ml-2 hidden group-hover:block">
                         <div
                           className={cn(
                             "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -357,7 +365,7 @@ export function StudySidebar() {
             })}
           </nav>
 
-          <div className='px-2 pb-2 mt-auto relative'>
+          <div className="px-2 pb-2 mt-auto relative">
             {mounted && (
               <div
                 className={cn(
@@ -380,13 +388,13 @@ export function StudySidebar() {
                       "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                     )}
                   >
-                    <span className='text-sm font-medium text-white'>
+                    <span className="text-sm font-medium text-white">
                       {getInitials()}
                     </span>
                   </div>
                   {!isCollapsed && (
-                    <div className='flex-1 min-w-0'>
-                      <p className='text-sm font-medium leading-none mb-1 truncate text-black dark:text-white'>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium leading-none mb-1 truncate text-black dark:text-white">
                         {hasSubscription
                           ? `${
                               subscriptionStatus.charAt(0).toUpperCase() +
@@ -394,13 +402,13 @@ export function StudySidebar() {
                             } plan`
                           : "Free plan"}
                       </p>
-                      <p className='text-sm text-gray-600 dark:text-gray-300 truncate'>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
                         {profile?.email}
                       </p>
                     </div>
                   )}
                   {isCollapsed && (
-                    <div className='absolute left-full ml-2 hidden group-hover:block'>
+                    <div className="absolute left-full ml-2 hidden group-hover:block">
                       <div
                         className={cn(
                           "rounded-md px-2 py-1 text-sm whitespace-nowrap",
@@ -427,9 +435,9 @@ export function StudySidebar() {
               mounted &&
               showProfileMenu &&
               createPortal(
-                <div className='fixed inset-0 z-[999999] pointer-events-none'>
+                <div className="fixed inset-0 z-[999999] pointer-events-none">
                   <div
-                    className='absolute inset-0 pointer-events-auto'
+                    className="absolute inset-0 pointer-events-auto"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     <motion.div
@@ -448,19 +456,19 @@ export function StudySidebar() {
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className='flex flex-col'>
-                        <div className='px-4 py-2.5 text-base text-gray-600 dark:text-white/70'>
+                      <div className="flex flex-col">
+                        <div className="px-4 py-2.5 text-base text-gray-600 dark:text-white/70">
                           {profile?.email}
                         </div>
-                        <div className='px-4 pb-2.5 flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
+                        <div className="px-4 pb-2.5 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
                             <div
                               className={cn(
                                 "h-[30px] w-[30px] rounded-full flex items-center justify-center font-medium",
                                 "bg-gradient-to-br from-[#4776E6] to-[#8E54E9]"
                               )}
                             >
-                              <span className='text-sm font-medium text-white'>
+                              <span className="text-sm font-medium text-white">
                                 {getInitials()}
                               </span>
                             </div>
@@ -494,11 +502,11 @@ export function StudySidebar() {
                               </div>
                             </div>
                           </div>
-                          <Check className='h-5 w-5 text-green-400' />
+                          <Check className="h-5 w-5 text-green-400" />
                         </div>
 
                         <div
-                          className='px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white/[0.06] group relative'
+                          className="px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white/[0.06] group relative"
                           onMouseEnter={() => setShowThemeMenu(true)}
                           onMouseLeave={(e) => {
                             // Check if we're not hovering over the popup
@@ -509,8 +517,8 @@ export function StudySidebar() {
                             }
                           }}
                         >
-                          <div className='flex items-center gap-3'>
-                            <Palette className='h-[18px] w-[18px]' />
+                          <div className="flex items-center gap-3">
+                            <Palette className="h-[18px] w-[18px]" />
                             <span
                               className={cn(
                                 "text-base",
@@ -522,14 +530,14 @@ export function StudySidebar() {
                               Appearance
                             </span>
                           </div>
-                          <ChevronRight className='h-4 w-4 text-gray-500' />
+                          <ChevronRight className="h-4 w-4 text-gray-500" />
                         </div>
 
                         {showThemeMenu &&
                           createPortal(
                             <div
-                              id='theme-popup'
-                              className='fixed inset-0 z-[9999999]'
+                              id="theme-popup"
+                              className="fixed inset-0 z-[9999999]"
                               onClick={(e) => {
                                 if (e.target === e.currentTarget) {
                                   setShowThemeMenu(false);
@@ -560,7 +568,7 @@ export function StudySidebar() {
                                     "0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 16px rgba(0, 0, 0, 0.4)",
                                 }}
                               >
-                                <div className='flex flex-col'>
+                                <div className="flex flex-col">
                                   <button
                                     onClick={() => {
                                       setTheme("system");
@@ -575,7 +583,7 @@ export function StudySidebar() {
                                   >
                                     <span>System</span>
                                     {theme === "system" && (
-                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                      <Check className="h-4 w-4 text-gray-500/70" />
                                     )}
                                   </button>
                                   <button
@@ -592,7 +600,7 @@ export function StudySidebar() {
                                   >
                                     <span>Light</span>
                                     {theme === "light" && (
-                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                      <Check className="h-4 w-4 text-gray-500/70" />
                                     )}
                                   </button>
                                   <button
@@ -609,7 +617,7 @@ export function StudySidebar() {
                                   >
                                     <span>Dark</span>
                                     {theme === "dark" && (
-                                      <Check className='h-4 w-4 text-gray-500/70' />
+                                      <Check className="h-4 w-4 text-gray-500/70" />
                                     )}
                                   </button>
                                 </div>
@@ -627,7 +635,7 @@ export function StudySidebar() {
                           )}
                           onClick={handleSettingsClick}
                         >
-                          <Settings className='h-[18px] w-[18px]' />
+                          <Settings className="h-[18px] w-[18px]" />
                           Settings
                         </button>
 
@@ -649,7 +657,7 @@ export function StudySidebar() {
                               : "hover:bg-black/[0.06]"
                           )}
                         >
-                          <LogOut className='h-[18px] w-[18px] text-red-400' />
+                          <LogOut className="h-[18px] w-[18px] text-red-400" />
                           Log out
                         </button>
                       </div>

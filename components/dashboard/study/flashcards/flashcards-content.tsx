@@ -785,8 +785,8 @@ export function FlashcardsContent({
 
   return (
     <div className='min-h-screen'>
-      <div className='flex items-center gap-4 mb-16'>
-        <div className='pl-1 pt-6'>
+      <div className='flex items-center gap-2 mb-12 pl-2'>
+        <div className='pt-4'>
           <Button
             variant='ghost'
             size='icon'
@@ -796,15 +796,15 @@ export function FlashcardsContent({
             <ChevronLeft className='h-5 w-5' />
           </Button>
         </div>
-        <h1 className='text-3xl font-semibold pt-6'>{getTitle(content)}</h1>
+        <h1 className='text-3xl font-semibold pt-4'>{getTitle(content)}</h1>
       </div>
 
       <div className='w-full'>
-        <div className='relative px-6 mb-8'>
+        <div className='relative px-6 mb-4'>
           <TabsList activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
 
-        <div className='p-4 md:p-8'>
+        <div className='p-4 md:p-6'>
           {activeTab === "flashcards" && (
             <div className='max-w-6xl mx-auto'>
               <div className='relative max-w-3xl mx-auto'>

@@ -59,8 +59,7 @@ export default function BanksPage() {
             Bank Questions
           </h1>
           <p className='text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl'>
-            Practice with bank-specific interview questions from leading
-            investment banks
+            Practice with bank-specific interview questions
           </p>
         </motion.div>
 

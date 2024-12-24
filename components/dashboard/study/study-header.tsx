@@ -34,10 +34,10 @@ export function StudyHeader({
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed top-6 inset-x-0 z-30 flex justify-center px-4"
+      className='fixed top-6 inset-x-0 z-30 flex justify-center px-4'
       style={{ y: headerY }}
     >
-      <motion.div className="relative w-[800px] mx-auto" style={{ scale }}>
+      <motion.div className='relative w-[800px] mx-auto' style={{ scale }}>
         <motion.div
           className={cn(
             "relative overflow-hidden",
@@ -52,7 +52,7 @@ export function StudyHeader({
         >
           {/* Enhanced gradient background */}
           <motion.div
-            className="absolute inset-0 opacity-30 dark:opacity-50"
+            className='absolute inset-0 opacity-30 dark:opacity-50'
             animate={{
               background: [
                 "radial-gradient(circle at 0% 0%, rgba(147, 197, 253, 0.15), transparent 50%)",
@@ -68,8 +68,8 @@ export function StudyHeader({
           />
 
           {/* Content container */}
-          <div className="relative px-8 py-5">
-            <div className="flex items-center gap-6">
+          <div className='relative px-8 py-5'>
+            <div className='flex items-center gap-6'>
               {/* Enhanced back button */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -86,7 +86,7 @@ export function StudyHeader({
               >
                 {/* Animated gradient background on hover */}
                 <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
                   style={{
                     background:
                       "linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
@@ -95,7 +95,7 @@ export function StudyHeader({
 
                 {/* Icon with smooth animation */}
                 <motion.div
-                  className="relative"
+                  className='relative'
                   animate={{ x: [-2, 0, -2] }}
                   transition={{
                     duration: 2,
@@ -103,18 +103,18 @@ export function StudyHeader({
                     ease: "easeInOut",
                   }}
                 >
-                  <ChevronLeft className="w-6 h-6" />
+                  <ChevronLeft className='w-6 h-6' />
                 </motion.div>
               </motion.button>
 
               {/* Title section */}
-              <div className="flex-1">
+              <div className='flex-1'>
                 <motion.h1
                   layout
-                  className="text-2xl md:text-3xl font-semibold"
+                  className='text-2xl md:text-3xl font-semibold'
                 >
                   <motion.span
-                    className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-500 to-violet-500 dark:from-blue-400 dark:via-purple-400 dark:to-violet-400"
+                    className='inline-block bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-500 to-violet-500 dark:from-blue-400 dark:via-purple-400 dark:to-violet-400'
                     animate={{
                       backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                     }}
@@ -132,7 +132,7 @@ export function StudyHeader({
 
               {/* Enhanced progress section */}
               <motion.div
-                className="flex items-center gap-3"
+                className='flex items-center gap-3'
                 whileHover={{ scale: 1.02 }}
               >
                 {/* Card counter with enhanced styling */}
@@ -147,7 +147,7 @@ export function StudyHeader({
                 >
                   {/* Subtle gradient animation */}
                   <motion.div
-                    className="absolute inset-0"
+                    className='absolute inset-0'
                     animate={{
                       opacity: [0.5, 0.3, 0.5],
                       background: [
@@ -161,16 +161,16 @@ export function StudyHeader({
                       ease: "linear",
                     }}
                   />
-                  <span className="relative text-base font-medium">
+                  <span className='relative text-base font-medium'>
                     {current} of {total}
                   </span>
                 </motion.div>
 
                 {/* Enhanced progress bar */}
-                <div className="relative w-28">
-                  <div className="absolute inset-0 rounded-full bg-black/5 dark:bg-white/5" />
+                <div className='relative w-28'>
+                  <div className='absolute inset-0 rounded-full bg-black/5 dark:bg-white/5' />
                   <motion.div
-                    className="relative h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"
+                    className='relative h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-violet-500'
                     style={{
                       width: `${(current / total) * 100}%`,
                     }}
@@ -189,7 +189,7 @@ export function StudyHeader({
                   >
                     {/* Animated shine effect */}
                     <motion.div
-                      className="absolute inset-0 rounded-full"
+                      className='absolute inset-0 rounded-full'
                       animate={{
                         background: [
                           "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",

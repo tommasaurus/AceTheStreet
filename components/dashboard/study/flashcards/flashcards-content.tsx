@@ -233,7 +233,7 @@ const cardVariants = {
     scale: 1,
     transition: {
       duration: 0.3,
-      ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for smooth animation
+      ease: [0.22, 1, 0.36, 1],
     },
   },
   exit: (direction: number) => ({
@@ -255,49 +255,36 @@ const FancyButton = ({
   showAnswer: boolean;
 }) => (
   <motion.div
-    className="w-full mb-6 relative group"
+    className='w-full mb-6 relative group'
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
   >
-    {/* Glow effect */}
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity animate-gradient-slow" />
-
     <Button
-      variant="default"
+      variant='default'
       onClick={onClick}
       className={cn(
         "w-full relative",
-        "bg-white dark:bg-background/50",
-        "border-2 border-transparent",
-        "rounded-xl h-12",
+        "bg-[#ECECEC] dark:bg-[#1c2936]",
+        "border-none",
+        "rounded-2xl h-12",
         "font-medium tracking-wide",
         "transition-all duration-300",
-        "backdrop-blur-sm",
         "overflow-hidden",
         "text-gray-800 dark:text-gray-100",
-        "hover:bg-white/90 dark:hover:bg-background/70",
+        "hover:bg-[#E5E5E5] dark:hover:bg-[#243442]",
         "group/button"
       )}
     >
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 opacity-0 group-hover/button:opacity-100 transition-opacity" />
-
-      {/* Animated shine effect */}
-      <div className="absolute inset-0 opacity-0 group-hover/button:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-0 translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      </div>
-
-      {/* Text with icon */}
-      <div className="relative flex items-center justify-center gap-2">
+      <div className='relative flex items-center justify-center gap-2'>
         <motion.div
           initial={false}
           animate={{ rotate: showAnswer ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className="text-gray-800 dark:text-gray-100"
+          className='text-gray-800 dark:text-gray-100'
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className='w-4 h-4' />
         </motion.div>
-        <span className="relative">
+        <span className='relative'>
           {showAnswer ? "Hide Answer" : "Show Answer"}
         </span>
       </div>
@@ -314,27 +301,27 @@ const TextSizeControl = ({
   setFontSize: (size: number) => void;
 }) => (
   <motion.div
-    className="relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5"
+    className='relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5'
     whileHover={{ scale: 1.02 }}
   >
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <button
         onClick={() => setFontSize(Math.max(12, fontSize - 2))}
-        className="text-sm opacity-60 hover:opacity-100 transition-opacity"
+        className='text-sm opacity-60 hover:opacity-100 transition-opacity'
       >
         A
       </button>
-      <div className="h-3 w-px bg-gray-400/20" />
+      <div className='h-3 w-px bg-gray-400/20' />
       <button
         onClick={() => setFontSize(Math.min(24, fontSize + 2))}
-        className="text-lg font-medium opacity-60 hover:opacity-100 transition-opacity"
+        className='text-lg font-medium opacity-60 hover:opacity-100 transition-opacity'
       >
         A
       </button>
     </div>
 
     {/* Tooltip */}
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
       Adjust text size
     </span>
   </motion.div>
@@ -362,7 +349,7 @@ const ActionButton = ({
 
   return (
     <motion.div
-      className="relative"
+      className='relative'
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -389,15 +376,15 @@ const ActionButton = ({
         whileHover={{ y: -2 }}
       >
         {/* Inner gradient overlay */}
-        <div className="absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className='absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
 
         {/* Icon container */}
-        <div className="relative z-10">
-          <Icon className="w-6 h-6 text-white" />
+        <div className='relative z-10'>
+          <Icon className='w-6 h-6 text-white' />
         </div>
 
         {/* Tooltip */}
-        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
           {label}
         </span>
       </motion.button>
@@ -415,17 +402,17 @@ const IconButton = ({
   onClick?: () => void;
   label: string;
 }) => (
-  <motion.div className="relative group">
+  <motion.div className='relative group'>
     <Button
-      variant="ghost"
-      size="icon"
+      variant='ghost'
+      size='icon'
       onClick={onClick}
-      className="rounded-full hover:bg-white/10 dark:hover:bg-white/5"
+      className='rounded-full hover:bg-white/10 dark:hover:bg-white/5'
     >
-      <Icon className="w-4 h-4" />
+      <Icon className='w-4 h-4' />
     </Button>
     {/* Tooltip */}
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
       {label}
     </span>
   </motion.div>
@@ -451,26 +438,20 @@ const NavigationButton = ({
       disabled && "opacity-50 pointer-events-none"
     )}
   >
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
-
     <Button
-      variant="ghost"
+      variant='ghost'
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "relative flex items-center gap-2 px-4 py-2 rounded-full",
-        "bg-white/5 dark:bg-white/5",
-        "hover:bg-white/10 dark:hover:bg-white/10",
-        "border border-white/10 dark:border-white/10",
+        "relative flex items-center gap-2 px-4 py-2 rounded-2xl",
+        "bg-[#ECECEC] dark:bg-[#1c2936]",
+        "hover:bg-[#E5E5E5] dark:hover:bg-[#243442]",
+        "border-none",
         "transition-all duration-300",
         "group/button"
       )}
     >
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-full opacity-0 group-hover/button:opacity-100 transition-opacity" />
-
-      {/* Content */}
-      <div className="relative flex items-center gap-2">
+      <div className='relative flex items-center gap-2'>
         {direction === "left" && (
           <motion.div
             initial={false}
@@ -482,10 +463,10 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className='h-4 w-4' />
           </motion.div>
         )}
-        <span className="relative font-medium">{label}</span>
+        <span className='relative font-medium'>{label}</span>
         {direction === "right" && (
           <motion.div
             initial={false}
@@ -497,16 +478,11 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className='h-4 w-4' />
           </motion.div>
         )}
       </div>
     </Button>
-
-    {/* Tooltip */}
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-      {disabled ? "No more cards" : `Navigate ${direction}`}
-    </span>
   </motion.div>
 );
 
@@ -530,7 +506,7 @@ const TabIcon = ({
     }}
   >
     <motion.div
-      className="absolute inset-0 rounded-xl"
+      className='absolute inset-0 rounded-xl'
       animate={{
         boxShadow: isActive ? `0 0 25px 5px rgb(${color} / 0.15)` : "none",
       }}
@@ -544,11 +520,11 @@ const TabIcon = ({
     />
     {isActive && (
       <motion.div
-        layoutId="activeTab"
-        className="absolute inset-0 rounded-xl"
+        layoutId='activeTab'
+        className='absolute inset-0 rounded-xl'
         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       >
-        <div className="absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40" />
+        <div className='absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40' />
       </motion.div>
     )}
   </motion.div>
@@ -562,6 +538,7 @@ export function FlashcardsContent({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [completedCards, setCompletedCards] = useState<number[]>([]);
+  const [bookmarkedCards, setBookmarkedCards] = useState<number[]>([]);
   const [fontSize, setFontSize] = useState(16);
   const [prevIndex, setPrevIndex] = useState(0);
   const [isTestMode, setIsTestMode] = useState(false);
@@ -711,93 +688,89 @@ export function FlashcardsContent({
     return "";
   };
 
+  const toggleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const cardId = currentCard.id;
+    setBookmarkedCards((prev) =>
+      prev.includes(cardId)
+        ? prev.filter((id) => id !== cardId)
+        : [...prev, cardId]
+    );
+  };
+
   if (!content) {
     return <div>Content not found</div>;
   }
 
   if (remainingCards.length === 0) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80">
-        <div className="max-w-md w-full space-y-8 text-center">
-          <div className="space-y-4 animate-fade-in">
-            <div className="relative inline-block">
-              <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%">
-                Congratulations! 🎉
+      <div className='min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80'>
+        <div className='w-full space-y-12 text-center'>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className='space-y-8'
+          >
+            <div className='relative mx-auto w-fit'>
+              <h2 className='text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%'>
+                Congratulations!
               </h2>
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse" />
+              <div className='absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse' />
             </div>
 
-            <p className="text-lg text-muted-foreground animate-fade-in-slow">
-              You've completed all the flashcards
+            <p className='text-2xl text-muted-foreground'>
+              You've completed all the flashcards 🎉
             </p>
 
-            <div
-              className="pt-6 flex flex-col gap-4 animate-fade-in"
-              style={{ animationDelay: "0.4s" }}
+            <motion.div
+              className='pt-6 flex flex-col gap-4 max-w-[260px] mx-auto'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.2,
+              }}
             >
               {/* Start Over Button */}
               <Button
                 onClick={handleReset}
-                className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+                className={cn(
+                  "relative h-12 overflow-hidden rounded-full",
+                  "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500",
+                  "text-white font-medium text-lg"
+                )}
               >
-                {/* Background gradient base */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#4461F2] to-[#A855F7] opacity-100" />
-
-                {/* Glowing effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#4461F2]/40 to-[#FF1CF7]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-                {/* Content container */}
-                <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-                  {/* Icon */}
-                  <span className="mr-3 animate-spin-slow">
-                    <RotateCcw className="h-5 w-5 text-[#4461F2]" />
-                  </span>
-
-                  {/* Text */}
-                  <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#4461F2] to-[#A855F7]">
-                    Start Over
-                  </span>
+                <div className='relative flex items-center justify-center gap-2'>
+                  <RotateCcw className='h-5 w-5 animate-spin-slow' />
+                  <span>Start Over</span>
                 </div>
-
-                {/* Gradient borders */}
-                <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#4461F2] via-transparent to-[#A855F7]" />
-                <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#4461F2] via-transparent to-[#A855F7]" />
               </Button>
 
               {/* Back to Menu Button */}
               <Button
                 asChild
-                className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+                className={cn(
+                  "relative h-12 overflow-hidden rounded-full",
+                  "bg-white/20 backdrop-blur-md",
+                  "border border-white/10",
+                  "text-white font-medium text-lg",
+                  "[&:hover]:bg-white/20 [&:hover]:opacity-100"
+                )}
               >
                 <Link
                   href={category === "banks" ? "/study/banks" : "/study/m&i400"}
+                  className='hover:no-underline'
                 >
-                  {/* Background gradient base */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#A855F7] to-[#4461F2] opacity-100" />
-
-                  {/* Glowing effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#A855F7]/40 to-[#4461F2]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-                  {/* Content container */}
-                  <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-                    {/* Icon */}
-                    <span className="mr-3">
-                      <ChevronLeft className="h-5 w-5 text-[#A855F7]" />
-                    </span>
-
-                    {/* Text */}
-                    <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#A855F7] to-[#4461F2]">
-                      Back to Menu
-                    </span>
+                  <div className='relative flex items-center justify-center gap-2'>
+                    <ChevronLeft className='h-5 w-5' />
+                    <span>Back to Menu</span>
                   </div>
-
-                  {/* Gradient borders */}
-                  <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#FF1CF7] via-transparent to-[#4461F2]" />
-                  <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#FF1CF7] via-transparent to-[#4461F2]" />
                 </Link>
               </Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     );
@@ -811,214 +784,223 @@ export function FlashcardsContent({
   const nextCard = remainingCards[(currentIndex + 1) % remainingCards.length];
 
   return (
-    <div className="relative">
-      <StudyHeader
-        title={getTitle(content)}
-        current={completedCards.length + 1}
-        total={questions.length}
-        onBack={() => window.history.back()}
-      />
+    <div className='min-h-screen'>
+      <div className='flex items-center gap-4 mb-16'>
+        <div className='pl-1 pt-6'>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={() => window.history.back()}
+            className='text-foreground'
+          >
+            <ChevronLeft className='h-5 w-5' />
+          </Button>
+        </div>
+        <h1 className='text-3xl font-semibold pt-6'>{getTitle(content)}</h1>
+      </div>
 
-      <div className="h-28" />
-
-      <Tabs
-        defaultValue="flashcards"
-        className="w-full"
-        onValueChange={handleTabChange}
-      >
-        <div className="relative px-6 mb-10">
-          {/* Enhanced ambient background glow */}
-          <div className="absolute inset-0 -top-20 -bottom-20 opacity-60">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-3xl" />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-2xl animate-pulse" />
-          </div>
-          <TabsList activeTab={activeTab} />
+      <div className='w-full'>
+        <div className='relative px-6 mb-8'>
+          <TabsList activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
 
-        <TabsContent value="flashcards">
-          <div className="min-h-[80vh] p-4 md:p-8">
-            <div className="max-w-6xl mx-auto space-y-8">
-              {/* Card Section */}
-              <div
-                className="relative min-h-[500px] overflow-hidden"
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-              >
-                <AnimatePresence mode="wait" custom={direction} initial={false}>
-                  <motion.div
-                    key={currentIndex}
+        <div className='p-4 md:p-8'>
+          {activeTab === "flashcards" && (
+            <div className='max-w-6xl mx-auto'>
+              <div className='relative max-w-3xl mx-auto'>
+                {/* Progress Bar */}
+                <div className='mb-6 flex flex-col gap-2 px-8'>
+                  <div className='flex items-center justify-between'>
+                    <span className='text-sm font-medium text-muted-foreground'>
+                      Progress
+                    </span>
+                    <span className='text-sm font-medium'>
+                      {completedCards.length + 1} / {questions.length}
+                    </span>
+                  </div>
+                  <div className='h-1 w-full bg-gray-200 dark:bg-muted/30 rounded-full overflow-hidden'>
+                    <div
+                      className='h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out'
+                      style={{
+                        width: `${
+                          ((completedCards.length + 1) / questions.length) * 100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Flashcard Container */}
+                <div
+                  className='relative'
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <AnimatePresence
+                    mode='wait'
                     custom={direction}
-                    variants={cardVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className="relative w-full max-w-3xl mx-auto absolute inset-0"
+                    initial={false}
                   >
                     <motion.div
-                      className={cn(
-                        "relative p-8 transition-colors duration-300",
-                        "bg-card/80 dark:bg-card/80",
-                        "border border-white/20 dark:border-white/10",
-                        "shadow-xl",
-                        "rounded-3xl",
-                        "overflow-hidden"
-                      )}
+                      key={currentIndex}
+                      custom={direction}
+                      variants={cardVariants}
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      className='relative'
                     >
-                      {/* Gradient Background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-slow opacity-50" />
+                      <motion.div
+                        className={cn(
+                          "relative p-8 transition-colors duration-300",
+                          "bg-[#ECECEC] dark:bg-[#1c2936]",
+                          "border-none",
+                          "shadow-lg",
+                          "rounded-3xl",
+                          "overflow-hidden",
+                          "mb-8",
+                          "cursor-pointer"
+                        )}
+                        onClick={() => setShowAnswer(!showAnswer)}
+                      >
+                        <div className='relative z-10'>
+                          <div className='flex justify-between items-center mb-4'>
+                            <Badge
+                              variant='outline'
+                              className='bg-[#E5E5E5] dark:bg-[#243442] border-none px-4 py-1.5 text-sm'
+                            >
+                              {currentCard.type}
+                            </Badge>
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              className='flex items-center gap-3'
+                            >
+                              <button
+                                onClick={toggleBookmark}
+                                className='relative p-2.5 rounded-full'
+                              >
+                                <Bookmark
+                                  className={cn(
+                                    "h-7 w-7 transition-colors duration-200",
+                                    "stroke-[1.5]",
+                                    bookmarkedCards.includes(currentCard.id)
+                                      ? "fill-foreground text-foreground"
+                                      : "fill-transparent text-muted-foreground"
+                                  )}
+                                />
+                                <span className='sr-only'>Bookmark card</span>
+                              </button>
+                            </div>
+                          </div>
 
-                      {/* Content Container - Ensures content is above gradient */}
-                      <div className="relative z-10">
-                        {/* Card Controls */}
-                        <div className="flex justify-between items-center mb-8">
-                          <Badge
-                            variant="outline"
-                            className="bg-white/10 dark:bg-white/5 border-none px-4 py-1"
-                          >
-                            {currentCard.type}
-                          </Badge>
-                          <div className="flex items-center gap-3">
-                            <TextSizeControl
-                              fontSize={fontSize}
-                              setFontSize={setFontSize}
+                          <div className='text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100'>
+                            {currentCard.question}
+                          </div>
+
+                          <div className='flex items-center mb-4'>
+                            <span className='text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                              {showAnswer ? "Hide Answer" : "Show Answer"}
+                            </span>
+                          </div>
+
+                          <AnimatePresence>
+                            {showAnswer && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0, y: 20 }}
+                                animate={{ opacity: 1, height: "auto", y: 0 }}
+                                exit={{ opacity: 0, height: 0, y: -20 }}
+                                transition={{ duration: 0.3 }}
+                                className='overflow-hidden'
+                              >
+                                <div className='prose dark:prose-invert max-w-none'>
+                                  <div className='text-2xl text-gray-700 dark:text-gray-300'>
+                                    {currentCard.answer}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </motion.div>
+
+                      <div className='flex justify-center items-center px-4 mb-4'>
+                        <div className='flex items-center gap-8'>
+                          <NavigationButton
+                            direction='left'
+                            onClick={handlePrevious}
+                            disabled={remainingCards.length <= 1}
+                            label='Previous'
+                          />
+
+                          <div className='flex gap-6 scale-110'>
+                            <ActionButton
+                              icon={X}
+                              onClick={handleNext}
+                              variant='error'
+                              label='Skip'
                             />
-                            <IconButton
-                              icon={Volume2}
-                              onClick={() => {
-                                /* Add text-to-speech logic here */
-                              }}
-                              label="Read aloud"
-                            />
-                            <IconButton
-                              icon={Bookmark}
-                              onClick={() => {
-                                /* Add bookmark logic here */
-                              }}
-                              label="Bookmark card"
+                            <ActionButton
+                              icon={Check}
+                              onClick={handleCorrect}
+                              variant='success'
+                              label='Got it!'
                             />
                           </div>
+
+                          <NavigationButton
+                            direction='right'
+                            onClick={handleNext}
+                            disabled={remainingCards.length <= 1}
+                            label='Next'
+                          />
                         </div>
-
-                        {/* Question Content */}
-                        <motion.div
-                          className="text-xl md:text-2xl font-medium mb-6"
-                          style={{ fontSize: `${fontSize}px` }}
-                        >
-                          {currentCard.question}
-                        </motion.div>
-
-                        {/* Replace the existing button with the new FancyButton component */}
-                        <FancyButton
-                          onClick={() => setShowAnswer(!showAnswer)}
-                          showAnswer={showAnswer}
-                        />
-
-                        {/* Answer Section */}
-                        <AnimatePresence>
-                          {showAnswer && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0, y: 20 }}
-                              animate={{ opacity: 1, height: "auto", y: 0 }}
-                              exit={{ opacity: 0, height: 0, y: -20 }}
-                              transition={{ duration: 0.3 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="prose dark:prose-invert max-w-none">
-                                <div
-                                  className="text-lg md:text-xl"
-                                  style={{ fontSize: `${fontSize}px` }}
-                                >
-                                  {currentCard.answer}
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
                     </motion.div>
+                  </AnimatePresence>
 
-                    {/* Navigation Controls */}
-                    <div className="absolute -bottom-24 left-0 right-0 flex justify-center items-center px-4">
-                      <div className="flex items-center gap-8">
-                        <NavigationButton
-                          direction="left"
-                          onClick={handlePrevious}
-                          disabled={remainingCards.length <= 1}
-                          label="Previous"
-                        />
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-6 scale-110">
-                          <ActionButton
-                            icon={X}
-                            onClick={handleNext}
-                            variant="error"
-                            label="Skip"
-                          />
-                          <ActionButton
-                            icon={Check}
-                            onClick={handleCorrect}
-                            variant="success"
-                            label="Got it!"
-                          />
-                        </div>
-
-                        <NavigationButton
-                          direction="right"
-                          onClick={handleNext}
-                          disabled={remainingCards.length <= 1}
-                          label="Next"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Swipe Indicator */}
-                {touchStart && touchEnd && (
-                  <div
-                    className="absolute inset-y-0 left-0 w-full pointer-events-none"
-                    style={{
-                      background: `linear-gradient(to ${
-                        touchStart - touchEnd > 0 ? "left" : "right"
-                      }, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.1))`,
-                      opacity: Math.min(
-                        Math.abs(touchStart - touchEnd) / 200,
-                        0.5
-                      ),
-                      transition: "opacity 0.2s ease",
-                    }}
-                  />
-                )}
+                  {touchStart && touchEnd && (
+                    <div
+                      className='absolute inset-y-0 left-0 w-full pointer-events-none'
+                      style={{
+                        background: `linear-gradient(to ${
+                          touchStart - touchEnd > 0 ? "left" : "right"
+                        }, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.1))`,
+                        opacity: Math.min(
+                          Math.abs(touchStart - touchEnd) / 200,
+                          0.5
+                        ),
+                        transition: "opacity 0.2s ease",
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
+          )}
 
-        <TabsContent value="test">
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            {isTestMode && testSettings ? (
-              <TestInterface
-                settings={testSettings}
-                questions={questions}
-                onComplete={handleTestComplete}
-              />
-            ) : (
-              <div className="max-w-3xl mx-auto">
-                <TestSetup
-                  maxQuestions={questions.length}
-                  onStartTest={handleStartTest}
+          {activeTab === "test" && (
+            <ScrollArea className='h-[calc(100vh-200px)]'>
+              {isTestMode && testSettings ? (
+                <TestInterface
+                  settings={testSettings}
+                  questions={questions}
+                  onComplete={handleTestComplete}
                 />
-              </div>
-            )}
-          </ScrollArea>
-        </TabsContent>
+              ) : (
+                <div className='max-w-3xl mx-auto'>
+                  <TestSetup
+                    maxQuestions={questions.length}
+                    onStartTest={handleStartTest}
+                  />
+                </div>
+              )}
+            </ScrollArea>
+          )}
 
-        <TabsContent value="match">
-          <MatchContent />
-        </TabsContent>
-      </Tabs>
+          {activeTab === "match" && <MatchContent />}
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,12 +9,9 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   return (
-    <div className="min-h-screen">
-      {/* Main content with padding to account for fixed header */}
-      <div className="pt-[72px] pb-8">
-        <div className="container mx-auto">
-          <FlashcardsContent category="banks" bankId={params.id} />
-        </div>
+    <div className='min-h-screen'>
+      <div className='container mx-auto py-8'>
+        <FlashcardsContent category='banks' bankId={params.id} />
       </div>
     </div>
   );

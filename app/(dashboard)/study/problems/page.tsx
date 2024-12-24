@@ -155,8 +155,7 @@ export default function ProblemsPage() {
             Technical Problems
           </h1>
           <p className='text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl'>
-            Practice with real technical interview problems. Each problem comes
-            with a detailed solution.
+            Practice with real technical and behavioral interview problems.
           </p>
         </motion.div>
 

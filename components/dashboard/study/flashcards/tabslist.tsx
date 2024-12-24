@@ -1,173 +1,98 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { TabsList as RadixTabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { LightbulbIcon, GraduationCap, Zap } from "lucide-react";
-import { useTheme } from "next-themes";
 
-const TabIcon = ({
-  icon: Icon,
-  isActive,
-  color,
-}: {
-  icon: any;
-  isActive: boolean;
-  color: string;
-}) => (
-  <motion.div
-    className={cn(
-      "relative w-10 h-10 rounded-xl flex items-center justify-center",
-      "transition-all duration-500"
-    )}
-    animate={{
-      backgroundColor: isActive ? `rgb(${color} / 0.15)` : "transparent",
-    }}
-  >
-    <motion.div
-      className="absolute inset-0 rounded-xl"
-      animate={{
-        boxShadow: isActive ? `0 0 25px 5px rgb(${color} / 0.15)` : "none",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    />
-    <Icon
-      className={cn(
-        "w-5 h-5 transition-all duration-300",
-        isActive ? `text-[rgb(${color})]` : "text-muted-foreground/70"
-      )}
-    />
-    {isActive && (
-      <motion.div
-        layoutId="activeTab"
-        className="absolute inset-0 rounded-xl"
-        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-      >
-        <div className="absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40" />
-      </motion.div>
-    )}
-  </motion.div>
-);
-
-const CustomTabsTrigger = ({
+const CustomTab = ({
   value,
   activeTab,
-  icon,
+  icon: Icon,
   title,
   subtitle,
-  color,
+  onClick,
 }: {
   value: string;
   activeTab: string;
   icon: any;
   title: string;
   subtitle: string;
-  color: string;
+  onClick: (value: string) => void;
 }) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const getGradientClass = (isActive: boolean) => {
+    if (!isActive) return "text-muted-foreground/70";
+    return "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text";
+  };
+
+  const getIconColor = (isActive: boolean) => {
+    if (!isActive) return "text-muted-foreground/70";
+    return "text-blue-500";
+  };
 
   return (
-    <TabsTrigger
-      value={value}
+    <Button
+      variant='ghost'
+      onClick={() => onClick(value)}
       className={cn(
-        "relative flex-1 flex items-center gap-3 py-3 px-4",
-        "rounded-xl transition-all duration-500",
-        "group overflow-hidden",
-        "data-[state=active]:bg-transparent"
+        "flex items-center gap-3 py-4 px-6 h-auto w-[180px]",
+        "bg-gray-200/80 dark:bg-[#1c2936] rounded-xl transition-colors",
+        "hover:bg-gray-200/80 dark:hover:bg-[#243442]",
+        activeTab === value && "dark:bg-[#243442]"
       )}
     >
-      <TabIcon icon={icon} isActive={activeTab === value} color={color} />
-      <div className="flex flex-col items-start relative">
-        <motion.span
-          className="text-lg font-medium tracking-tight transition-all duration-300 font-cal"
-          animate={{
-            color: activeTab === value ? `rgb(${color})` : "",
-            scale: activeTab === value ? 1.05 : 1,
-          }}
+      <Icon
+        className={cn(
+          "w-5 h-5 transition-colors",
+          getIconColor(activeTab === value)
+        )}
+      />
+      <div className='flex flex-col items-start'>
+        <span
+          className={cn(
+            "text-sm font-medium transition-colors",
+            getGradientClass(activeTab === value)
+          )}
         >
           {title}
-        </motion.span>
-        <motion.span
-          className="text-[11px] font-medium transition-all duration-300 font-cal"
-          animate={{
-            opacity: activeTab === value ? 1 : 0.5,
-            color:
-              activeTab === value
-                ? isDark
-                  ? "rgb(255, 255, 255)"
-                  : `rgb(${color})`
-                : "rgb(156, 163, 175)",
-          }}
-        >
-          {subtitle}
-        </motion.span>
-
-        {/* Active tab indicator */}
-        {activeTab === value && (
-          <motion.div
-            layoutId={`${value}-indicator`}
-            className="absolute -bottom-2 left-0 right-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div
-              className={`h-[2px] w-full bg-gradient-to-r from-[rgb(${color})]/0 via-[rgb(${color})] to-[rgb(${color})]/0`}
-            />
-            <div
-              className={`h-[2px] w-full bg-gradient-to-r from-[rgb(${color})]/0 via-[rgb(${color})] to-[rgb(${color})]/0 blur-sm`}
-            />
-          </motion.div>
-        )}
+        </span>
+        <span className='text-xs text-muted-foreground'>{subtitle}</span>
       </div>
-
-      {/* Hover effect */}
-      <motion.div
-        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(circle at center, rgba(${color}, 0.03) 0%, transparent 70%)`,
-        }}
-      />
-    </TabsTrigger>
+    </Button>
   );
 };
 
-export default function TabsList({ activeTab }: { activeTab: string }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
+export default function TabsList({
+  activeTab,
+  onTabChange,
+}: {
+  activeTab: string;
+  onTabChange: (value: string) => void;
+}) {
   return (
-    <div className="relative px-6 mb-10">
-      <div className="absolute inset-0 -top-20 -bottom-20 opacity-60">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-3xl" />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-2xl animate-pulse" />
-      </div>
-      <RadixTabsList className="relative flex w-full max-w-2xl mx-auto p-1.5 gap-2 bg-transparent backdrop-blur-2xl rounded-2xl">
-        <CustomTabsTrigger
-          value="flashcards"
-          activeTab={activeTab}
-          icon={LightbulbIcon}
-          title="Flashcards"
-          subtitle="Practice Mode"
-          color="59, 130, 246"
-        />
-        <CustomTabsTrigger
-          value="test"
-          activeTab={activeTab}
-          icon={GraduationCap}
-          title="Test"
-          subtitle="Exam Mode"
-          color="34, 197, 94"
-        />
-        <CustomTabsTrigger
-          value="match"
-          activeTab={activeTab}
-          icon={Zap}
-          title="Match"
-          subtitle="Speed Mode"
-          color="249, 115, 22"
-        />
-      </RadixTabsList>
+    <div className='flex items-center justify-center w-full gap-3'>
+      <CustomTab
+        value='flashcards'
+        activeTab={activeTab}
+        icon={LightbulbIcon}
+        title='Flashcards'
+        subtitle='Practice Mode'
+        onClick={onTabChange}
+      />
+      <CustomTab
+        value='test'
+        activeTab={activeTab}
+        icon={GraduationCap}
+        title='Test'
+        subtitle='Exam Mode'
+        onClick={onTabChange}
+      />
+      <CustomTab
+        value='match'
+        activeTab={activeTab}
+        icon={Zap}
+        title='Match'
+        subtitle='Speed Mode'
+        onClick={onTabChange}
+      />
     </div>
   );
 }

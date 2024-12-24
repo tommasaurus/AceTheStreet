@@ -19,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import MatchContent from "@/components/dashboard/study/match/MatchContent";
 import {
   TestSetup,
@@ -31,6 +31,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useSpring, animated } from "@react-spring/web";
 import { StudyHeader } from "@/components/dashboard/study/study-header";
+import { cva } from "class-variance-authority";
+import { useTheme } from "next-themes";
+import TabsList from "./tabslist";
 
 interface Question {
   id: number;
@@ -507,6 +510,50 @@ const NavigationButton = ({
   </motion.div>
 );
 
+// Add this new component for the tab icon animation
+const TabIcon = ({
+  icon: Icon,
+  isActive,
+  color,
+}: {
+  icon: any;
+  isActive: boolean;
+  color: string;
+}) => (
+  <motion.div
+    className={cn(
+      "relative w-10 h-10 rounded-xl flex items-center justify-center",
+      "transition-all duration-500"
+    )}
+    animate={{
+      backgroundColor: isActive ? `rgb(${color} / 0.15)` : "transparent",
+    }}
+  >
+    <motion.div
+      className="absolute inset-0 rounded-xl"
+      animate={{
+        boxShadow: isActive ? `0 0 25px 5px rgb(${color} / 0.15)` : "none",
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    />
+    <Icon
+      className={cn(
+        "w-5 h-5 transition-all duration-300",
+        isActive ? `text-[rgb(${color})]` : "text-muted-foreground/70"
+      )}
+    />
+    {isActive && (
+      <motion.div
+        layoutId="activeTab"
+        className="absolute inset-0 rounded-xl"
+        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+      >
+        <div className="absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40" />
+      </motion.div>
+    )}
+  </motion.div>
+);
+
 export function FlashcardsContent({
   category,
   bankId,
@@ -523,6 +570,7 @@ export function FlashcardsContent({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isSwiping, setIsSwiping] = useState(false);
   const [direction, setDirection] = useState(0);
+  const [activeTab, setActiveTab] = useState("flashcards");
 
   const handleStartTest = (settings: TestSettings) => {
     if (
@@ -562,6 +610,7 @@ export function FlashcardsContent({
       setIsTestMode(false);
       setTestSettings(null);
     }
+    setActiveTab(value);
   };
 
   const id = category === "banks" ? bankId : categoryId;
@@ -772,32 +821,19 @@ export function FlashcardsContent({
 
       <div className="h-28" />
 
-      {/* Tabs Section */}
       <Tabs
         defaultValue="flashcards"
         className="w-full"
         onValueChange={handleTabChange}
       >
-        <TabsList className="grid w-full grid-cols-3 h-auto gap-4 mb-8">
-          <TabsTrigger value="flashcards" className="flex flex-col py-4 gap-2">
-            <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-              <LightbulbIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <span>Flashcards</span>
-          </TabsTrigger>
-          <TabsTrigger value="test" className="flex flex-col py-4 gap-2">
-            <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-green-600 dark:text-green-400" />
-            </div>
-            <span>Test</span>
-          </TabsTrigger>
-          <TabsTrigger value="match" className="flex flex-col py-4 gap-2">
-            <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-              <Zap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-            </div>
-            <span>Match</span>
-          </TabsTrigger>
-        </TabsList>
+        <div className="relative px-6 mb-10">
+          {/* Enhanced ambient background glow */}
+          <div className="absolute inset-0 -top-20 -bottom-20 opacity-60">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-orange-500/5 blur-2xl animate-pulse" />
+          </div>
+          <TabsList activeTab={activeTab} />
+        </div>
 
         <TabsContent value="flashcards">
           <div className="min-h-[80vh] p-4 md:p-8">
@@ -960,21 +996,23 @@ export function FlashcardsContent({
           </div>
         </TabsContent>
 
-        <TabsContent value="test">
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            {isTestMode && testSettings ? (
-              <TestInterface
-                settings={testSettings}
-                questions={questions}
-                onComplete={handleTestComplete}
-              />
-            ) : (
-              <TestSetup
-                maxQuestions={questions.length}
-                onStartTest={handleStartTest}
-              />
-            )}
-          </ScrollArea>
+        <TabsContent value="test" className="min-h-[80vh]">
+          {isTestMode ? (
+            <TestInterface
+              questions={questions}
+              settings={testSettings!}
+              onComplete={handleTestComplete}
+            />
+          ) : (
+            <div className="relative p-8">
+              <div className="max-w-3xl mx-auto">
+                <TestSetup
+                  onStart={handleStartTest}
+                  questionCount={questions.length}
+                />
+              </div>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="match">

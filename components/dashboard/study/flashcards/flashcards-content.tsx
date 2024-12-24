@@ -255,12 +255,12 @@ const FancyButton = ({
   showAnswer: boolean;
 }) => (
   <motion.div
-    className='w-full mb-6 relative group'
+    className="w-full mb-6 relative group"
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
   >
     <Button
-      variant='default'
+      variant="default"
       onClick={onClick}
       className={cn(
         "w-full relative",
@@ -275,16 +275,16 @@ const FancyButton = ({
         "group/button"
       )}
     >
-      <div className='relative flex items-center justify-center gap-2'>
+      <div className="relative flex items-center justify-center gap-2">
         <motion.div
           initial={false}
           animate={{ rotate: showAnswer ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className='text-gray-800 dark:text-gray-100'
+          className="text-gray-800 dark:text-gray-100"
         >
-          <ChevronRight className='w-4 h-4' />
+          <ChevronRight className="w-4 h-4" />
         </motion.div>
-        <span className='relative'>
+        <span className="relative">
           {showAnswer ? "Hide Answer" : "Show Answer"}
         </span>
       </div>
@@ -301,27 +301,27 @@ const TextSizeControl = ({
   setFontSize: (size: number) => void;
 }) => (
   <motion.div
-    className='relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5'
+    className="relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5"
     whileHover={{ scale: 1.02 }}
   >
-    <div className='flex items-center gap-2'>
+    <div className="flex items-center gap-2">
       <button
         onClick={() => setFontSize(Math.max(12, fontSize - 2))}
-        className='text-sm opacity-60 hover:opacity-100 transition-opacity'
+        className="text-sm opacity-60 hover:opacity-100 transition-opacity"
       >
         A
       </button>
-      <div className='h-3 w-px bg-gray-400/20' />
+      <div className="h-3 w-px bg-gray-400/20" />
       <button
         onClick={() => setFontSize(Math.min(24, fontSize + 2))}
-        className='text-lg font-medium opacity-60 hover:opacity-100 transition-opacity'
+        className="text-lg font-medium opacity-60 hover:opacity-100 transition-opacity"
       >
         A
       </button>
     </div>
 
     {/* Tooltip */}
-    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
+    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
       Adjust text size
     </span>
   </motion.div>
@@ -349,7 +349,7 @@ const ActionButton = ({
 
   return (
     <motion.div
-      className='relative'
+      className="relative"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -376,15 +376,15 @@ const ActionButton = ({
         whileHover={{ y: -2 }}
       >
         {/* Inner gradient overlay */}
-        <div className='absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
+        <div className="absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
         {/* Icon container */}
-        <div className='relative z-10'>
-          <Icon className='w-6 h-6 text-white' />
+        <div className="relative z-10">
+          <Icon className="w-6 h-6 text-white" />
         </div>
 
         {/* Tooltip */}
-        <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
           {label}
         </span>
       </motion.button>
@@ -402,17 +402,17 @@ const IconButton = ({
   onClick?: () => void;
   label: string;
 }) => (
-  <motion.div className='relative group'>
+  <motion.div className="relative group">
     <Button
-      variant='ghost'
-      size='icon'
+      variant="ghost"
+      size="icon"
       onClick={onClick}
-      className='rounded-full hover:bg-white/10 dark:hover:bg-white/5'
+      className="rounded-full hover:bg-white/10 dark:hover:bg-white/5"
     >
-      <Icon className='w-4 h-4' />
+      <Icon className="w-4 h-4" />
     </Button>
     {/* Tooltip */}
-    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
+    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
       {label}
     </span>
   </motion.div>
@@ -439,7 +439,7 @@ const NavigationButton = ({
     )}
   >
     <Button
-      variant='ghost'
+      variant="ghost"
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -451,7 +451,7 @@ const NavigationButton = ({
         "group/button"
       )}
     >
-      <div className='relative flex items-center gap-2'>
+      <div className="relative flex items-center gap-2">
         {direction === "left" && (
           <motion.div
             initial={false}
@@ -463,10 +463,10 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronLeft className='h-4 w-4' />
+            <ChevronLeft className="h-4 w-4" />
           </motion.div>
         )}
-        <span className='relative font-medium'>{label}</span>
+        <span className="relative font-medium">{label}</span>
         {direction === "right" && (
           <motion.div
             initial={false}
@@ -478,7 +478,7 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronRight className='h-4 w-4' />
+            <ChevronRight className="h-4 w-4" />
           </motion.div>
         )}
       </div>
@@ -506,7 +506,7 @@ const TabIcon = ({
     }}
   >
     <motion.div
-      className='absolute inset-0 rounded-xl'
+      className="absolute inset-0 rounded-xl"
       animate={{
         boxShadow: isActive ? `0 0 25px 5px rgb(${color} / 0.15)` : "none",
       }}
@@ -520,11 +520,11 @@ const TabIcon = ({
     />
     {isActive && (
       <motion.div
-        layoutId='activeTab'
-        className='absolute inset-0 rounded-xl'
+        layoutId="activeTab"
+        className="absolute inset-0 rounded-xl"
         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       >
-        <div className='absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40' />
+        <div className="absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40" />
       </motion.div>
     )}
   </motion.div>
@@ -704,27 +704,27 @@ export function FlashcardsContent({
 
   if (remainingCards.length === 0) {
     return (
-      <div className='min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80'>
-        <div className='w-full space-y-12 text-center'>
+      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80">
+        <div className="w-full space-y-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className='space-y-8'
+            className="space-y-8"
           >
-            <div className='relative mx-auto w-fit'>
-              <h2 className='text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%'>
+            <div className="relative mx-auto w-fit">
+              <h2 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%">
                 Congratulations!
               </h2>
-              <div className='absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse' />
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse" />
             </div>
 
-            <p className='text-2xl text-muted-foreground'>
+            <p className="text-2xl text-muted-foreground">
               You've completed all the flashcards 🎉
             </p>
 
             <motion.div
-              className='pt-6 flex flex-col gap-4 max-w-[260px] mx-auto'
+              className="pt-6 flex flex-col gap-4 max-w-[260px] mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -742,8 +742,8 @@ export function FlashcardsContent({
                   "text-white font-medium text-lg"
                 )}
               >
-                <div className='relative flex items-center justify-center gap-2'>
-                  <RotateCcw className='h-5 w-5 animate-spin-slow' />
+                <div className="relative flex items-center justify-center gap-2">
+                  <RotateCcw className="h-5 w-5 animate-spin-slow" />
                   <span>Start Over</span>
                 </div>
               </Button>
@@ -761,10 +761,10 @@ export function FlashcardsContent({
               >
                 <Link
                   href={category === "banks" ? "/study/banks" : "/study/m&i400"}
-                  className='hover:no-underline'
+                  className="hover:no-underline"
                 >
-                  <div className='relative flex items-center justify-center gap-2'>
-                    <ChevronLeft className='h-5 w-5' />
+                  <div className="relative flex items-center justify-center gap-2">
+                    <ChevronLeft className="h-5 w-5" />
                     <span>Back to Menu</span>
                   </div>
                 </Link>
@@ -784,43 +784,43 @@ export function FlashcardsContent({
   const nextCard = remainingCards[(currentIndex + 1) % remainingCards.length];
 
   return (
-    <div className='min-h-screen'>
-      <div className='flex items-center gap-2 mb-12 pl-2'>
-        <div className='pt-4'>
+    <div className="min-h-screen">
+      <div className="flex items-center gap-2 mb-12 pl-2">
+        <div className="pt-4">
           <Button
-            variant='ghost'
-            size='icon'
+            variant="ghost"
+            size="icon"
             onClick={() => window.history.back()}
-            className='text-foreground'
+            className="text-foreground"
           >
-            <ChevronLeft className='h-5 w-5' />
+            <ChevronLeft className="h-5 w-5" />
           </Button>
         </div>
-        <h1 className='text-3xl font-semibold pt-4'>{getTitle(content)}</h1>
+        <h1 className="text-3xl font-semibold pt-4">{getTitle(content)}</h1>
       </div>
 
-      <div className='w-full'>
-        <div className='relative px-6 mb-4'>
+      <div className="w-full">
+        <div className="relative px-6 mb-4">
           <TabsList activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
 
-        <div className='p-4 md:p-6'>
+        <div className="p-4 md:p-6">
           {activeTab === "flashcards" && (
-            <div className='max-w-6xl mx-auto'>
-              <div className='relative max-w-3xl mx-auto'>
+            <div className="max-w-6xl mx-auto">
+              <div className="relative max-w-3xl mx-auto">
                 {/* Progress Bar */}
-                <div className='mb-6 flex flex-col gap-2 px-8'>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm font-medium text-muted-foreground'>
+                <div className="mb-6 flex flex-col gap-2 px-8">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
                       Progress
                     </span>
-                    <span className='text-sm font-medium'>
+                    <span className="text-sm font-medium">
                       {completedCards.length + 1} / {questions.length}
                     </span>
                   </div>
-                  <div className='h-1 w-full bg-gray-200 dark:bg-muted/30 rounded-full overflow-hidden'>
+                  <div className="h-1 w-full bg-gray-200 dark:bg-muted/30 rounded-full overflow-hidden">
                     <div
-                      className='h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out'
+                      className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
                       style={{
                         width: `${
                           ((completedCards.length + 1) / questions.length) * 100
@@ -832,13 +832,13 @@ export function FlashcardsContent({
 
                 {/* Flashcard Container */}
                 <div
-                  className='relative'
+                  className="relative"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
                 >
                   <AnimatePresence
-                    mode='wait'
+                    mode="wait"
                     custom={direction}
                     initial={false}
                   >
@@ -846,10 +846,10 @@ export function FlashcardsContent({
                       key={currentIndex}
                       custom={direction}
                       variants={cardVariants}
-                      initial='initial'
-                      animate='animate'
-                      exit='exit'
-                      className='relative'
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className="relative"
                     >
                       <motion.div
                         className={cn(
@@ -864,21 +864,21 @@ export function FlashcardsContent({
                         )}
                         onClick={() => setShowAnswer(!showAnswer)}
                       >
-                        <div className='relative z-10'>
-                          <div className='flex justify-between items-center mb-4'>
+                        <div className="relative z-10">
+                          <div className="flex justify-between items-center mb-4">
                             <Badge
-                              variant='outline'
-                              className='bg-[#E5E5E5] dark:bg-[#243442] border-none px-4 py-1.5 text-sm'
+                              variant="outline"
+                              className="bg-[#E5E5E5] dark:bg-[#243442] border-none px-4 py-1.5 text-sm"
                             >
                               {currentCard.type}
                             </Badge>
                             <div
                               onClick={(e) => e.stopPropagation()}
-                              className='flex items-center gap-3'
+                              className="flex items-center gap-3"
                             >
                               <button
                                 onClick={toggleBookmark}
-                                className='relative p-2.5 rounded-full'
+                                className="relative p-2.5 rounded-full"
                               >
                                 <Bookmark
                                   className={cn(
@@ -889,17 +889,17 @@ export function FlashcardsContent({
                                       : "fill-transparent text-muted-foreground"
                                   )}
                                 />
-                                <span className='sr-only'>Bookmark card</span>
+                                <span className="sr-only">Bookmark card</span>
                               </button>
                             </div>
                           </div>
 
-                          <div className='text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100'>
+                          <div className="text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100">
                             {currentCard.question}
                           </div>
 
-                          <div className='flex items-center mb-4'>
-                            <span className='text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                          <div className="flex items-center mb-4">
+                            <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                               {showAnswer ? "Hide Answer" : "Show Answer"}
                             </span>
                           </div>
@@ -911,10 +911,10 @@ export function FlashcardsContent({
                                 animate={{ opacity: 1, height: "auto", y: 0 }}
                                 exit={{ opacity: 0, height: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
-                                className='overflow-hidden'
+                                className="overflow-hidden"
                               >
-                                <div className='prose dark:prose-invert max-w-none'>
-                                  <div className='text-2xl text-gray-700 dark:text-gray-300'>
+                                <div className="prose dark:prose-invert max-w-none">
+                                  <div className="text-2xl text-gray-700 dark:text-gray-300">
                                     {currentCard.answer}
                                   </div>
                                 </div>
@@ -924,35 +924,35 @@ export function FlashcardsContent({
                         </div>
                       </motion.div>
 
-                      <div className='flex justify-center items-center px-4 mb-4'>
-                        <div className='flex items-center gap-8'>
+                      <div className="flex justify-center items-center px-4 mb-4">
+                        <div className="flex items-center gap-8">
                           <NavigationButton
-                            direction='left'
+                            direction="left"
                             onClick={handlePrevious}
                             disabled={remainingCards.length <= 1}
-                            label='Previous'
+                            label="Previous"
                           />
 
-                          <div className='flex gap-6 scale-110'>
+                          <div className="flex gap-6 scale-110">
                             <ActionButton
                               icon={X}
                               onClick={handleNext}
-                              variant='error'
-                              label='Skip'
+                              variant="error"
+                              label="Skip"
                             />
                             <ActionButton
                               icon={Check}
                               onClick={handleCorrect}
-                              variant='success'
-                              label='Got it!'
+                              variant="success"
+                              label="Got it!"
                             />
                           </div>
 
                           <NavigationButton
-                            direction='right'
+                            direction="right"
                             onClick={handleNext}
                             disabled={remainingCards.length <= 1}
-                            label='Next'
+                            label="Next"
                           />
                         </div>
                       </div>
@@ -961,7 +961,7 @@ export function FlashcardsContent({
 
                   {touchStart && touchEnd && (
                     <div
-                      className='absolute inset-y-0 left-0 w-full pointer-events-none'
+                      className="absolute inset-y-0 left-0 w-full pointer-events-none"
                       style={{
                         background: `linear-gradient(to ${
                           touchStart - touchEnd > 0 ? "left" : "right"
@@ -980,7 +980,7 @@ export function FlashcardsContent({
           )}
 
           {activeTab === "test" && (
-            <ScrollArea className='h-[calc(100vh-200px)]'>
+            <ScrollArea className="h-[calc(100vh-200px)]">
               {isTestMode && testSettings ? (
                 <TestInterface
                   settings={testSettings}
@@ -988,7 +988,7 @@ export function FlashcardsContent({
                   onComplete={handleTestComplete}
                 />
               ) : (
-                <div className='max-w-3xl mx-auto'>
+                <div className="max-w-3xl mx-auto">
                   <TestSetup
                     maxQuestions={questions.length}
                     onStartTest={handleStartTest}

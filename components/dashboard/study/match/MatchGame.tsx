@@ -5,7 +5,7 @@ import styles from "./match.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Question {
@@ -27,7 +27,6 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Delay animations until after initial render
     const timer = requestAnimationFrame(() => {
       setIsLoaded(true);
     });
@@ -76,23 +75,60 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
           as fast as you can. Avoid wrong matches, they add extra time!
         </p>
       </div>
-      <Button
+
+      <motion.button
         onClick={onStartGame}
-        className="relative w-[400px] h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+        className={cn(
+          "group relative w-full max-w-[280px] h-[52px]",
+          "bg-gray-900/90 dark:bg-white/10",
+          "backdrop-blur-sm",
+          "rounded-xl",
+          "border border-gray-800/50 dark:border-white/10",
+          "transition-all duration-300 ease-out",
+          "hover:bg-gray-900/95 dark:hover:bg-white/15",
+          "hover:-translate-y-0.5",
+          "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-orange-500/10",
+          "active:translate-y-0",
+          "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-orange-500/30",
+          "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
+        )}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#f97316] to-[#fb923c] opacity-100" />
-
-        <div className="absolute inset-0 bg-gradient-to-r from-[#f97316]/40 to-[#fb923c]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-        <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-          <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#f97316] to-[#fb923c]">
+        {/* Content wrapper */}
+        <div className="relative flex items-center justify-center gap-3">
+          {/* Text with subtle gradient */}
+          <span className="text-[15px] font-medium text-white dark:text-white/90">
             Start Game
           </span>
-        </div>
 
-        <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#f97316] via-transparent to-[#fb923c]" />
-        <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#f97316] via-transparent to-[#fb923c]" />
-      </Button>
+          {/* Minimal arrow */}
+          <motion.div
+            animate={{
+              x: [0, 3, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <svg
+              className="w-4 h-4 text-white/70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 12h16" />
+              <path d="m15 5 7 7-7 7" />
+            </svg>
+          </motion.div>
+        </div>
+      </motion.button>
     </div>
   );
 };

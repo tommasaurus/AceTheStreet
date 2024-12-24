@@ -25,6 +25,7 @@
   justify-content: center;
   min-height: 80vh;
   text-align: center;
+  padding: 1rem;
 }
 
 .gameComplete {
@@ -343,26 +344,22 @@
 .readyText {
   font-size: 3rem;
   font-weight: bold;
-  background: linear-gradient(to right, #f97316, #fb923c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #1f2937;
   margin: 0;
 }
 
 :global(.dark) .readyText {
-  background: linear-gradient(to right, #f97316, #fb923c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
 }
 
 .gameDescription {
   font-size: 1.25rem;
-  color: #6b7280;
+  color: #4b5563;
   line-height: 1.6;
 }
 
 :global(.dark) .gameDescription {
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 /* Specific classes for match game icon */
@@ -412,16 +409,16 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f97316, #fb923c);
+  background: linear-gradient(135deg, #1f2937, #2d3748);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: #f3f4f6;
   backface-visibility: hidden;
   transform: translateZ(15px);
-  box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 20px rgba(66, 53, 46, 0.2), 0 0 30px rgba(249, 115, 22, 0.08);
 }
 
 /* Back face */
@@ -430,24 +427,24 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f97316, #fb923c);
+  background: linear-gradient(135deg, #1f2937, #2d3748);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: #f3f4f6;
   backface-visibility: hidden;
   transform: translateZ(-15px) rotateY(180deg);
-  box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 20px rgba(66, 53, 46, 0.2), 0 0 30px rgba(249, 115, 22, 0.08);
 }
 
 /* Side faces */
 .matchIconCard span {
   position: absolute;
-  background: linear-gradient(135deg, #f97316, #fb923c);
+  background: linear-gradient(135deg, #1f2937, #2d3748);
   backface-visibility: hidden;
-  box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 20px rgba(66, 53, 46, 0.2), 0 0 30px rgba(249, 115, 22, 0.08);
 }
 
 /* Right face */
@@ -560,20 +557,22 @@
 .gameIcon:hover .matchIconCard::before,
 .gameIcon:hover .matchIconCard::after,
 .gameIcon:hover .matchIconCard span {
-  box-shadow: 0 0 50px rgba(249, 115, 22, 0.6);
+  box-shadow: 0 0 25px rgba(66, 53, 46, 0.25), 0 0 40px rgba(249, 115, 22, 0.12);
   filter: brightness(1.2) contrast(1.1);
 }
 
 :global(.dark) .matchIconCard::before,
 :global(.dark) .matchIconCard::after,
 :global(.dark) .matchIconCard span {
-  box-shadow: 0 0 40px rgba(249, 115, 22, 0.4);
+  background: linear-gradient(135deg, #f3f4f6, #ffffff);
+  color: #1f2937;
+  box-shadow: 0 0 40px rgba(243, 244, 246, 0.2);
 }
 
 :global(.dark) .gameIcon:hover .matchIconCard::before,
 :global(.dark) .gameIcon:hover .matchIconCard::after,
 :global(.dark) .gameIcon:hover .matchIconCard span {
-  box-shadow: 0 0 70px rgba(249, 115, 22, 0.7);
+  box-shadow: 0 0 70px rgba(243, 244, 246, 0.3);
   filter: brightness(1.2) contrast(1.1);
 }
 
@@ -590,7 +589,7 @@
 .matchIconCard::before,
 .matchIconCard::after,
 .matchIconCard span {
-  box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 20px rgba(66, 53, 46, 0.2), 0 0 30px rgba(249, 115, 22, 0.08);
   will-change: transform, box-shadow;
 }
 
@@ -598,5 +597,5 @@
 .gameIcon:hover .matchIconCard::before,
 .gameIcon:hover .matchIconCard::after,
 .gameIcon:hover .matchIconCard span {
-  box-shadow: 0 0 50px rgba(249, 115, 22, 0.5);
+  box-shadow: 0 0 25px rgba(66, 53, 46, 0.25), 0 0 40px rgba(249, 115, 22, 0.12);
 }

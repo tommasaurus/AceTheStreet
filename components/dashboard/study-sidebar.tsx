@@ -330,7 +330,9 @@ export function StudySidebar() {
                     className={cn(
                       "flex items-center gap-4 rounded-lg px-4 py-3 text-base transition-colors whitespace-nowrap relative",
                       pathname.startsWith(item.href)
-                        ? "bg-[#ECECEC] dark:bg-[#1c2936] text-black dark:text-white"
+                        ? item.name === "Match"
+                          ? "bg-orange-500/10 text-orange-600 dark:text-orange-400"
+                          : "bg-[#ECECEC] dark:bg-[#1c2936] text-black dark:text-white"
                         : "text-gray-600 dark:text-gray-300 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]",
                       isLocked && "opacity-75",
                       !isMobile && isCollapsed && "justify-center px-3 group"
@@ -339,6 +341,9 @@ export function StudySidebar() {
                     <ItemIcon
                       className={cn(
                         "shrink-0",
+                        pathname.startsWith(item.href) && item.name === "Match"
+                          ? "text-orange-500"
+                          : "",
                         !isMobile && isCollapsed ? "h-6 w-6" : "h-5 w-5"
                       )}
                     />

@@ -359,3 +359,25 @@ html {
   animation: shimmer 3s linear infinite;
   background-size: 200% 100%;
 }
+
+/* Add these styles for the header effects */
+.header-gradient {
+  background: linear-gradient(
+    to right,
+    hsl(var(--background)),
+    hsl(var(--background) / 0.9),
+    hsl(var(--background) / 0.8)
+  );
+  backdrop-filter: blur(8px);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--foreground)),
+    hsl(var(--foreground) / 0.8)
+  );
+}

@@ -30,6 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useSpring, animated } from "@react-spring/web";
+import { StudyHeader } from "@/components/dashboard/study/study-header";
 
 interface Question {
   id: number;
@@ -49,6 +50,8 @@ interface CategoryContent {
   category: string;
   questions: Question[];
 }
+
+type Content = BankContent | CategoryContent;
 
 type QuestionsData = {
   banks: {
@@ -647,6 +650,18 @@ export function FlashcardsContent({
     setIsSwiping(false);
   };
 
+  // Helper function to get the title
+  const getTitle = (content: Content | null) => {
+    if (!content) return "";
+    if (category === "banks" && "bank" in content) {
+      return content.bank;
+    }
+    if ("category" in content) {
+      return content.category;
+    }
+    return "";
+  };
+
   if (!content) {
     return <div>Content not found</div>;
   }
@@ -747,250 +762,225 @@ export function FlashcardsContent({
   const nextCard = remainingCards[(currentIndex + 1) % remainingCards.length];
 
   return (
-    <Tabs
-      defaultValue="flashcards"
-      className="w-full"
-      onValueChange={handleTabChange}
-    >
-      <TabsList className="grid w-full grid-cols-3 h-auto gap-4 mb-8">
-        <TabsTrigger value="flashcards" className="flex flex-col py-4 gap-2">
-          <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-            <LightbulbIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          </div>
-          <span>Flashcards</span>
-        </TabsTrigger>
-        <TabsTrigger value="test" className="flex flex-col py-4 gap-2">
-          <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-green-600 dark:text-green-400" />
-          </div>
-          <span>Test</span>
-        </TabsTrigger>
-        <TabsTrigger value="match" className="flex flex-col py-4 gap-2">
-          <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-            <Zap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-          </div>
-          <span>Match</span>
-        </TabsTrigger>
-      </TabsList>
+    <div className="relative">
+      <StudyHeader
+        title={getTitle(content)}
+        current={completedCards.length + 1}
+        total={questions.length}
+        onBack={() => window.history.back()}
+      />
 
-      <TabsContent value="flashcards">
-        <div className="min-h-[80vh] p-4 md:p-8">
-          <div className="max-w-6xl mx-auto space-y-8">
-            {/* Header Section */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Button variant="ghost" asChild>
-                  <Link
-                    href={
-                      category === "banks" ? "/study/banks" : "/study/m&i400"
-                    }
-                    className="flex items-center gap-2"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    Back
-                  </Link>
-                </Button>
-                <div>
-                  <h2 className="font-semibold text-lg">
-                    {category === "banks"
-                      ? "bank" in content
-                        ? content.bank
-                        : ""
-                      : "category" in content
-                      ? content.category
-                      : ""}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {currentCard.type}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 w-full sm:w-auto">
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {completedCards.length} of {questions.length}
-                </span>
-                <Progress value={progress} className="w-32 h-2" />
-              </div>
+      <div className="h-28" />
+
+      {/* Tabs Section */}
+      <Tabs
+        defaultValue="flashcards"
+        className="w-full"
+        onValueChange={handleTabChange}
+      >
+        <TabsList className="grid w-full grid-cols-3 h-auto gap-4 mb-8">
+          <TabsTrigger value="flashcards" className="flex flex-col py-4 gap-2">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+              <LightbulbIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
+            <span>Flashcards</span>
+          </TabsTrigger>
+          <TabsTrigger value="test" className="flex flex-col py-4 gap-2">
+            <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 text-green-600 dark:text-green-400" />
+            </div>
+            <span>Test</span>
+          </TabsTrigger>
+          <TabsTrigger value="match" className="flex flex-col py-4 gap-2">
+            <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+              <Zap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+            </div>
+            <span>Match</span>
+          </TabsTrigger>
+        </TabsList>
 
-            {/* Card Section */}
-            <div
-              className="relative min-h-[500px] overflow-hidden"
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
-              <AnimatePresence mode="wait" custom={direction} initial={false}>
-                <motion.div
-                  key={currentIndex}
-                  custom={direction}
-                  variants={cardVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="relative w-full max-w-3xl mx-auto absolute inset-0"
-                >
+        <TabsContent value="flashcards">
+          <div className="min-h-[80vh] p-4 md:p-8">
+            <div className="max-w-6xl mx-auto space-y-8">
+              {/* Card Section */}
+              <div
+                className="relative min-h-[500px] overflow-hidden"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                <AnimatePresence mode="wait" custom={direction} initial={false}>
                   <motion.div
-                    className={cn(
-                      "relative p-8 transition-colors duration-300",
-                      "bg-card/80 dark:bg-card/80",
-                      "border border-white/20 dark:border-white/10",
-                      "shadow-xl",
-                      "rounded-3xl",
-                      "overflow-hidden"
-                    )}
+                    key={currentIndex}
+                    custom={direction}
+                    variants={cardVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="relative w-full max-w-3xl mx-auto absolute inset-0"
                   >
-                    {/* Gradient Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-slow opacity-50" />
+                    <motion.div
+                      className={cn(
+                        "relative p-8 transition-colors duration-300",
+                        "bg-card/80 dark:bg-card/80",
+                        "border border-white/20 dark:border-white/10",
+                        "shadow-xl",
+                        "rounded-3xl",
+                        "overflow-hidden"
+                      )}
+                    >
+                      {/* Gradient Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-slow opacity-50" />
 
-                    {/* Content Container - Ensures content is above gradient */}
-                    <div className="relative z-10">
-                      {/* Card Controls */}
-                      <div className="flex justify-between items-center mb-8">
-                        <Badge
-                          variant="outline"
-                          className="bg-white/10 dark:bg-white/5 border-none px-4 py-1"
+                      {/* Content Container - Ensures content is above gradient */}
+                      <div className="relative z-10">
+                        {/* Card Controls */}
+                        <div className="flex justify-between items-center mb-8">
+                          <Badge
+                            variant="outline"
+                            className="bg-white/10 dark:bg-white/5 border-none px-4 py-1"
+                          >
+                            {currentCard.type}
+                          </Badge>
+                          <div className="flex items-center gap-3">
+                            <TextSizeControl
+                              fontSize={fontSize}
+                              setFontSize={setFontSize}
+                            />
+                            <IconButton
+                              icon={Volume2}
+                              onClick={() => {
+                                /* Add text-to-speech logic here */
+                              }}
+                              label="Read aloud"
+                            />
+                            <IconButton
+                              icon={Bookmark}
+                              onClick={() => {
+                                /* Add bookmark logic here */
+                              }}
+                              label="Bookmark card"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Question Content */}
+                        <motion.div
+                          className="text-xl md:text-2xl font-medium mb-6"
+                          style={{ fontSize: `${fontSize}px` }}
                         >
-                          {currentCard.type}
-                        </Badge>
-                        <div className="flex items-center gap-3">
-                          <TextSizeControl
-                            fontSize={fontSize}
-                            setFontSize={setFontSize}
+                          {currentCard.question}
+                        </motion.div>
+
+                        {/* Replace the existing button with the new FancyButton component */}
+                        <FancyButton
+                          onClick={() => setShowAnswer(!showAnswer)}
+                          showAnswer={showAnswer}
+                        />
+
+                        {/* Answer Section */}
+                        <AnimatePresence>
+                          {showAnswer && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0, y: 20 }}
+                              animate={{ opacity: 1, height: "auto", y: 0 }}
+                              exit={{ opacity: 0, height: 0, y: -20 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="prose dark:prose-invert max-w-none">
+                                <div
+                                  className="text-lg md:text-xl"
+                                  style={{ fontSize: `${fontSize}px` }}
+                                >
+                                  {currentCard.answer}
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </motion.div>
+
+                    {/* Navigation Controls */}
+                    <div className="absolute -bottom-24 left-0 right-0 flex justify-center items-center px-4">
+                      <div className="flex items-center gap-8">
+                        <NavigationButton
+                          direction="left"
+                          onClick={handlePrevious}
+                          disabled={remainingCards.length <= 1}
+                          label="Previous"
+                        />
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-6 scale-110">
+                          <ActionButton
+                            icon={X}
+                            onClick={handleNext}
+                            variant="error"
+                            label="Skip"
                           />
-                          <IconButton
-                            icon={Volume2}
-                            onClick={() => {
-                              /* Add text-to-speech logic here */
-                            }}
-                            label="Read aloud"
-                          />
-                          <IconButton
-                            icon={Bookmark}
-                            onClick={() => {
-                              /* Add bookmark logic here */
-                            }}
-                            label="Bookmark card"
+                          <ActionButton
+                            icon={Check}
+                            onClick={handleCorrect}
+                            variant="success"
+                            label="Got it!"
                           />
                         </div>
+
+                        <NavigationButton
+                          direction="right"
+                          onClick={handleNext}
+                          disabled={remainingCards.length <= 1}
+                          label="Next"
+                        />
                       </div>
-
-                      {/* Question Content */}
-                      <motion.div
-                        className="text-xl md:text-2xl font-medium mb-6"
-                        style={{ fontSize: `${fontSize}px` }}
-                      >
-                        {currentCard.question}
-                      </motion.div>
-
-                      {/* Replace the existing button with the new FancyButton component */}
-                      <FancyButton
-                        onClick={() => setShowAnswer(!showAnswer)}
-                        showAnswer={showAnswer}
-                      />
-
-                      {/* Answer Section */}
-                      <AnimatePresence>
-                        {showAnswer && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0, y: 20 }}
-                            animate={{ opacity: 1, height: "auto", y: 0 }}
-                            exit={{ opacity: 0, height: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="prose dark:prose-invert max-w-none">
-                              <div
-                                className="text-lg md:text-xl"
-                                style={{ fontSize: `${fontSize}px` }}
-                              >
-                                {currentCard.answer}
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </div>
                   </motion.div>
+                </AnimatePresence>
 
-                  {/* Navigation Controls */}
-                  <div className="absolute -bottom-24 left-0 right-0 flex justify-center items-center px-4">
-                    <div className="flex items-center gap-8">
-                      <NavigationButton
-                        direction="left"
-                        onClick={handlePrevious}
-                        disabled={remainingCards.length <= 1}
-                        label="Previous"
-                      />
-
-                      {/* Action Buttons */}
-                      <div className="flex gap-6 scale-110">
-                        <ActionButton
-                          icon={X}
-                          onClick={handleNext}
-                          variant="error"
-                          label="Skip"
-                        />
-                        <ActionButton
-                          icon={Check}
-                          onClick={handleCorrect}
-                          variant="success"
-                          label="Got it!"
-                        />
-                      </div>
-
-                      <NavigationButton
-                        direction="right"
-                        onClick={handleNext}
-                        disabled={remainingCards.length <= 1}
-                        label="Next"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Swipe Indicator */}
-              {touchStart && touchEnd && (
-                <div
-                  className="absolute inset-y-0 left-0 w-full pointer-events-none"
-                  style={{
-                    background: `linear-gradient(to ${
-                      touchStart - touchEnd > 0 ? "left" : "right"
-                    }, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.1))`,
-                    opacity: Math.min(
-                      Math.abs(touchStart - touchEnd) / 200,
-                      0.5
-                    ),
-                    transition: "opacity 0.2s ease",
-                  }}
-                />
-              )}
+                {/* Swipe Indicator */}
+                {touchStart && touchEnd && (
+                  <div
+                    className="absolute inset-y-0 left-0 w-full pointer-events-none"
+                    style={{
+                      background: `linear-gradient(to ${
+                        touchStart - touchEnd > 0 ? "left" : "right"
+                      }, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.1))`,
+                      opacity: Math.min(
+                        Math.abs(touchStart - touchEnd) / 200,
+                        0.5
+                      ),
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </TabsContent>
+        </TabsContent>
 
-      <TabsContent value="test">
-        <ScrollArea className="h-[calc(100vh-200px)]">
-          {isTestMode && testSettings ? (
-            <TestInterface
-              settings={testSettings}
-              questions={questions}
-              onComplete={handleTestComplete}
-            />
-          ) : (
-            <TestSetup
-              maxQuestions={questions.length}
-              onStartTest={handleStartTest}
-            />
-          )}
-        </ScrollArea>
-      </TabsContent>
+        <TabsContent value="test">
+          <ScrollArea className="h-[calc(100vh-200px)]">
+            {isTestMode && testSettings ? (
+              <TestInterface
+                settings={testSettings}
+                questions={questions}
+                onComplete={handleTestComplete}
+              />
+            ) : (
+              <TestSetup
+                maxQuestions={questions.length}
+                onStartTest={handleStartTest}
+              />
+            )}
+          </ScrollArea>
+        </TabsContent>
 
-      <TabsContent value="match">
-        <MatchContent />
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="match">
+          <MatchContent />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

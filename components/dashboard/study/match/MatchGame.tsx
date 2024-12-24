@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./match.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import { Button } from "@/components/ui/button";
 
 interface Question {
   question: string;
@@ -73,9 +74,23 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
           as fast as you can. Avoid wrong matches, they add extra time!
         </p>
       </div>
-      <button className={styles.startGameButton} onClick={onStartGame}>
-        Start game
-      </button>
+      <Button
+        onClick={onStartGame}
+        className="relative w-[400px] h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-[#f97316] to-[#fb923c] opacity-100" />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-[#f97316]/40 to-[#fb923c]/40 blur-md group-hover:opacity-75 transition-opacity" />
+
+        <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
+          <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#f97316] to-[#fb923c]">
+            Start Game
+          </span>
+        </div>
+
+        <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#f97316] via-transparent to-[#fb923c]" />
+        <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#f97316] via-transparent to-[#fb923c]" />
+      </Button>
     </div>
   );
 };

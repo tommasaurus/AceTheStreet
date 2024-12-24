@@ -70,8 +70,13 @@ function generateQuestions(
   questions: Question[],
   settings: TestSettings
 ): TestQuestion[] {
+  console.log("Input questions:", questions);
+  console.log("Settings:", settings);
+
   const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
   const selectedQuestions = shuffledQuestions.slice(0, settings.questionCount);
+
+  console.log("Selected questions:", selectedQuestions);
 
   const enabledTypes = Object.entries(settings.questionTypes)
     .filter(([_, enabled]) => enabled)
@@ -93,9 +98,15 @@ function generateQuestions(
     switch (questionType) {
       case "trueFalse": {
         const isTrue = Math.random() > 0.5;
-        const randomWrongAnswer = shuffledQuestions.filter(
+        const availableWrongAnswers = shuffledQuestions.filter(
           (wrong) => wrong.answer !== q.answer
-        )[Math.floor(Math.random() * (shuffledQuestions.length - 1))].answer;
+        );
+        const randomWrongAnswer =
+          availableWrongAnswers.length > 0
+            ? availableWrongAnswers[
+                Math.floor(Math.random() * availableWrongAnswers.length)
+              ].answer
+            : "No answer available";
 
         const tfQuestion: TrueFalseTestQuestion = {
           ...baseQuestion,

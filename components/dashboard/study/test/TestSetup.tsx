@@ -24,8 +24,8 @@ interface TestSetupProps {
 
 export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
   const [settings, setSettings] = useState<TestSettings>({
-    questionCount: 10,
-    timeLimit: 10,
+    questionCount: Math.min(10, maxQuestions),
+    timeLimit: 15,
     questionTypes: {
       trueFalse: true,
       multipleChoice: true,
@@ -92,9 +92,20 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
 
         <Button
           onClick={scrollToPreferences}
-          className={styles.configureButton}
+          className="relative w-[400px] mx-auto h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
         >
-          Configure Test
+          <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] to-[#4ade80] opacity-100" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e]/40 to-[#4ade80]/40 blur-md group-hover:opacity-75 transition-opacity" />
+
+          <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
+            <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
+              Configure Test
+            </span>
+          </div>
+
+          <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
+          <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
         </Button>
       </div>
 
@@ -164,7 +175,7 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
                   onCheckedChange={(checked) =>
                     handleCheckedChange("trueFalse", checked)
                   }
-                  className={styles.checkbox}
+                  className="border-[#22c55e] data-[state=checked]:bg-[#22c55e] data-[state=checked]:text-white"
                 />
                 <label className={styles.checkboxLabel}>True/False</label>
               </div>
@@ -174,7 +185,7 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
                   onCheckedChange={(checked) =>
                     handleCheckedChange("multipleChoice", checked)
                   }
-                  className={styles.checkbox}
+                  className="border-[#22c55e] data-[state=checked]:bg-[#22c55e] data-[state=checked]:text-white"
                 />
                 <label className={styles.checkboxLabel}>Multiple Choice</label>
               </div>
@@ -184,15 +195,29 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
                   onCheckedChange={(checked) =>
                     handleCheckedChange("matching", checked)
                   }
-                  className={styles.checkbox}
+                  className="border-[#22c55e] data-[state=checked]:bg-[#22c55e] data-[state=checked]:text-white"
                 />
                 <label className={styles.checkboxLabel}>Matching</label>
               </div>
             </div>
           </div>
 
-          <Button onClick={handleStartTest} className={styles.startTestButton}>
-            Start Test
+          <Button
+            onClick={handleStartTest}
+            className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] to-[#4ade80] opacity-100" />
+
+            <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e]/40 to-[#4ade80]/40 blur-md group-hover:opacity-75 transition-opacity" />
+
+            <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
+              <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
+                Start Test
+              </span>
+            </div>
+
+            <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
+            <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
           </Button>
         </div>
       </div>

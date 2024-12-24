@@ -103,18 +103,10 @@ export default function M_and_I_Page() {
                 href={`/study/m&i400/${category.id}`}
                 className='block group'
               >
-                <Card className='relative h-[280px] rounded-3xl border-0 bg-[#ECECEC] dark:bg-[#1c2936] p-8 overflow-hidden transition-all duration-500'>
-                  {/* Gradient Background */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 dark:group-hover:opacity-10 transition-opacity duration-500`}
-                  />
-
-                  {/* Animated Border */}
-                  <div className='absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 dark:from-transparent dark:via-white/5 dark:to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-
+                <Card className='relative h-[280px] rounded-3xl border-0 bg-[#ECECEC] dark:bg-[#1c2936] p-8 overflow-hidden'>
                   <CardHeader className='relative p-0 h-full z-10'>
                     <div className='flex h-full flex-col justify-between'>
-                      <div className='space-y-3 transform transition-transform duration-500 group-hover:translate-x-2'>
+                      <div className='space-y-3'>
                         <CardTitle className='text-3xl font-semibold text-black dark:text-white'>
                           {category.name}
                         </CardTitle>
@@ -123,14 +115,14 @@ export default function M_and_I_Page() {
                         </p>
                       </div>
 
-                      <div className='flex items-center justify-between transform transition-all duration-500 group-hover:translate-x-2'>
+                      <div className='flex items-center justify-between'>
                         <Badge
                           variant='secondary'
                           className='text-sm py-1.5 px-4 rounded-full bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300 backdrop-blur-sm'
                         >
                           {category.questionCount} Questions
                         </Badge>
-                        <div className='w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-sm flex items-center justify-center transform transition-transform duration-500 group-hover:translate-x-1'>
+                        <div className='w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-sm flex items-center justify-center'>
                           <span className='text-sm font-medium text-gray-600 dark:text-gray-300'>
                             →
                           </span>

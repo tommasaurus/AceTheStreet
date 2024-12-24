@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -28,6 +28,8 @@ import {
 import { TestInterface } from "@/components/dashboard/study/test/TestInterface";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { useSpring, animated } from "@react-spring/web";
 
 interface Question {
   id: number;
@@ -213,6 +215,90 @@ interface FlashcardsContentProps {
   categoryId?: string;
 }
 
+const cardVariants = {
+  initial: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 1000 : -1000,
+    scale: 0.95,
+  }),
+  animate: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for smooth animation
+    },
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -1000 : 1000,
+    scale: 0.95,
+    transition: {
+      duration: 0.3,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
+
+const FancyButton = ({
+  onClick,
+  showAnswer,
+}: {
+  onClick: () => void;
+  showAnswer: boolean;
+}) => (
+  <motion.div
+    className="w-full mb-6 relative group"
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    {/* Glow effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity animate-gradient-slow" />
+
+    <Button
+      variant="default"
+      onClick={onClick}
+      className={cn(
+        "w-full relative",
+        "bg-white dark:bg-background/50",
+        "border-2 border-transparent",
+        "rounded-xl h-12",
+        "font-medium tracking-wide",
+        "transition-all duration-300",
+        "backdrop-blur-sm",
+        "overflow-hidden",
+        "text-gray-800 dark:text-gray-100",
+        "hover:bg-white/90 dark:hover:bg-background/70",
+        "group/button"
+      )}
+    >
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 opacity-0 group-hover/button:opacity-100 transition-opacity" />
+
+      {/* Animated shine effect */}
+      <div className="absolute inset-0 opacity-0 group-hover/button:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      </div>
+
+      {/* Text with icon */}
+      <div className="relative flex items-center justify-center gap-2">
+        <motion.div
+          initial={false}
+          animate={{ rotate: showAnswer ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-gray-800 dark:text-gray-100"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </motion.div>
+        <span className="relative">
+          {showAnswer ? "Hide Answer" : "Show Answer"}
+        </span>
+      </div>
+    </Button>
+  </motion.div>
+);
+
 export function FlashcardsContent({
   category,
   bankId,
@@ -225,6 +311,10 @@ export function FlashcardsContent({
   const [prevIndex, setPrevIndex] = useState(0);
   const [isTestMode, setIsTestMode] = useState(false);
   const [testSettings, setTestSettings] = useState<TestSettings | null>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [direction, setDirection] = useState(0);
 
   const handleStartTest = (settings: TestSettings) => {
     if (
@@ -285,6 +375,7 @@ export function FlashcardsContent({
     setShowAnswer(false);
     if (remainingCards.length > 1) {
       setPrevIndex(currentIndex);
+      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % remainingCards.length);
     }
   };
@@ -293,6 +384,7 @@ export function FlashcardsContent({
     setShowAnswer(false);
     if (remainingCards.length > 1) {
       setPrevIndex(currentIndex);
+      setDirection(-1);
       setCurrentIndex(
         (prev) => (prev - 1 + remainingCards.length) % remainingCards.length
       );
@@ -318,6 +410,37 @@ export function FlashcardsContent({
   };
 
   const progress = (completedCards.length / questions.length) * 100;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+    setTouchEnd(null);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.touches[0].clientX);
+    setIsSwiping(true);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) >= minSwipeDistance) {
+      if (distance > 0) {
+        // Swiped left - go to next card
+        handleNext();
+      } else {
+        // Swiped right - go to previous card
+        handlePrevious();
+      }
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+    setIsSwiping(false);
+  };
 
   if (!content) {
     return <div>Content not found</div>;
@@ -449,7 +572,7 @@ export function FlashcardsContent({
         <div className="min-h-[80vh] p-4 md:p-8">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Header Section */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <Button variant="ghost" asChild>
                   <Link
@@ -477,121 +600,129 @@ export function FlashcardsContent({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">
-                  {completedCards.length} of {questions.length} completed
+              <div className="flex items-center gap-4 w-full sm:w-auto">
+                <span className="text-sm font-medium whitespace-nowrap">
+                  {completedCards.length} of {questions.length}
                 </span>
                 <Progress value={progress} className="w-32 h-2" />
               </div>
             </div>
 
-            {/* Cards Section */}
-            <div className="relative min-h-[500px] flex items-center justify-center">
-              {/* Previous Card */}
-              {remainingCards.length > 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: -100 }}
-                  animate={{ opacity: 0.5, x: 0 }}
-                  className="absolute left-0 w-80 h-[300px] -ml-18 cursor-pointer"
-                  onClick={handlePrevious}
-                >
-                  <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform -rotate-6 h-full blur-[2px] hover:blur-none transition-all duration-300">
-                    <div className="text-base font-medium truncate">
-                      {prevCard.question}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Current Card */}
-              <AnimatePresence mode="wait">
+            {/* Card Section */}
+            <div
+              className="relative min-h-[500px] overflow-hidden"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <AnimatePresence mode="wait" custom={direction} initial={false}>
                 <motion.div
                   key={currentIndex}
-                  initial={{
-                    opacity: 0,
-                    x: showAnswer ? 0 : currentIndex > prevIndex ? 300 : -300,
-                    rotate: showAnswer ? 0 : currentIndex > prevIndex ? 6 : -6,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                    rotate: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    x: currentIndex > prevIndex ? -300 : 300,
-                    rotate: currentIndex > prevIndex ? -6 : 6,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                  className="w-full max-w-xl z-10"
-                  style={{ minHeight: showAnswer ? "600px" : "500px" }}
+                  custom={direction}
+                  variants={cardVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="relative w-full max-w-3xl mx-auto absolute inset-0"
                 >
-                  <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg h-full relative">
-                    <div className="flex justify-between items-start mb-6">
-                      <Badge
-                        variant={
-                          currentCard.type === "Technical"
-                            ? "default"
-                            : "secondary"
-                        }
-                      >
-                        {currentCard.type}
-                      </Badge>
-                      <div className="flex items-center gap-4">
-                        {/* Font size slider */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">
-                            Aa
-                          </span>
-                          <Slider
-                            className="w-24"
-                            min={12}
-                            max={24}
-                            step={1}
-                            value={[fontSize]}
-                            onValueChange={(value) => setFontSize(value[0])}
-                          />
-                          <span className="text-base text-muted-foreground">
-                            Aa
-                          </span>
+                  <motion.div
+                    className={cn(
+                      "relative p-8 transition-colors duration-300",
+                      "bg-card/80 dark:bg-card/80",
+                      "border border-white/20 dark:border-white/10",
+                      "shadow-xl",
+                      "rounded-3xl",
+                      "overflow-hidden"
+                    )}
+                  >
+                    {/* Gradient Background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-slow opacity-50" />
+
+                    {/* Content Container - Ensures content is above gradient */}
+                    <div className="relative z-10">
+                      {/* Card Controls */}
+                      <div className="flex justify-between items-center mb-8">
+                        <Badge
+                          variant="outline"
+                          className="bg-white/10 dark:bg-white/5 border-none px-4 py-1"
+                        >
+                          {currentCard.type}
+                        </Badge>
+                        <div className="flex items-center gap-3">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="rounded-full"
+                          >
+                            <Volume2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="rounded-full"
+                          >
+                            <Bookmark className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <Button variant="ghost" size="icon">
-                          <Volume2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <Bookmark className="h-4 w-4" />
-                        </Button>
                       </div>
+
+                      {/* Question Content */}
+                      <motion.div
+                        className="text-xl md:text-2xl font-medium mb-6"
+                        style={{ fontSize: `${fontSize}px` }}
+                      >
+                        {currentCard.question}
+                      </motion.div>
+
+                      {/* Replace the existing button with the new FancyButton component */}
+                      <FancyButton
+                        onClick={() => setShowAnswer(!showAnswer)}
+                        showAnswer={showAnswer}
+                      />
+
+                      {/* Answer Section */}
+                      <AnimatePresence>
+                        {showAnswer && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0, y: 20 }}
+                            animate={{ opacity: 1, height: "auto", y: 0 }}
+                            exit={{ opacity: 0, height: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="prose dark:prose-invert max-w-none">
+                              <div
+                                className="text-lg md:text-xl"
+                                style={{ fontSize: `${fontSize}px` }}
+                              >
+                                {currentCard.answer}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    <div
-                      className="text-xl md:text-2xl font-medium mb-4"
-                      style={{ fontSize: `${fontSize}px` }}
-                    >
-                      {currentCard.question}
-                    </div>
+                  </motion.div>
+
+                  {/* Navigation Controls */}
+                  <div className="absolute -bottom-20 left-0 right-0 flex justify-between items-center px-4">
                     <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => setShowAnswer(!showAnswer)}
+                      variant="ghost"
+                      onClick={handlePrevious}
+                      disabled={remainingCards.length <= 1}
+                      className="flex items-center gap-2"
                     >
-                      {showAnswer ? "Hide Answer" : "Show Answer"}
+                      <ChevronLeft className="h-4 w-4" />
+                      Previous
                     </Button>
 
-                    {/* Controls Section */}
-                    <motion.div
-                      className="flex justify-center gap-4 mt-8"
-                      animate={{ opacity: showAnswer ? 0 : 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    {/* Check/X Buttons */}
+                    <div className="flex gap-4">
                       <Button
                         variant="destructive"
                         size="lg"
                         onClick={handleNext}
-                        className="w-12 h-12 rounded-full p-0"
+                        className="rounded-full w-12 h-12 p-0"
                       >
                         <X className="h-6 w-6" />
                       </Button>
@@ -599,73 +730,54 @@ export function FlashcardsContent({
                         variant="default"
                         size="lg"
                         onClick={handleCorrect}
-                        className="w-12 h-12 rounded-full p-0 bg-green-500 hover:bg-green-600"
+                        className="rounded-full w-12 h-12 p-0 bg-green-500 hover:bg-green-600"
                       >
                         <Check className="h-6 w-6" />
                       </Button>
-                    </motion.div>
-                  </div>
+                    </div>
 
-                  {/* Answer Card */}
-                  <AnimatePresence>
-                    {showAnswer && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        className="mt-4"
-                      >
-                        <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg">
-                          <div
-                            className="text-xl md:text-2xl font-medium"
-                            style={{ fontSize: `${fontSize}px` }}
-                          >
-                            {currentCard.answer}
-                          </div>
-                        </div>
-                        <motion.div
-                          className="flex justify-center gap-4 mt-4"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          <Button
-                            variant="destructive"
-                            size="lg"
-                            onClick={handleNext}
-                            className="w-12 h-12 rounded-full p-0"
-                          >
-                            <X className="h-6 w-6" />
-                          </Button>
-                          <Button
-                            variant="default"
-                            size="lg"
-                            onClick={handleCorrect}
-                            className="w-12 h-12 rounded-full p-0 bg-green-500 hover:bg-green-600"
-                          >
-                            <Check className="h-6 w-6" />
-                          </Button>
-                        </motion.div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    <Button
+                      variant="ghost"
+                      onClick={handleNext}
+                      disabled={remainingCards.length <= 1}
+                      className="flex items-center gap-2"
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Next Card */}
-              {remainingCards.length > 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 0.5, x: 0 }}
-                  className="absolute right-0 w-80 h-[300px] -mr-18 cursor-pointer"
-                  onClick={handleNext}
-                >
-                  <div className="bg-card text-card-foreground rounded-xl p-10 shadow-lg transform rotate-6 h-full blur-[2px] hover:blur-none transition-all duration-300">
-                    <div className="text-base font-medium truncate">
-                      {nextCard.question}
-                    </div>
-                  </div>
-                </motion.div>
+              {/* Swipe Indicator */}
+              {touchStart && touchEnd && (
+                <div
+                  className="absolute inset-y-0 left-0 w-full pointer-events-none"
+                  style={{
+                    background: `linear-gradient(to ${
+                      touchStart - touchEnd > 0 ? "left" : "right"
+                    }, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.1))`,
+                    opacity: Math.min(
+                      Math.abs(touchStart - touchEnd) / 200,
+                      0.5
+                    ),
+                    transition: "opacity 0.2s ease",
+                  }}
+                />
               )}
+            </div>
+
+            {/* Font Size Controls */}
+            <div className="flex justify-end items-center gap-4">
+              <span className="text-sm text-muted-foreground">Text Size</span>
+              <Slider
+                className="w-32"
+                min={12}
+                max={24}
+                step={1}
+                value={[fontSize]}
+                onValueChange={(value) => setFontSize(value[0])}
+              />
             </div>
           </div>
         </div>

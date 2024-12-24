@@ -10,8 +10,8 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   return (
     <div className="min-h-screen">
-      {/* Reduced top padding from 72px to 48px */}
-      <div className="pt-[48px] pb-8">
+      {/* Main content with padding to account for fixed header */}
+      <div className="pt-[72px] pb-8">
         <div className="container mx-auto">
           <FlashcardsContent category="banks" bankId={params.id} />
         </div>

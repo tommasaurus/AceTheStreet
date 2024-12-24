@@ -996,23 +996,23 @@ export function FlashcardsContent({
           </div>
         </TabsContent>
 
-        <TabsContent value="test" className="min-h-[80vh]">
-          {isTestMode ? (
-            <TestInterface
-              questions={questions}
-              settings={testSettings!}
-              onComplete={handleTestComplete}
-            />
-          ) : (
-            <div className="relative p-8">
+        <TabsContent value="test">
+          <ScrollArea className="h-[calc(100vh-200px)]">
+            {isTestMode && testSettings ? (
+              <TestInterface
+                settings={testSettings}
+                questions={questions}
+                onComplete={handleTestComplete}
+              />
+            ) : (
               <div className="max-w-3xl mx-auto">
                 <TestSetup
-                  onStart={handleStartTest}
-                  questionCount={questions.length}
+                  maxQuestions={questions.length}
+                  onStartTest={handleStartTest}
                 />
               </div>
-            </div>
-          )}
+            )}
+          </ScrollArea>
         </TabsContent>
 
         <TabsContent value="match">

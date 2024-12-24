@@ -5,6 +5,8 @@ import styles from "./match.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Question {
   question: string;
@@ -134,9 +136,19 @@ const PenaltyAnimation = ({ isVisible }: { isVisible: boolean }) => (
     {isVisible && (
       <motion.div
         initial={{ opacity: 0, y: 0 }}
-        animate={{ opacity: 1, y: -30 }}
-        exit={{ opacity: 0 }}
-        className={styles.penaltyText}
+        animate={{
+          opacity: [0, 1, 1, 0],
+          y: -30,
+          scale: [1, 1.2, 1.2, 1],
+        }}
+        transition={{
+          duration: 1,
+          times: [0, 0.2, 0.8, 1],
+        }}
+        className={cn(
+          styles.penaltyText,
+          "font-bold text-red-500 dark:text-red-400"
+        )}
       >
         +2s
       </motion.div>
@@ -284,33 +296,93 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
   return (
     <div className={styles.gameContainer}>
       <div className={styles.gameHeader}>
-        <div className={styles.exitButtonContainer}>
-          <ExitButton onExit={handleExit} />
+        <div className="relative w-full flex items-center justify-between px-8 py-4 bg-gradient-to-r from-background/80 to-background rounded-2xl border border-border/50 backdrop-blur-sm">
+          <div className={styles.exitButtonContainer}>
+            <Button
+              onClick={handleExit}
+              variant="ghost"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Exit
+            </Button>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <span className="text-sm text-muted-foreground mb-1">Time</span>
+            <motion.div
+              className={cn(
+                "text-3xl font-bold bg-clip-text text-transparent",
+                "bg-gradient-to-r from-orange-500 to-orange-600"
+              )}
+              animate={{ scale: showPenalty ? [1, 1.1, 1] : 1 }}
+            >
+              {(time / 1000).toFixed(1)}s
+            </motion.div>
+          </div>
+
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-muted-foreground mb-1">Matched</span>
+            <span className="font-semibold">
+              {matchedPairs.length / 2} / {questions.length}
+            </span>
+          </div>
         </div>
-        <Timer time={time} />
-        <div className={styles.spacer}></div>
       </div>
-      <div className={styles.matchGameGrid}>
+
+      <div
+        className={cn(
+          styles.matchGameGrid,
+          "relative p-8 rounded-2xl",
+          "bg-gradient-to-b from-background/50 to-background/30",
+          "border border-border/50 backdrop-blur-sm"
+        )}
+      >
         {shuffledCards.map((card) => (
           <motion.div
             key={card.id}
-            className={`${styles.matchCard} 
-              ${selectedCard?.id === card.id ? styles.selected : ""} 
-              ${matchedPairs.includes(card.id) ? styles.matched : ""}
-              ${wrongPair.includes(card.id) ? styles.wrong : ""}
-              ${card.type === "blank" ? styles.blank : ""}`}
+            className={cn(
+              styles.matchCard,
+              "relative overflow-hidden",
+              "bg-card/95 dark:bg-card/95",
+              "border border-border/50",
+              "shadow-sm hover:shadow-md",
+              "transition-all duration-300",
+              selectedCard?.id === card.id && "ring-2 ring-orange-500/50",
+              matchedPairs.includes(card.id) &&
+                "ring-2 ring-green-500/50 bg-green-500/5",
+              wrongPair.includes(card.id) &&
+                "ring-2 ring-red-500/50 bg-red-500/5",
+              card.type === "blank" && "opacity-0 pointer-events-none"
+            )}
             onClick={() => handleCardClick(card)}
+            whileHover={{ scale: card.type !== "blank" ? 1.02 : 1 }}
             animate={
-              matchedPairs.includes(card.id) ? { scale: [1, 1.1, 1] } : {}
+              matchedPairs.includes(card.id)
+                ? {
+                    scale: [1, 1.05, 1],
+                    transition: { duration: 0.5 },
+                  }
+                : {}
             }
-            transition={{ duration: 0.3 }}
           >
-            <div className={styles.cardContent}>
+            <div className="absolute inset-0 bg-gradient-to-br from-background/50 to-transparent opacity-50" />
+
+            <div
+              className={cn(
+                styles.cardContent,
+                "relative z-10 p-4",
+                "text-sm md:text-base font-medium",
+                "transition-colors duration-300"
+              )}
+            >
               {card.content}
               {wrongPair.includes(card.id) && card.id === lastClickedCard && (
                 <PenaltyAnimation isVisible={showPenalty} />
               )}
             </div>
+
+            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
           </motion.div>
         ))}
       </div>

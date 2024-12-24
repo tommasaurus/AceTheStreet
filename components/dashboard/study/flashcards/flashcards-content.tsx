@@ -753,10 +753,10 @@ export function FlashcardsContent({
                 asChild
                 className={cn(
                   "relative h-12 overflow-hidden rounded-full",
-                  "bg-white/20 backdrop-blur-md",
-                  "border border-white/10",
-                  "text-white font-medium text-lg",
-                  "[&:hover]:bg-white/20 [&:hover]:opacity-100"
+                  "bg-gray-900/10 dark:bg-white/20 backdrop-blur-md",
+                  "border border-gray-900/20 dark:border-white/10",
+                  "text-gray-900 dark:text-white font-medium text-lg",
+                  "[&:hover]:bg-gray-900/10 dark:[&:hover]:bg-white/20 [&:hover]:opacity-100"
                 )}
               >
                 <Link

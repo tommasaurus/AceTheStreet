@@ -299,6 +299,211 @@ const FancyButton = ({
   </motion.div>
 );
 
+// Update the TextSizeControl component
+const TextSizeControl = ({
+  fontSize,
+  setFontSize,
+}: {
+  fontSize: number;
+  setFontSize: (size: number) => void;
+}) => (
+  <motion.div
+    className="relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5"
+    whileHover={{ scale: 1.02 }}
+  >
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => setFontSize(Math.max(12, fontSize - 2))}
+        className="text-sm opacity-60 hover:opacity-100 transition-opacity"
+      >
+        A
+      </button>
+      <div className="h-3 w-px bg-gray-400/20" />
+      <button
+        onClick={() => setFontSize(Math.min(24, fontSize + 2))}
+        className="text-lg font-medium opacity-60 hover:opacity-100 transition-opacity"
+      >
+        A
+      </button>
+    </div>
+
+    {/* Tooltip */}
+    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+      Adjust text size
+    </span>
+  </motion.div>
+);
+
+// Add this new component for the action buttons
+const ActionButton = ({
+  icon: Icon,
+  onClick,
+  variant = "default",
+  label,
+}: {
+  icon: any;
+  onClick: () => void;
+  variant?: "success" | "error" | "default";
+  label: string;
+}) => {
+  const colors = {
+    success:
+      "from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700",
+    error: "from-red-500 to-rose-600 dark:from-red-600 dark:to-rose-700",
+    default:
+      "from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700",
+  };
+
+  return (
+    <motion.div
+      className="relative"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      {/* Glow effect */}
+      <div
+        className={cn(
+          "absolute inset-0 rounded-full blur-xl opacity-30 group-hover:opacity-40 transition-opacity",
+          variant === "success" && "bg-green-500/50",
+          variant === "error" && "bg-red-500/50"
+        )}
+      />
+
+      <motion.button
+        onClick={onClick}
+        className={cn(
+          "relative w-14 h-14 rounded-full flex items-center justify-center",
+          "bg-gradient-to-br",
+          colors[variant],
+          "shadow-lg",
+          "border border-white/10",
+          "transition-all duration-300 ease-out",
+          "group"
+        )}
+        whileHover={{ y: -2 }}
+      >
+        {/* Inner gradient overlay */}
+        <div className="absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        {/* Icon container */}
+        <div className="relative z-10">
+          <Icon className="w-6 h-6 text-white" />
+        </div>
+
+        {/* Tooltip */}
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          {label}
+        </span>
+      </motion.button>
+    </motion.div>
+  );
+};
+
+// Add this new component for the icon buttons
+const IconButton = ({
+  icon: Icon,
+  onClick,
+  label,
+}: {
+  icon: any;
+  onClick?: () => void;
+  label: string;
+}) => (
+  <motion.div className="relative group">
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={onClick}
+      className="rounded-full hover:bg-white/10 dark:hover:bg-white/5"
+    >
+      <Icon className="w-4 h-4" />
+    </Button>
+    {/* Tooltip */}
+    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+      {label}
+    </span>
+  </motion.div>
+);
+
+// Add this new component for navigation buttons
+const NavigationButton = ({
+  direction,
+  onClick,
+  disabled,
+  label,
+}: {
+  direction: "left" | "right";
+  onClick: () => void;
+  disabled: boolean;
+  label: string;
+}) => (
+  <motion.div
+    whileHover={{ x: direction === "left" ? -3 : 3, scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+    className={cn(
+      "relative group",
+      disabled && "opacity-50 pointer-events-none"
+    )}
+  >
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
+
+    <Button
+      variant="ghost"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "relative flex items-center gap-2 px-4 py-2 rounded-full",
+        "bg-white/5 dark:bg-white/5",
+        "hover:bg-white/10 dark:hover:bg-white/10",
+        "border border-white/10 dark:border-white/10",
+        "transition-all duration-300",
+        "group/button"
+      )}
+    >
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-full opacity-0 group-hover/button:opacity-100 transition-opacity" />
+
+      {/* Content */}
+      <div className="relative flex items-center gap-2">
+        {direction === "left" && (
+          <motion.div
+            initial={false}
+            animate={{ x: [-2, 0] }}
+            transition={{
+              duration: 0.7,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            }}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </motion.div>
+        )}
+        <span className="relative font-medium">{label}</span>
+        {direction === "right" && (
+          <motion.div
+            initial={false}
+            animate={{ x: [0, 2] }}
+            transition={{
+              duration: 0.7,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            }}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </motion.div>
+        )}
+      </div>
+    </Button>
+
+    {/* Tooltip */}
+    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+      {disabled ? "No more cards" : `Navigate ${direction}`}
+    </span>
+  </motion.div>
+);
+
 export function FlashcardsContent({
   category,
   bankId,
@@ -649,20 +854,24 @@ export function FlashcardsContent({
                           {currentCard.type}
                         </Badge>
                         <div className="flex items-center gap-3">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-full"
-                          >
-                            <Volume2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-full"
-                          >
-                            <Bookmark className="w-4 h-4" />
-                          </Button>
+                          <TextSizeControl
+                            fontSize={fontSize}
+                            setFontSize={setFontSize}
+                          />
+                          <IconButton
+                            icon={Volume2}
+                            onClick={() => {
+                              /* Add text-to-speech logic here */
+                            }}
+                            label="Read aloud"
+                          />
+                          <IconButton
+                            icon={Bookmark}
+                            onClick={() => {
+                              /* Add bookmark logic here */
+                            }}
+                            label="Bookmark card"
+                          />
                         </div>
                       </div>
 
@@ -705,46 +914,38 @@ export function FlashcardsContent({
                   </motion.div>
 
                   {/* Navigation Controls */}
-                  <div className="absolute -bottom-20 left-0 right-0 flex justify-between items-center px-4">
-                    <Button
-                      variant="ghost"
-                      onClick={handlePrevious}
-                      disabled={remainingCards.length <= 1}
-                      className="flex items-center gap-2"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
+                  <div className="absolute -bottom-24 left-0 right-0 flex justify-center items-center px-4">
+                    <div className="flex items-center gap-8">
+                      <NavigationButton
+                        direction="left"
+                        onClick={handlePrevious}
+                        disabled={remainingCards.length <= 1}
+                        label="Previous"
+                      />
 
-                    {/* Check/X Buttons */}
-                    <div className="flex gap-4">
-                      <Button
-                        variant="destructive"
-                        size="lg"
+                      {/* Action Buttons */}
+                      <div className="flex gap-6 scale-110">
+                        <ActionButton
+                          icon={X}
+                          onClick={handleNext}
+                          variant="error"
+                          label="Skip"
+                        />
+                        <ActionButton
+                          icon={Check}
+                          onClick={handleCorrect}
+                          variant="success"
+                          label="Got it!"
+                        />
+                      </div>
+
+                      <NavigationButton
+                        direction="right"
                         onClick={handleNext}
-                        className="rounded-full w-12 h-12 p-0"
-                      >
-                        <X className="h-6 w-6" />
-                      </Button>
-                      <Button
-                        variant="default"
-                        size="lg"
-                        onClick={handleCorrect}
-                        className="rounded-full w-12 h-12 p-0 bg-green-500 hover:bg-green-600"
-                      >
-                        <Check className="h-6 w-6" />
-                      </Button>
+                        disabled={remainingCards.length <= 1}
+                        label="Next"
+                      />
                     </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={handleNext}
-                      disabled={remainingCards.length <= 1}
-                      className="flex items-center gap-2"
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -765,19 +966,6 @@ export function FlashcardsContent({
                   }}
                 />
               )}
-            </div>
-
-            {/* Font Size Controls */}
-            <div className="flex justify-end items-center gap-4">
-              <span className="text-sm text-muted-foreground">Text Size</span>
-              <Slider
-                className="w-32"
-                min={12}
-                max={24}
-                step={1}
-                value={[fontSize]}
-                onValueChange={(value) => setFontSize(value[0])}
-              />
             </div>
           </div>
         </div>

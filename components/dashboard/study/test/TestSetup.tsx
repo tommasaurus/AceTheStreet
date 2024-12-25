@@ -103,9 +103,10 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
           </p>
         </div>
 
-        <Button
+        <motion.button
           onClick={scrollToPreferences}
           className={cn(
+            styles.configureButton,
             "group relative w-full max-w-[280px] h-[52px]",
             "bg-gray-900/90 dark:bg-white/90",
             "backdrop-blur-sm",
@@ -119,14 +120,12 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
             "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-green-500/30",
             "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
           )}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
           <div className="relative flex items-center justify-center gap-3">
-            <span
-              className={cn(
-                "text-[15px] font-medium",
-                "text-white dark:text-gray-900"
-              )}
-            >
+            <span className="text-[15px] font-medium text-white dark:text-gray-900">
               Configure Test
             </span>
             <motion.div
@@ -153,7 +152,7 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
               </svg>
             </motion.div>
           </div>
-        </Button>
+        </motion.button>
       </div>
 
       <div id="testPreferences" className={styles.setupForm}>

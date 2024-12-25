@@ -551,7 +551,7 @@
 }
 
 .gameIcon {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   perspective: 2000px;
   width: 120px;
   height: 120px;
@@ -673,7 +673,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .gameDescription {
@@ -681,7 +681,7 @@
   color: #4b5563;
   line-height: 1.6;
   max-width: 580px;
-  margin: 24px auto;
+  margin: 16px auto;
 }
 
 .setupForm {
@@ -856,7 +856,7 @@
   }
 
   .testIcon {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
 
   .iconGrid {
@@ -866,11 +866,12 @@
 
   .readyText {
     font-size: 2.5rem;
+    margin-bottom: 8px;
   }
 
   .testDescription {
     font-size: 1.1rem;
-    margin: 16px auto;
+    margin: 12px auto;
   }
 }
 
@@ -890,28 +891,39 @@
   font-size: 0.875rem;
 }
 
-/* Update the Configure Test button to match other buttons */
+/* Update the Configure Test button to match the match game animation */
 .configureButton {
+  /* Remove the gradient background */
+  background: transparent;
   height: 56px;
   font-size: 1.1rem;
   font-weight: 600;
-  background: linear-gradient(to right, #4461f2, #60a5fa);
   border: none;
   border-radius: 8px;
-  color: white;
   padding: 0 32px;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 1rem;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  opacity: 0; /* Start hidden */
+  transform: translateY(20px); /* Start below final position */
+  animation: fadeInUp 0.6s ease-out forwards;
+  animation-delay: 0.2s; /* Add slight delay like match button */
 }
 
-.configureButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(68, 97, 242, 0.3);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* Add shine animation like match button */
 .configureButton::before {
   content: "";
   position: absolute;
@@ -930,6 +942,38 @@
 
 .configureButton:hover::before {
   left: 100%;
+}
+
+/* Remove duplicate hover effects */
+.configureButton:hover {
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 12px rgba(68, 97, 242, 0.3);
+}
+
+/* Light mode styles */
+.configureButton {
+  color: #ffffff; /* White text for light mode */
+  background-color: rgba(23, 23, 23, 0.9); /* Dark background for light mode */
+}
+
+/* Dark mode styles */
+:global(.dark) .configureButton {
+  color: #171717; /* Dark text for dark mode */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Light background for dark mode */
+}
+
+:global(.dark) .configureButton:hover {
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+}
+
+/* Active state */
+.configureButton:active {
+  transform: translateY(0);
 }
 
 /* Subtle hover effect for icons */

@@ -232,17 +232,12 @@ export function TestInterface({
       newSelectedAnswers[currentQuestion] = correctIndex;
     } else if (currentQ.type === "trueFalse") {
       // For true/false, set the correct match/dontmatch value
-      newSelectedAnswers[currentQuestion] = currentQ.answer as string;
+      newSelectedAnswers[currentQuestion] = currentQ.answer;
     }
     setSelectedAnswers(newSelectedAnswers);
 
     // Update the question's userAnswer
-    const updatedQuestions = [...testQuestions];
-    updatedQuestions[currentQuestion] = {
-      ...currentQ,
-      userAnswer: "dontknow",
-    };
-    setTestQuestions(updatedQuestions);
+    handleAnswerChange(currentQ.id, "dontknow");
   };
 
   const handleTestComplete = () => {
@@ -335,9 +330,7 @@ export function TestInterface({
   };
 
   const areAllQuestionsAnswered = () => {
-    return testQuestions.every(
-      (q) => q.userAnswer || q.userAnswer === "dontknow"
-    );
+    return testQuestions.every((q) => q.userAnswer !== undefined);
   };
 
   const renderAnswerOptions = () => {
@@ -427,11 +420,13 @@ export function TestInterface({
           )}
         </div>
         <Button
-          onClick={() => handleDontKnow(currentQ.id)}
+          onClick={() => handleDontKnow(testQuestions[currentQuestion].id)}
           variant="outline"
-          className={styles.dontKnowButton}
+          className={cn(styles.dontKnowButton, {
+            [styles.revealed]: revealedAnswers[currentQuestion],
+          })}
         >
-          Don't Know
+          {revealedAnswers[currentQuestion] ? "Answer Revealed" : "Don't Know"}
         </Button>
       </>
     );
@@ -524,9 +519,13 @@ export function TestInterface({
                       handleDontKnow(testQuestions[currentQuestion].id)
                     }
                     variant="outline"
-                    className={styles.dontKnowButton}
+                    className={cn(styles.dontKnowButton, {
+                      [styles.revealed]: revealedAnswers[currentQuestion],
+                    })}
                   >
-                    Don't Know
+                    {revealedAnswers[currentQuestion]
+                      ? "Answer Revealed"
+                      : "Don't Know"}
                   </Button>
                 </>
               )}
@@ -534,6 +533,21 @@ export function TestInterface({
               {/* True/False */}
               {testQuestions[currentQuestion].type === "trueFalse" && (
                 <>
+                  <div className={styles.questionPair}>
+                    <div className={styles.term}>
+                      {testQuestions[currentQuestion].question}
+                    </div>
+                    <div className={styles.definition}>
+                      {
+                        (
+                          testQuestions[
+                            currentQuestion
+                          ] as TrueFalseTestQuestion
+                        ).options.definition
+                      }
+                    </div>
+                  </div>
+
                   <div className={styles.trueFalseOptions}>
                     <motion.button
                       className={cn(styles.trueFalseOption, {
@@ -571,47 +585,47 @@ export function TestInterface({
                       handleDontKnow(testQuestions[currentQuestion].id)
                     }
                     variant="outline"
-                    className={styles.dontKnowButton}
+                    className={cn(styles.dontKnowButton, {
+                      [styles.revealed]: revealedAnswers[currentQuestion],
+                    })}
                   >
-                    Don't Know
+                    {revealedAnswers[currentQuestion]
+                      ? "Answer Revealed"
+                      : "Don't Know"}
                   </Button>
                 </>
               )}
             </motion.div>
           </AnimatePresence>
 
-          <div className={styles.navigationButtons}>
-            <div className={styles.navButtonsGroup}>
-              <button
-                className={cn(styles.navButton, styles.configureButton)}
-                onClick={previousQuestion}
-                disabled={currentQuestion === 0}
-              >
-                Previous
-              </button>
+          <button
+            className={styles.previousButton}
+            onClick={previousQuestion}
+            disabled={currentQuestion === 0}
+          >
+            Previous
+          </button>
 
-              <div
-                className={cn(styles.submitButtonContainer, {
-                  [styles.visible]: areAllQuestionsAnswered(),
-                })}
-              >
-                <button
-                  className={styles.submitButton}
-                  onClick={handleTestComplete}
-                >
-                  Submit Test
-                </button>
-              </div>
-
-              <button
-                className={cn(styles.navButton, styles.configureButton)}
-                onClick={nextQuestion}
-                disabled={currentQuestion === testQuestions.length - 1}
-              >
-                Next
-              </button>
-            </div>
+          <div
+            className={cn(styles.submitButtonContainer, {
+              [styles.visible]: areAllQuestionsAnswered(),
+            })}
+          >
+            <button
+              className={styles.submitButton}
+              onClick={handleTestComplete}
+            >
+              Submit Test
+            </button>
           </div>
+
+          <button
+            className={styles.nextButton}
+            onClick={nextQuestion}
+            disabled={currentQuestion === testQuestions.length - 1}
+          >
+            Next
+          </button>
         </>
       )}
     </div>

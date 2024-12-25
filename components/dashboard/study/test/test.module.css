@@ -65,9 +65,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   position: relative;
-  padding-bottom: 120px;
 }
 
 .timer {
@@ -109,9 +107,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border-radius: 16px;
   padding: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   transition: all 0.3s ease;
   animation: fadeIn 0.5s ease-out;
+  position: relative;
+  z-index: 1;
+  height: auto;
+  overflow: visible;
 }
 
 /* Dark mode styles */
@@ -455,9 +457,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 200px);
-  text-align: center;
   padding: 4rem 2rem;
+  text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -899,37 +900,199 @@
   transform: scale(1.1);
 }
 
-.navigationButtons {
+/* Update the navigation button styles */
+.previousButton,
+.nextButton {
   position: fixed;
   bottom: 2rem;
+  height: 48px;
+  padding: 0 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  background: rgba(23, 23, 23, 0.9);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  color: white;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.previousButton {
+  /* Move from left edge towards center */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(
+    calc(-100% - 8rem)
+  ); /* Keep the same for previous button */
+}
+
+.nextButton {
+  /* Move from right edge towards center */
+  right: 50%;
+  transform: translateX(calc(100% + 10rem)); /* Increased from 8rem to 10rem */
+}
+
+/* Dark mode styles */
+:global(.dark) .previousButton,
+:global(.dark) .nextButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #171717;
+}
+
+/* Hover effects */
+.previousButton:not(:disabled):hover,
+.nextButton:not(:disabled):hover {
+  transform: translateY(-2px) translateX(calc(-100% - 8rem));
+  background: rgba(23, 23, 23, 1);
+}
+
+.nextButton:not(:disabled):hover {
+  transform: translateY(-2px) translateX(calc(100% + 10rem)); /* Update hover state */
+}
+
+:global(.dark) .previousButton:not(:disabled):hover,
+:global(.dark) .nextButton:not(:disabled):hover {
+  background: white;
+  color: black;
+}
+
+/* Disabled state */
+.previousButton:disabled,
+.nextButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: translateX(calc(-100% - 8rem));
+}
+
+.nextButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: translateX(calc(100% + 10rem)); /* Update disabled state */
+}
+
+/* Don't Know Button styles */
+.dontKnowButton {
+  border-radius: 8px;
+  margin: 2rem auto 1rem;
+  display: block;
+  width: auto;
+  min-width: 120px;
+  height: 48px;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  /* Light mode styles */
+  background: rgba(23, 23, 23, 0.9);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  color: white;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+/* Dark mode styles for Don't Know button */
+:global(.dark) .dontKnowButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #171717;
+}
+
+.dontKnowButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(23, 23, 23, 0.8);
+  color: white;
+}
+
+:global(.dark) .dontKnowButton:hover:not(:disabled) {
+  background: white;
+  color: black;
+}
+
+.questionPair {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1rem auto 2rem;
   width: 100%;
-  max-width: 800px;
-  padding: 0 2rem;
-  z-index: 10;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
 }
 
-/* Center container for all buttons */
-.navButtonsGroup {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-left: 4rem; /* Add this to shift buttons right */
+.term,
+.definition {
+  background: white; /* Light mode background */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  color: #171717; /* Dark text for light mode */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Submit button styling update */
+/* Dark mode styles */
+:global(.dark) .term,
+:global(.dark) .definition {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f3f4f6; /* Light text for dark mode */
+  box-shadow: none;
+}
+
+/* Hover effects */
+.term:hover,
+.definition:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+:global(.dark) .term:hover,
+:global(.dark) .definition:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Add/update the revealed state styles */
+.trueFalseOption.revealed {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+  pointer-events: none;
+}
+
+:global(.dark) .trueFalseOption.revealed {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+}
+
+/* Update the don't know button when revealed */
+.dontKnowButton.revealed {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:global(.dark) .dontKnowButton.revealed {
+  /* Remove all styles */
+}
+
+/* Submit button container */
 .submitButtonContainer {
-  display: flex;
-  align-items: center;
-  margin: 0 1rem;
-  height: 48px;
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(calc(-50% + 1.3rem));
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
+  z-index: 2;
 }
 
 .submitButtonContainer.visible {
@@ -937,6 +1100,7 @@
   visibility: visible;
 }
 
+/* Submit button styling */
 .submitButton {
   height: 48px;
   background: #22c55e;
@@ -955,7 +1119,18 @@
   justify-content: center;
 }
 
-.navButton {
+.submitButton:hover {
+  transform: translateY(-2px);
+  background: #16a34a;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.startNewTestButton {
   height: 48px;
   padding: 0 24px;
   font-size: 1rem;
@@ -963,167 +1138,15 @@
   border-radius: 8px;
   transition: all 0.3s ease;
   min-width: 120px;
-  background: rgba(23, 23, 23, 0.9);
-  border: 1px solid rgba(23, 23, 23, 0.1);
-  color: white;
-}
-
-/* Dark mode styles for nav buttons */
-:global(.dark) .navButton {
-  background: rgba(255, 255, 255, 0.9); /* White background */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #171717; /* Dark text */
-}
-
-/* Individual button hover effects */
-.navButton:not(:disabled):hover {
-  transform: translateY(-2px);
-  background: rgba(23, 23, 23, 1);
-}
-
-:global(.dark) .navButton:not(:disabled):hover {
-  background: white; /* Full white on hover */
-  color: black; /* Black text on hover */
-}
-
-/* Disabled state */
-.navButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.submitButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.dontKnowButton {
-  border-radius: 8px;
-  margin: 2rem auto 0;
-  display: block;
-  width: auto;
-  min-width: 120px;
-  height: 48px;
-  padding: 0 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
   /* Light mode styles */
   background: rgba(23, 23, 23, 0.9);
   border: 1px solid rgba(23, 23, 23, 0.1);
   color: white;
-  transition: all 0.3s ease;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Dark mode styles */
-:global(.dark) .dontKnowButton {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #171717;
-}
-
-.dontKnowButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  /* Update light mode hover */
-  background: rgba(23, 23, 23, 0.8);
-  color: white;
-}
-
-:global(.dark) .dontKnowButton:hover:not(:disabled) {
-  background: white;
-  color: black;
-}
-
-.dontKnowButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Update revealed state styling */
-.dontKnowButton.revealed {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.3);
-  color: #22c55e;
-  pointer-events: none;
-}
-
-.questionPair {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 2rem auto;
-  width: 100%;
-  max-width: 600px;
-}
-
-.term,
-.definition {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  transition: all 0.3s ease;
-}
-
-/* Update styles for revealed answers */
-.answerOption.revealed {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #22c55e;
-  font-weight: 500;
-}
-
-.trueFalseOption.revealed {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #22c55e;
-  font-weight: 500;
-}
-
-/* Update the don't know button when revealed */
-.dontKnowButton.revealed {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.3);
-  color: #22c55e;
-  pointer-events: none;
-}
-
-/* Add a transition for smoother reveal effect */
-.answerOption,
-.trueFalseOption {
-  transition: all 0.3s ease;
-}
-
-/* Update revealed state styling for dark mode */
-:global(.dark) .dontKnowButton.revealed {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #171717;
-}
-
-/* Add these styles for the Start New Test button */
-.startNewTestButton {
-  width: 100%;
-  max-width: 400px;
-  height: 48px;
-  margin: 2rem auto;
-  display: block;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  /* Light mode styles */
-  background: rgba(23, 23, 23, 0.9);
-  border: 1px solid rgba(23, 23, 23, 0.1);
-  color: white;
-  transition: all 0.3s ease;
+  margin: 2rem auto 0;
 }
 
 /* Dark mode styles */
@@ -1143,18 +1166,29 @@
   color: black;
 }
 
-.answerOption:active {
-  cursor: grabbing;
+/* Add a class for the question content wrapper */
+.questionContent {
+  flex: 1;
+  position: relative;
+  /* Remove any scroll behavior */
+  overflow: visible;
+  height: auto;
 }
 
-.dragging {
-  opacity: 0.8;
-  cursor: grabbing;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transform: scale(1.05);
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  pointer-events: none;
+/* Update the dashboard layout styles */
+.dashboardContainer {
+  min-height: 100vh; /* Change from height to min-height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: hsl(var(--background));
+  /* Remove overflow and scrolling properties */
+}
+
+.contentWrapper {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  flex: 1;
+  /* Remove overflow property */
 }

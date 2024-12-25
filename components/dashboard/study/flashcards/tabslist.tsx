@@ -25,7 +25,14 @@ const CustomTab = ({
         ? "text-orange-500 dark:text-orange-400"
         : "text-muted-foreground/70";
     }
-    return "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text";
+    if (value === "test") {
+      return isActive
+        ? "text-green-500 dark:text-green-400"
+        : "text-muted-foreground/70";
+    }
+    return isActive
+      ? "text-blue-500 dark:text-blue-400"
+      : "text-muted-foreground/70";
   };
 
   const getIconColor = (isActive: boolean) => {
@@ -35,7 +42,14 @@ const CustomTab = ({
         ? "text-orange-500 dark:text-orange-400"
         : "text-muted-foreground/70";
     }
-    return "text-blue-500";
+    if (value === "test") {
+      return isActive
+        ? "text-green-500 dark:text-green-400"
+        : "text-muted-foreground/70";
+    }
+    return isActive
+      ? "text-blue-500 dark:text-blue-400"
+      : "text-muted-foreground/70";
   };
 
   return (

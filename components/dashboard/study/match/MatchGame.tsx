@@ -80,14 +80,14 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
         onClick={onStartGame}
         className={cn(
           "group relative w-full max-w-[280px] h-[52px]",
-          "bg-gray-900/90 dark:bg-white/10",
+          "bg-gray-900/90 dark:bg-white/90",
           "backdrop-blur-sm",
           "rounded-xl",
-          "border border-gray-800/50 dark:border-white/10",
+          "border border-gray-800/50 dark:border-white/20",
           "transition-all duration-300 ease-out",
-          "hover:bg-gray-900/95 dark:hover:bg-white/15",
+          "hover:bg-gray-900/95 dark:hover:bg-white/95",
           "hover:-translate-y-0.5",
-          "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-orange-500/10",
+          "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-white/20",
           "active:translate-y-0",
           "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-orange-500/30",
           "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
@@ -99,7 +99,12 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
         {/* Content wrapper */}
         <div className="relative flex items-center justify-center gap-3">
           {/* Text with subtle gradient */}
-          <span className="text-[15px] font-medium text-white dark:text-white/90">
+          <span
+            className={cn(
+              "text-[15px] font-medium",
+              "text-white dark:text-gray-900"
+            )}
+          >
             Start Game
           </span>
 
@@ -115,7 +120,7 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
             }}
           >
             <svg
-              className="w-4 h-4 text-white/70"
+              className="w-4 h-4 text-white/70 dark:text-gray-900/70"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -133,32 +138,121 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
   );
 };
 
-const GameComplete = ({
+const MatchGameComplete = ({
   time,
-  onRestart,
+  onPlayAgain,
 }: {
   time: number;
-  onRestart: () => void;
+  onPlayAgain: () => void;
 }) => {
-  useEffect(() => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }, []);
-
   return (
     <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className={styles.gameComplete}
+      className="flex flex-col items-center justify-center gap-8 p-8"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      <h2>Congratulations!</h2>
-      <p>You completed the game in {(time / 1000).toFixed(1)} seconds</p>
-      <button className={styles.startGameButton} onClick={onRestart}>
-        Play Again
-      </button>
+      {/* Celebration animation wrapper */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="relative"
+      >
+        {/* Animated rings */}
+        <div className="absolute inset-0 -z-10">
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-orange-500/20"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-orange-500/20"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          />
+        </div>
+
+        {/* Main heading */}
+        <motion.h1
+          className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent pb-1"
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
+          transition={{ type: "spring", bounce: 0.5 }}
+        >
+          Congratulations!
+        </motion.h1>
+      </motion.div>
+
+      {/* Time display */}
+      <motion.div
+        className="flex flex-col items-center gap-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <span className="text-lg text-gray-600 dark:text-gray-300">
+          You completed the game in
+        </span>
+        <motion.span
+          className="text-3xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent"
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", bounce: 0.5, delay: 0.6 }}
+        >
+          {(time / 1000).toFixed(1)} seconds
+        </motion.span>
+      </motion.div>
+
+      {/* Play Again button */}
+      <motion.button
+        onClick={onPlayAgain}
+        className={cn(
+          "relative group px-8 py-3 mt-4",
+          "bg-gray-900 dark:bg-white",
+          "hover:bg-gray-800 dark:hover:bg-gray-50",
+          "rounded-xl",
+          "transition-all duration-300",
+          "hover:-translate-y-0.5",
+          "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-white/20"
+        )}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {/* Shine effect */}
+        <div className="absolute inset-0 -z-10 overflow-hidden rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        </div>
+
+        {/* Button content */}
+        <div className="flex items-center gap-2">
+          <span className="text-white dark:text-gray-900 font-medium">
+            Play Again
+          </span>
+          <motion.div
+            animate={{ x: [0, 4, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <svg
+              className="w-4 h-4 text-white/70 dark:text-gray-900/70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 12h16" />
+              <path d="m15 5 7 7-7 7" />
+            </svg>
+          </motion.div>
+        </div>
+      </motion.button>
     </motion.div>
   );
 };
@@ -326,7 +420,7 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
   }
 
   if (isComplete) {
-    return <GameComplete time={time} onRestart={handleRestart} />;
+    return <MatchGameComplete time={time} onPlayAgain={handleRestart} />;
   }
 
   return (

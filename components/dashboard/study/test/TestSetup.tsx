@@ -4,8 +4,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { GraduationCap, CheckCircle2, XCircle, Timer } from "lucide-react";
+import {
+  Brain,
+  Atom,
+  CheckCircle2,
+  XCircle,
+  Timer,
+  Sparkles,
+  Target,
+  Lightbulb,
+  Telescope,
+  Shapes,
+} from "lucide-react";
 import styles from "./test.module.css";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export interface TestSettings {
   questionCount: number;
@@ -63,22 +76,22 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
         <div className={styles.gameIcon}>
           <div className={styles.iconGrid}>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Atom className="rotate-[15deg]" />
             </div>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Target className="-rotate-[15deg]" />
             </div>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Shapes />
             </div>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Brain className="rotate-[10deg]" />
             </div>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Telescope className="-rotate-[10deg]" />
             </div>
             <div className={styles.iconCard}>
-              <GraduationCap />
+              <Sparkles />
             </div>
           </div>
         </div>
@@ -92,20 +105,54 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
 
         <Button
           onClick={scrollToPreferences}
-          className="relative w-[400px] mx-auto h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+          className={cn(
+            "group relative w-full max-w-[280px] h-[52px]",
+            "bg-gray-900/90 dark:bg-white/90",
+            "backdrop-blur-sm",
+            "rounded-xl",
+            "border border-gray-800/50 dark:border-white/20",
+            "transition-all duration-300 ease-out",
+            "hover:bg-gray-900/95 dark:hover:bg-white/95",
+            "hover:-translate-y-0.5",
+            "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-white/20",
+            "active:translate-y-0",
+            "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-green-500/30",
+            "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
+          )}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] to-[#4ade80] opacity-100" />
-
-          <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e]/40 to-[#4ade80]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-          <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-            <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
+          <div className="relative flex items-center justify-center gap-3">
+            <span
+              className={cn(
+                "text-[15px] font-medium",
+                "text-white dark:text-gray-900"
+              )}
+            >
               Configure Test
             </span>
+            <motion.div
+              animate={{
+                x: [0, 3, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <svg
+                className="w-4 h-4 text-white/70 dark:text-gray-900/70"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 12h16" />
+                <path d="m15 5 7 7-7 7" />
+              </svg>
+            </motion.div>
           </div>
-
-          <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
-          <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
         </Button>
       </div>
 
@@ -204,20 +251,54 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
 
           <Button
             onClick={handleStartTest}
-            className="relative w-full h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
+            className={cn(
+              "group relative w-full max-w-[280px] h-[52px] mx-auto",
+              "bg-gray-900/90 dark:bg-white/90",
+              "backdrop-blur-sm",
+              "rounded-xl",
+              "border border-gray-800/50 dark:border-white/20",
+              "transition-all duration-300 ease-out",
+              "hover:bg-gray-900/95 dark:hover:bg-white/95",
+              "hover:-translate-y-0.5",
+              "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-white/20",
+              "active:translate-y-0",
+              "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-green-500/30",
+              "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
+            )}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] to-[#4ade80] opacity-100" />
-
-            <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e]/40 to-[#4ade80]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-            <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-              <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
+            <div className="relative flex items-center justify-center gap-3">
+              <span
+                className={cn(
+                  "text-[15px] font-medium",
+                  "text-white dark:text-gray-900"
+                )}
+              >
                 Start Test
               </span>
+              <motion.div
+                animate={{
+                  x: [0, 3, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <svg
+                  className="w-4 h-4 text-white/70 dark:text-gray-900/70"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 12h16" />
+                  <path d="m15 5 7 7-7 7" />
+                </svg>
+              </motion.div>
             </div>
-
-            <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
-            <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
           </Button>
         </div>
       </div>

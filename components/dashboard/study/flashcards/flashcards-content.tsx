@@ -605,8 +605,7 @@ export function FlashcardsContent({
   const handleStartTest = (settings: TestSettings) => {
     if (
       !settings.questionTypes.trueFalse &&
-      !settings.questionTypes.multipleChoice &&
-      !settings.questionTypes.matching
+      !settings.questionTypes.multipleChoice
     ) {
       toast.error("Please select at least one question type");
       return;

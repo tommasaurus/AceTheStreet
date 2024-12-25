@@ -62,10 +62,12 @@
 .testContainer {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 120px;
 }
 
 .timer {
@@ -101,74 +103,192 @@
 }
 
 .questionCard {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 8px;
-  padding: 1.5rem;
+  /* Light mode styles */
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
 }
 
+/* Dark mode styles */
+:global(.dark) .questionCard {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Question text styling for light mode */
 .questionText {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #171717; /* Dark text for light mode */
 }
 
+/* Dark mode question text */
+:global(.dark) .questionText {
+  color: #f3f4f6;
+}
+
+/* Question number styling for light mode */
+.questionNumber {
+  color: #16a34a; /* Slightly darker green for better contrast in light mode */
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+/* Dark mode question number */
+:global(.dark) .questionNumber {
+  color: #22c55e;
+  opacity: 0.8;
+}
+
+/* Multiple Choice Styling */
 .answerOptions {
   display: flex;
-  flex-direction: column; /* Stack buttons vertically */
+  flex-direction: column;
   gap: 1rem;
-  margin-bottom: 1rem;
-  align-items: center;
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.5rem;
 }
 
-.answerOptions button {
-  width: 500px;
-  max-width: 500px;
-  min-height: 58px;
-  height: auto;
-  white-space: normal;
-  text-align: center;
+.answerOption {
+  position: relative;
+  background: rgba(23, 23, 23, 0.05); /* Lighter background for light mode */
+  border: 1px solid rgba(23, 23, 23, 0.1); /* Darker border for light mode */
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: grab;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #171717; /* Dark text for light mode */
+  user-select: none;
+  touch-action: none; /* Add this to improve touch handling */
+}
+
+.answerOption:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.answerOption.selected {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #15803d;
+}
+
+:global(.dark) .answerOption.selected {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+}
+
+/* Dark mode styles for answer options */
+:global(.dark) .answerOption {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f3f4f6;
+}
+
+/* Don't Know Button Styling */
+.dontKnowContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  position: relative;
+}
+
+/* True/False Styling */
+.trueFalseOptions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.trueFalseOption {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-.dontKnowButton {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.submitButton {
-  background: linear-gradient(to right, #22c55e, #4ade80);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  width: 200px;
-  margin: 2rem auto;
-  display: block;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  min-width: 140px;
 }
 
-.submitButton:hover {
+.trueFalseOption svg {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+}
+
+.trueFalseOption.match {
+  color: #22c55e;
+}
+
+.trueFalseOption.dontMatch {
+  color: #ef4444;
+}
+
+.trueFalseOption:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.submitButton:disabled {
-  background-color: hsl(var(--muted));
-  cursor: not-allowed;
-  transform: none;
+.trueFalseOption.selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: currentColor;
 }
 
-.correctAnswer {
-  background-color: #22c55e !important;
-  color: white !important;
-  border-color: #22c55e !important;
-  animation: pulse 2s infinite;
+.trueFalseOption.selected svg {
+  transform: scale(1.2);
+}
+
+/* Add a subtle animation when hovering over the term/definition */
+.term:hover,
+.definition:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  to {
+    transform: translateX(100%) rotate(45deg);
+  }
 }
 
 @keyframes pulse {
@@ -176,73 +296,60 @@
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    box-shadow: 0 0 0 20px rgba(34, 197, 94, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 }
 
-.setupForm .error {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  transform: translate3d(0, 0, 0);
+/* Progress Bar */
+.progressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 100;
 }
 
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
-  }
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
-  }
+.progressFill {
+  height: 100%;
+  background: linear-gradient(to right, #22c55e, #4ade80);
+  transition: width 0.3s ease;
 }
 
-.trueFalseContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background-color: hsl(var(--muted) / 0.1);
-  border-radius: 8px;
-}
-
-.questionSide,
-.answerSide {
+/* Timer */
+.timer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #22c55e;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.questionLabel {
-  font-size: 0.875rem;
-  color: hsl(var(--muted-foreground));
-  font-weight: 500;
+.timer.warning {
+  color: #f97316;
+  animation: timerPulse 1s infinite;
 }
 
-.questionText {
-  font-size: 1.1rem;
-  font-weight: 500;
-  padding: 1rem;
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+@keyframes timerPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .resultsContainer {
@@ -341,198 +448,6 @@
   font-weight: 600;
   color: #22c55e;
   margin-bottom: 1rem;
-}
-
-.matchingContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  max-width: 100%;
-}
-
-.termsColumn,
-.answersColumn {
-  display: grid;
-  gap: 1rem;
-  /* Add this to make rows match heights */
-  grid-auto-rows: 1fr;
-}
-
-.termBox {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  padding: 1rem;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.answerBox {
-  background-color: hsl(var(--muted) / 0.2);
-  border: 2px dashed rgba(205, 205, 205, 0.339);
-  border-radius: 6px;
-  padding: 1rem;
-  height: 100%;
-  width: 100%; /* Change from 400px to 100% */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  overflow: hidden;
-}
-
-:global(.dark) .termBox {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-:global(.dark) .answerBox {
-  background-color: hsl(var(--muted) / 0.4);
-  border: 2px dashed rgba(255, 255, 255, 0.3);
-}
-
-.answerBox.dragOver {
-  background-color: hsl(var(--muted) / 0.4);
-  border-style: solid;
-  border-color: hsl(var(--primary));
-}
-
-:global(.dark) .answerBox.dragOver {
-  background-color: hsl(var(--muted) / 0.6);
-  border-color: hsl(var(--primary));
-}
-
-.answerBank {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: hsl(var(--muted) / 0.1);
-  border-radius: 8px;
-  margin-top: 2rem;
-  justify-content: center;
-}
-
-.answerOption {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  cursor: grab;
-  user-select: none;
-  transition: all 0.2s ease;
-  width: 100%;
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 1px;
-}
-
-.answerBox .answerOption {
-  width: calc(100% - 2px);
-  border-color: transparent;
-}
-
-:global(.dark) .answerOption {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Add this for dark mode */
-:global(.dark) .answerBox .answerOption {
-  border-color: transparent;
-}
-
-.answerOption.dragging {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: scale(1.05);
-  z-index: 10;
-  opacity: 0.8;
-}
-
-/* Add this new style for the text inside answer options */
-.answerOption span {
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.answerBank .answerOption {
-  width: 500px;
-  min-width: 500px;
-  max-width: 500px;
-  height: auto;
-  white-space: normal;
-  border-bottom: 3px solid hsl(var(--primary) / 0.3);
-  border-left: 3px solid hsl(var(--primary) / 0.1);
-  border-right: 3px solid hsl(var(--primary) / 0.1);
-  padding: 1rem;
-}
-
-.answerBank .answerOption span {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  word-break: break-word;
-  display: block;
-  width: 100%;
-}
-
-.answerOption:hover {
-  border-bottom-color: hsl(var(--primary) / 0.5);
-}
-
-/* Dark mode support */
-:global(.dark) .answerBank .answerOption {
-  border-bottom: 3px solid hsl(var(--primary) / 0.4);
-  border-left: 3px solid hsl(var(--primary) / 0.2);
-  border-right: 3px solid hsl(var(--primary) / 0.2);
-}
-
-.answerOption:hover {
-  border-bottom-color: hsl(var(--primary) / 0.5);
-  border-left-color: hsl(var(--primary) / 0.2);
-  border-right-color: hsl(var(--primary) / 0.2);
-}
-
-/* Dark mode hover */
-:global(.dark) .answerOption:hover {
-  border-bottom-color: hsl(var(--primary) / 0.6);
-  border-left-color: hsl(var(--primary) / 0.3);
-  border-right-color: hsl(var(--primary) / 0.3);
-}
-
-/* Keep existing styles for answers in boxes */
-.answerBox .answerOption {
-  width: 100%;
-  height: 100%;
-  min-height: 58px;
-  max-height: none;
-}
-
-.answerBox .answerOption span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.separator {
-  border: none;
-  height: 2px;
-  background-color: hsl(var(--border));
-  margin: 1rem 0;
-}
-
-.testSetupContainer {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* Prevent seeing content below */
 }
 
 .matchGameIntro {
@@ -971,7 +886,7 @@
 }
 
 :global(.dark) .configureButton:hover {
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 /* Active state */
@@ -982,4 +897,264 @@
 /* Subtle hover effect for icons */
 .iconCard:hover svg {
   transform: scale(1.1);
+}
+
+.navigationButtons {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 2rem;
+  z-index: 10;
+}
+
+/* Center container for all buttons */
+.navButtonsGroup {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-left: 4rem; /* Add this to shift buttons right */
+}
+
+/* Submit button styling update */
+.submitButtonContainer {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+  height: 48px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.submitButtonContainer.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.submitButton {
+  height: 48px;
+  background: #22c55e;
+  color: white;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navButton {
+  height: 48px;
+  padding: 0 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  background: rgba(23, 23, 23, 0.9);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  color: white;
+}
+
+/* Dark mode styles for nav buttons */
+:global(.dark) .navButton {
+  background: rgba(255, 255, 255, 0.9); /* White background */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #171717; /* Dark text */
+}
+
+/* Individual button hover effects */
+.navButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  background: rgba(23, 23, 23, 1);
+}
+
+:global(.dark) .navButton:not(:disabled):hover {
+  background: white; /* Full white on hover */
+  color: black; /* Black text on hover */
+}
+
+/* Disabled state */
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.dontKnowButton {
+  border-radius: 8px;
+  margin: 2rem auto 0;
+  display: block;
+  width: auto;
+  min-width: 120px;
+  height: 48px;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  /* Light mode styles */
+  background: rgba(23, 23, 23, 0.9);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark mode styles */
+:global(.dark) .dontKnowButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #171717;
+}
+
+.dontKnowButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  /* Update light mode hover */
+  background: rgba(23, 23, 23, 0.8);
+  color: white;
+}
+
+:global(.dark) .dontKnowButton:hover:not(:disabled) {
+  background: white;
+  color: black;
+}
+
+.dontKnowButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Update revealed state styling */
+.dontKnowButton.revealed {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  pointer-events: none;
+}
+
+.questionPair {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.term,
+.definition {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+/* Update styles for revealed answers */
+.answerOption.revealed {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.trueFalseOption.revealed {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+  font-weight: 500;
+}
+
+/* Update the don't know button when revealed */
+.dontKnowButton.revealed {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  pointer-events: none;
+}
+
+/* Add a transition for smoother reveal effect */
+.answerOption,
+.trueFalseOption {
+  transition: all 0.3s ease;
+}
+
+/* Update revealed state styling for dark mode */
+:global(.dark) .dontKnowButton.revealed {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #171717;
+}
+
+/* Add these styles for the Start New Test button */
+.startNewTestButton {
+  width: 100%;
+  max-width: 400px;
+  height: 48px;
+  margin: 2rem auto;
+  display: block;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  /* Light mode styles */
+  background: rgba(23, 23, 23, 0.9);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+/* Dark mode styles */
+:global(.dark) .startNewTestButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #171717;
+}
+
+.startNewTestButton:hover {
+  transform: translateY(-2px);
+  background: rgba(23, 23, 23, 1);
+}
+
+:global(.dark) .startNewTestButton:hover {
+  background: white;
+  color: black;
+}
+
+.answerOption:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  opacity: 0.8;
+  cursor: grabbing;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  pointer-events: none;
 }

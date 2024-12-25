@@ -74,22 +74,8 @@ export function TestResults({
         </div>
       </div>
 
-      <Button
-        onClick={onRestart}
-        className="relative w-[400px] h-12 group overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] to-[#4ade80] opacity-100" />
-
-        <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e]/40 to-[#4ade80]/40 blur-md group-hover:opacity-75 transition-opacity" />
-
-        <div className="relative flex items-center justify-center w-full px-8 py-4 bg-white/95 dark:bg-[#151e2a]/95 backdrop-blur-sm rounded-xl">
-          <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
-            Start New Test
-          </span>
-        </div>
-
-        <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
-        <div className="absolute inset-x-0 -top-1 h-px bg-gradient-to-r from-[#22c55e] via-transparent to-[#4ade80]" />
+      <Button onClick={onRestart} className={styles.startNewTestButton}>
+        Start New Test
       </Button>
     </div>
   );

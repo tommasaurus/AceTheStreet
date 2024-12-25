@@ -18,7 +18,6 @@ const ConfigureTest = ({
       questionTypes: {
         trueFalse: true,
         multipleChoice: true,
-        matching: true,
       },
     };
     onStartTest(settings);

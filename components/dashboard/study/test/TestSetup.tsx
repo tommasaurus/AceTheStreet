@@ -26,7 +26,6 @@ export interface TestSettings {
   questionTypes: {
     trueFalse: boolean;
     multipleChoice: boolean;
-    matching: boolean;
   };
 }
 
@@ -42,7 +41,6 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
     questionTypes: {
       trueFalse: true,
       multipleChoice: true,
-      matching: true,
     },
   });
 
@@ -234,16 +232,6 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
                   className="border-[#22c55e] data-[state=checked]:bg-[#22c55e] data-[state=checked]:text-white"
                 />
                 <label className={styles.checkboxLabel}>Multiple Choice</label>
-              </div>
-              <div className={styles.checkboxOption}>
-                <Checkbox
-                  checked={settings.questionTypes.matching}
-                  onCheckedChange={(checked) =>
-                    handleCheckedChange("matching", checked)
-                  }
-                  className="border-[#22c55e] data-[state=checked]:bg-[#22c55e] data-[state=checked]:text-white"
-                />
-                <label className={styles.checkboxLabel}>Matching</label>
               </div>
             </div>
           </div>

@@ -1,3 +1,9 @@
+import { TestSettings } from "./TestSetup";
+import type { Question } from "@/types";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
+
 const ConfigureTest = ({
   onStartTest,
   questions,
@@ -5,6 +11,23 @@ const ConfigureTest = ({
   onStartTest: (settings: TestSettings) => void;
   questions: Question[];
 }) => {
+  const handleStartTest = () => {
+    const settings: TestSettings = {
+      questionCount: Math.min(10, questions.length),
+      timeLimit: 15,
+      questionTypes: {
+        trueFalse: true,
+        multipleChoice: true,
+        matching: true,
+      },
+    };
+    onStartTest(settings);
+  };
+
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-8 p-8">
       {/* ... other configuration elements ... */}

@@ -1179,7 +1179,7 @@ export function FlashcardsContent({
           )}
 
           {activeTab === "test" && (
-            <ScrollArea className="h-[calc(100vh-200px)]">
+            <div className="w-full">
               {isTestMode && testSettings ? (
                 <TestInterface
                   settings={testSettings}
@@ -1194,7 +1194,7 @@ export function FlashcardsContent({
                   />
                 </div>
               )}
-            </ScrollArea>
+            </div>
           )}
 
           {activeTab === "match" && <MatchContent />}

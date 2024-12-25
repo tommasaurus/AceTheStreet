@@ -273,7 +273,7 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  animation: rotate3d 8s linear infinite;
+  animation: floatAndRotate 12s ease-in-out infinite;
   transform-origin: center;
 }
 
@@ -282,17 +282,18 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #16a34a, #22c55e);
+  background: #f3f4f6;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
   font-weight: bold;
-  color: white;
-  transition: all 0.3s ease;
+  color: #1f2937;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   backface-visibility: visible;
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+  border: 3px solid #1f2937;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
 }
 
 /* Position each face of the cube */
@@ -316,22 +317,40 @@
 }
 
 :global(.dark) .iconCard {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+  background: #1f2937;
+  color: #f3f4f6;
+  border: 3px solid #f3f4f6;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes rotate3d {
+@keyframes floatAndRotate {
   0% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    transform: translateY(0px) rotateX(5deg) rotateY(0deg) rotateZ(2deg)
+      scale(1);
+  }
+  25% {
+    transform: translateY(-8px) rotateX(8deg) rotateY(90deg) rotateZ(4deg)
+      scale(1.02);
+  }
+  50% {
+    transform: translateY(0px) rotateX(5deg) rotateY(180deg) rotateZ(2deg)
+      scale(1);
+  }
+  75% {
+    transform: translateY(-8px) rotateX(8deg) rotateY(270deg) rotateZ(4deg)
+      scale(1.02);
   }
   100% {
-    transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);
+    transform: translateY(0px) rotateX(5deg) rotateY(360deg) rotateZ(2deg)
+      scale(1);
   }
 }
 
-/* Add hover effect to pause animation */
+/* Add hover effect to pause animation but make it smoother */
 .gameIcon:hover .iconGrid {
   animation-play-state: paused;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1.03) rotateX(8deg) rotateY(45deg) translateY(-5px);
 }
 
 .introText {
@@ -601,4 +620,16 @@
 .gameIcon:hover .matchIconCard::after,
 .gameIcon:hover .matchIconCard span {
   box-shadow: 0 0 25px rgba(66, 53, 46, 0.25), 0 0 40px rgba(249, 115, 22, 0.12);
+}
+
+/* Enhance the hover effects with smoother transitions */
+.gameIcon:hover .iconCard {
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+:global(.dark) .gameIcon:hover .iconCard {
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3), 0 0 80px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
 }

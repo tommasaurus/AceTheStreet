@@ -182,10 +182,10 @@ export function TestInterface({
   const [results, setResults] = useState<any>(null);
   const [timeTaken, setTimeTaken] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | number | null>(
-    null
-  );
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    (number | string | null)[]
+  >([]);
   const [revealedAnswers, setRevealedAnswers] = useState<boolean[]>(
     new Array(testQuestions.length).fill(false)
   );
@@ -232,7 +232,7 @@ export function TestInterface({
       newSelectedAnswers[currentQuestion] = correctIndex;
     } else if (currentQ.type === "trueFalse") {
       // For true/false, set the correct match/dontmatch value
-      newSelectedAnswers[currentQuestion] = currentQ.answer;
+      newSelectedAnswers[currentQuestion] = currentQ.answer as string;
     }
     setSelectedAnswers(newSelectedAnswers);
 
@@ -288,32 +288,6 @@ export function TestInterface({
     handleAnswerChange(currentQ.id, answer);
   };
 
-  const handleDragEnd = (event: any) => {
-    if (!event.over) return;
-
-    const { active, over } = event;
-
-    // Update the questions state when an item is dropped
-    const updatedQuestions = [...testQuestions];
-    const currentQ = updatedQuestions[currentQuestion];
-
-    if (currentQ.type === "matching") {
-      // Handle the matching logic here
-      // You might want to update the userAnswer with the new matching state
-      const draggedId = active.id;
-      const droppedId = over.id;
-
-      // Update the question's state
-      handleAnswerChange(
-        currentQ.id,
-        JSON.stringify({
-          draggedId,
-          droppedId,
-        })
-      );
-    }
-  };
-
   const nextQuestion = () => {
     if (currentQuestion < testQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -327,10 +301,12 @@ export function TestInterface({
           );
           setSelectedAnswer(correctIndex);
         } else if (nextQ.type === "trueFalse") {
-          setSelectedAnswer(nextQ.answer);
+          // For trueFalse questions, we'll store the index of the correct answer (0 for match, 1 for don't match)
+          setSelectedAnswer(nextQ.answer === "match" ? 0 : 1);
         }
       } else {
-        setSelectedAnswer(selectedAnswers[currentQuestion + 1]);
+        const nextAnswer = selectedAnswers[currentQuestion + 1];
+        setSelectedAnswer(typeof nextAnswer === "number" ? nextAnswer : null);
       }
     }
   };
@@ -348,10 +324,12 @@ export function TestInterface({
           );
           setSelectedAnswer(correctIndex);
         } else if (prevQ.type === "trueFalse") {
-          setSelectedAnswer(prevQ.answer);
+          // For trueFalse questions, we'll store the index of the correct answer (0 for match, 1 for don't match)
+          setSelectedAnswer(prevQ.answer === "match" ? 0 : 1);
         }
       } else {
-        setSelectedAnswer(selectedAnswers[currentQuestion - 1]);
+        const prevAnswer = selectedAnswers[currentQuestion - 1];
+        setSelectedAnswer(typeof prevAnswer === "number" ? prevAnswer : null);
       }
     }
   };
@@ -363,24 +341,21 @@ export function TestInterface({
   };
 
   const renderAnswerOptions = () => {
-    const currentQuestion = testQuestions[currentQuestion];
+    const currentQ = testQuestions[currentQuestion];
 
-    if (currentQuestion.type === "true_false") {
+    if (currentQ.type === "trueFalse") {
       return (
         <>
           <div className={styles.answerButtons}>
-            <Button onClick={() => handleAnswer("Match")} variant="outline">
+            <Button onClick={() => handleAnswer("match")} variant="outline">
               Match
             </Button>
-            <Button
-              onClick={() => handleAnswer("Don't Match")}
-              variant="outline"
-            >
+            <Button onClick={() => handleAnswer("dontmatch")} variant="outline">
               Don't Match
             </Button>
           </div>
           <Button
-            onClick={() => handleAnswer("Don't Know")}
+            onClick={() => handleDontKnow(currentQ.id)}
             variant="outline"
             className={styles.dontKnowButton}
           >
@@ -393,19 +368,66 @@ export function TestInterface({
     // For multiple choice questions
     return (
       <>
-        <div className={styles.answerButtons}>
-          {currentQuestion.options?.map((option, index) => (
-            <Button
-              key={index}
-              onClick={() => handleAnswer(option)}
-              variant="outline"
-            >
-              {option}
-            </Button>
-          ))}
+        <div className={styles.answerOptions}>
+          {testQuestions[currentQuestion].type === "multipleChoice" ? (
+            (
+              (testQuestions[currentQuestion] as MultipleChoiceTestQuestion)
+                .options as string[]
+            ).map((option, index) => (
+              <motion.button
+                key={index}
+                className={cn(styles.answerOption, {
+                  [styles.selected]: selectedAnswers[currentQuestion] === index,
+                  [styles.revealed]:
+                    revealedAnswers[currentQuestion] &&
+                    option === testQuestions[currentQuestion].answer,
+                })}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => handleAnswer(option)}
+                disabled={revealedAnswers[currentQuestion]}
+              >
+                {option}
+              </motion.button>
+            ))
+          ) : (
+            // For true/false questions
+            <div className={styles.trueFalseOptions}>
+              <motion.button
+                className={cn(styles.trueFalseOption, {
+                  [styles.selected]:
+                    selectedAnswers[currentQuestion] === "match",
+                  [styles.revealed]:
+                    revealedAnswers[currentQuestion] &&
+                    testQuestions[currentQuestion].answer === "match",
+                })}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleAnswer("match")}
+                disabled={revealedAnswers[currentQuestion]}
+              >
+                Match
+              </motion.button>
+              <motion.button
+                className={cn(styles.trueFalseOption, {
+                  [styles.selected]:
+                    selectedAnswers[currentQuestion] === "dontmatch",
+                  [styles.revealed]:
+                    revealedAnswers[currentQuestion] &&
+                    testQuestions[currentQuestion].answer === "dontmatch",
+                })}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleAnswer("dontmatch")}
+                disabled={revealedAnswers[currentQuestion]}
+              >
+                Don't Match
+              </motion.button>
+            </div>
+          )}
         </div>
         <Button
-          onClick={() => handleAnswer("Don't Know")}
+          onClick={() => handleDontKnow(currentQ.id)}
           variant="outline"
           className={styles.dontKnowButton}
         >
@@ -472,28 +494,30 @@ export function TestInterface({
               {testQuestions[currentQuestion].type === "multipleChoice" && (
                 <>
                   <div className={styles.answerOptions}>
-                    {testQuestions[currentQuestion].options.map(
-                      (option, index) => (
-                        <motion.button
-                          key={index}
-                          className={cn(styles.answerOption, {
-                            [styles.selected]:
-                              selectedAnswers[currentQuestion] === index,
-                            [styles.revealed]:
-                              revealedAnswers[currentQuestion] &&
-                              option === testQuestions[currentQuestion].answer,
-                          })}
-                          whileHover={{ scale: 1.01 }}
-                          whileTap={{ scale: 0.99 }}
-                          onClick={() => {
-                            handleAnswer(option);
-                          }}
-                          disabled={revealedAnswers[currentQuestion]}
-                        >
-                          {option}
-                        </motion.button>
-                      )
-                    )}
+                    {(
+                      (
+                        testQuestions[
+                          currentQuestion
+                        ] as MultipleChoiceTestQuestion
+                      ).options as string[]
+                    ).map((option, index) => (
+                      <motion.button
+                        key={index}
+                        className={cn(styles.answerOption, {
+                          [styles.selected]:
+                            selectedAnswers[currentQuestion] === index,
+                          [styles.revealed]:
+                            revealedAnswers[currentQuestion] &&
+                            option === testQuestions[currentQuestion].answer,
+                        })}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() => handleAnswer(option)}
+                        disabled={revealedAnswers[currentQuestion]}
+                      >
+                        {option}
+                      </motion.button>
+                    ))}
                   </div>
                   <Button
                     onClick={() =>
@@ -501,11 +525,8 @@ export function TestInterface({
                     }
                     variant="outline"
                     className={styles.dontKnowButton}
-                    disabled={revealedAnswers[currentQuestion]}
                   >
-                    {revealedAnswers[currentQuestion]
-                      ? "Answer Revealed"
-                      : "Don't Know"}
+                    Don't Know
                   </Button>
                 </>
               )}
@@ -513,17 +534,9 @@ export function TestInterface({
               {/* True/False */}
               {testQuestions[currentQuestion].type === "trueFalse" && (
                 <>
-                  <div className={styles.questionPair}>
-                    <div className={styles.term}>
-                      {testQuestions[currentQuestion].options.term}
-                    </div>
-                    <div className={styles.definition}>
-                      {testQuestions[currentQuestion].options.definition}
-                    </div>
-                  </div>
                   <div className={styles.trueFalseOptions}>
                     <motion.button
-                      className={cn(styles.trueFalseOption, styles.match, {
+                      className={cn(styles.trueFalseOption, {
                         [styles.selected]:
                           selectedAnswers[currentQuestion] === "match",
                         [styles.revealed]:
@@ -535,12 +548,10 @@ export function TestInterface({
                       onClick={() => handleAnswer("match")}
                       disabled={revealedAnswers[currentQuestion]}
                     >
-                      <CheckCircle />
                       Match
                     </motion.button>
-
                     <motion.button
-                      className={cn(styles.trueFalseOption, styles.dontMatch, {
+                      className={cn(styles.trueFalseOption, {
                         [styles.selected]:
                           selectedAnswers[currentQuestion] === "dontmatch",
                         [styles.revealed]:
@@ -552,25 +563,18 @@ export function TestInterface({
                       onClick={() => handleAnswer("dontmatch")}
                       disabled={revealedAnswers[currentQuestion]}
                     >
-                      <XCircle />
                       Don't Match
                     </motion.button>
                   </div>
-                  <div className={styles.dontKnowContainer}>
-                    <motion.button
-                      className={cn(styles.dontKnowButton, {
-                        [styles.revealed]: revealedAnswers[currentQuestion],
-                      })}
-                      onClick={() =>
-                        handleDontKnow(testQuestions[currentQuestion].id)
-                      }
-                      disabled={revealedAnswers[currentQuestion]}
-                    >
-                      {revealedAnswers[currentQuestion]
-                        ? "Answer Revealed"
-                        : "Don't Know"}
-                    </motion.button>
-                  </div>
+                  <Button
+                    onClick={() =>
+                      handleDontKnow(testQuestions[currentQuestion].id)
+                    }
+                    variant="outline"
+                    className={styles.dontKnowButton}
+                  >
+                    Don't Know
+                  </Button>
                 </>
               )}
             </motion.div>

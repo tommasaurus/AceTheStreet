@@ -672,7 +672,6 @@
 .introText {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   margin-bottom: 16px;
 }
 
@@ -682,6 +681,10 @@
   line-height: 1.6;
   max-width: 580px;
   margin: 16px auto;
+}
+
+:global(.dark) .gameDescription {
+  color: #d1d5db;
 }
 
 .setupForm {
@@ -712,7 +715,7 @@
 }
 
 :global(.dark) .testDescription {
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 .optionsContainer {

@@ -13,6 +13,7 @@ import {
   LightbulbIcon,
   GraduationCap,
   Zap,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -34,6 +35,7 @@ import { StudyHeader } from "@/components/dashboard/study/study-header";
 import { cva } from "class-variance-authority";
 import { useTheme } from "next-themes";
 import TabsList from "./tabslist";
+import { Separator } from "@/components/ui/separator";
 
 interface Question {
   id: number;
@@ -530,6 +532,39 @@ const TabIcon = ({
   </motion.div>
 );
 
+const ScrollIndicator = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        delay: 0.5,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="absolute left-[50%] -translate-x-[50%] mt-16 flex flex-col items-center gap-2 whitespace-nowrap"
+    >
+      <span className="text-sm text-muted-foreground/80">
+        Scroll to see all cards
+      </span>
+      <motion.div
+        animate={{
+          y: [0, 8, 0],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="relative"
+      >
+        <div className="absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md" />
+        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+      </motion.div>
+    </motion.div>
+  );
+};
+
 export function FlashcardsContent({
   category,
   bankId,
@@ -548,6 +583,24 @@ export function FlashcardsContent({
   const [isSwiping, setIsSwiping] = useState(false);
   const [direction, setDirection] = useState(0);
   const [activeTab, setActiveTab] = useState("flashcards");
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const threshold = windowHeight * 0.3; // Show questions after scrolling 30% of viewport height
+
+      if (scrollPosition > threshold) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleStartTest = (settings: TestSettings) => {
     if (
@@ -807,7 +860,7 @@ export function FlashcardsContent({
         <div className="p-4 md:p-6">
           {activeTab === "flashcards" && (
             <div className="max-w-6xl mx-auto">
-              <div className="relative max-w-3xl mx-auto">
+              <div className="relative max-w-3xl mx-auto mb-32">
                 {/* Progress Bar */}
                 <div className="mb-6 flex flex-col gap-2 px-8">
                   <div className="flex items-center justify-between">
@@ -924,36 +977,74 @@ export function FlashcardsContent({
                         </div>
                       </motion.div>
 
-                      <div className="flex justify-center items-center px-4 mb-4">
-                        <div className="flex items-center gap-8">
-                          <NavigationButton
-                            direction="left"
-                            onClick={handlePrevious}
-                            disabled={remainingCards.length <= 1}
-                            label="Previous"
-                          />
-
-                          <div className="flex gap-6 scale-110">
-                            <ActionButton
-                              icon={X}
-                              onClick={handleNext}
-                              variant="error"
-                              label="Skip"
+                      <div className="flex flex-col items-center">
+                        {/* Action Buttons */}
+                        <div className="flex justify-center items-center px-4 mb-8">
+                          <div className="relative flex items-center gap-8">
+                            <NavigationButton
+                              direction="left"
+                              onClick={handlePrevious}
+                              disabled={remainingCards.length <= 1}
+                              label="Previous"
                             />
-                            <ActionButton
-                              icon={Check}
-                              onClick={handleCorrect}
-                              variant="success"
-                              label="Got it!"
+
+                            <div className="flex gap-6 scale-110 relative">
+                              <ActionButton
+                                icon={X}
+                                onClick={handleNext}
+                                variant="error"
+                                label="Skip"
+                              />
+                              <ActionButton
+                                icon={Check}
+                                onClick={handleCorrect}
+                                variant="success"
+                                label="Got it!"
+                              />
+
+                              {/* Keep only this Scroll Indicator */}
+                              <AnimatePresence mode="wait">
+                                {!hasScrolled && (
+                                  <motion.div
+                                    initial={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+                                    style={{
+                                      top: "calc(100% + 48px)",
+                                    }}
+                                  >
+                                    <span className="text-sm text-muted-foreground/80">
+                                      Scroll to see all cards
+                                    </span>
+                                    <motion.div
+                                      animate={{
+                                        y: [0, 8, 0],
+                                      }}
+                                      transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                      }}
+                                      className="flex justify-center mt-2"
+                                    >
+                                      <div className="relative">
+                                        <div className="absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md" />
+                                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                                      </div>
+                                    </motion.div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </div>
+
+                            <NavigationButton
+                              direction="right"
+                              onClick={handleNext}
+                              disabled={remainingCards.length <= 1}
+                              label="Next"
                             />
                           </div>
-
-                          <NavigationButton
-                            direction="right"
-                            onClick={handleNext}
-                            disabled={remainingCards.length <= 1}
-                            label="Next"
-                          />
                         </div>
                       </div>
                     </motion.div>
@@ -976,6 +1067,115 @@ export function FlashcardsContent({
                   )}
                 </div>
               </div>
+
+              {/* Question List Section */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="relative mt-24 pt-16"
+              >
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, var(--background), transparent 50%)",
+                    height: "100px",
+                    top: "-50px",
+                  }}
+                />
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  className="flex items-center justify-between mb-12"
+                >
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-semibold">All Questions</h2>
+                    <Badge variant="outline" className="px-4 py-1.5">
+                      {questions.length} Questions
+                    </Badge>
+                  </div>
+
+                  <div className="h-px flex-1 mx-8 bg-gradient-to-r from-transparent via-muted-foreground/20 to-transparent" />
+                </motion.div>
+
+                <div className="grid gap-4">
+                  {questions.map((question, index) => (
+                    <motion.div
+                      key={question.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: index * 0.05,
+                      }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      className="group"
+                    >
+                      <div
+                        className={cn(
+                          "relative p-6 transition-all duration-300",
+                          "bg-[#ECECEC] dark:bg-[#1c2936]",
+                          "rounded-2xl",
+                          "hover:bg-[#E5E5E5] dark:hover:bg-[#243442]",
+                          "transform-gpu hover:scale-[1.02]",
+                          "hover:shadow-lg",
+                          "border border-transparent",
+                          "hover:border-blue-500/20 dark:hover:border-blue-400/20"
+                        )}
+                      >
+                        <div className="space-y-4">
+                          <div className="flex items-start justify-between">
+                            <Badge
+                              variant="outline"
+                              className="bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300"
+                            >
+                              {question.type}
+                            </Badge>
+                            <div className="flex items-center gap-2">
+                              {completedCards.includes(question.id) && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="text-green-500"
+                                >
+                                  <Check className="h-5 w-5" />
+                                </motion.div>
+                              )}
+                              {bookmarkedCards.includes(question.id) && (
+                                <Bookmark className="h-5 w-5 fill-foreground" />
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <h3 className="text-lg font-medium text-foreground">
+                              {question.question}
+                            </h3>
+                            <div
+                              className={cn(
+                                "prose prose-sm dark:prose-invert max-w-none",
+                                "text-muted-foreground",
+                                "transition-all duration-300",
+                                "overflow-hidden"
+                              )}
+                            >
+                              {question.answer
+                                .split("\n\n")
+                                .map((paragraph, i) => (
+                                  <p key={i}>{paragraph}</p>
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           )}
 

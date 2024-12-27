@@ -116,7 +116,8 @@ export function TestSetup({ maxQuestions, onStartTest }: TestSetupProps) {
             "hover:shadow-lg hover:shadow-gray-950/20 dark:hover:shadow-white/20",
             "active:translate-y-0",
             "focus:outline-none focus:ring-2 focus:ring-gray-800/30 dark:focus:ring-green-500/30",
-            "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]"
+            "focus:ring-offset-2 dark:focus:ring-offset-[#151e2a]",
+            "mb-[1px]"
           )}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

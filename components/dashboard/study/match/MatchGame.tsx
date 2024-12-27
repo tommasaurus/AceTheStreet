@@ -70,8 +70,9 @@ const MatchGameIntro = ({ onStartGame }: { onStartGame: () => void }) => {
       <div className={styles.introText}>
         <h1 className={styles.readyText}>Ready to play?</h1>
         <p className={styles.gameDescription}>
-          Match all the terms with their definitions as fast as you can. Avoid
-          wrong matches, they add extra time!
+          Match all the terms with their definitions
+          <br />
+          as fast as you can. Avoid wrong matches, they add extra time!
         </p>
       </div>
 

@@ -964,7 +964,7 @@
 
 .previousButton {
   /* Move from left edge towards center */
-  left: 50%;
+  left: 45%;
   transform: translateX(
     calc(-100% - 8rem)
   ); /* Keep the same for previous button */
@@ -972,7 +972,7 @@
 
 .nextButton {
   /* Move from right edge towards center */
-  right: 50%;
+  right: 48%;
   transform: translateX(calc(100% + 10rem)); /* Increased from 8rem to 10rem */
 }
 
@@ -1160,6 +1160,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 2.7rem;
 }
 
 .submitButton:hover {
@@ -1361,13 +1362,6 @@
     right: 18rem; /* Reduced from 1rem */
   }
 
-  /* Add background to make text more readable */
-  .nextButton,
-  .previousButton {
-    background: hsl(var(--background));
-    border: 1px solid hsl(var(--border));
-  }
-
   /* Add padding at bottom to prevent buttons overlapping content */
   .questionsContainer {
     padding-bottom: 4rem;
@@ -1440,5 +1434,9 @@
 
   .nextButton {
     right: 19rem; /* Reduced from 1rem */
+  }
+
+  .submitButton {
+    margin-left: 5.4rem;
   }
 }

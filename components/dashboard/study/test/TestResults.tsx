@@ -30,11 +30,11 @@ export function TestResults({
 }: TestResultsProps) {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
+      <h1 className="text-4xl font-bold md:mb-8 mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#22c55e] to-[#4ade80]">
         Test Results
       </h1>
 
-      <div className="relative w-48 h-48 mb-12">
+      <div className="relative w-48 h-48 md:mb-8 mb-12">
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#22c55e] to-[#4ade80]" />
         <div className="absolute inset-[6px] rounded-full bg-background flex items-center justify-center">
           <div className="text-center">
@@ -46,31 +46,39 @@ export function TestResults({
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-12 w-full max-w-2xl">
-        <div className="bg-card p-4 rounded-xl text-center">
-          <span className="block text-3xl font-bold text-[#22c55e]">
+      <div className="grid grid-cols-4 md:gap-4 max-md:grid-cols-2 max-md:gap-3 md:mb-8 mb-12 w-full max-w-2xl max-md:px-2">
+        <div className="bg-card md:p-4 max-md:p-3 rounded-xl text-center">
+          <span className="block md:text-3xl max-md:text-2xl font-bold text-[#22c55e]">
             {results.correct}
           </span>
-          <span className="text-sm text-muted-foreground">Correct</span>
+          <span className="md:text-sm max-md:text-xs text-muted-foreground">
+            Correct
+          </span>
         </div>
-        <div className="bg-card p-4 rounded-xl text-center">
-          <span className="block text-3xl font-bold text-[#22c55e]">
+        <div className="bg-card md:p-4 max-md:p-3 rounded-xl text-center">
+          <span className="block md:text-3xl max-md:text-2xl font-bold text-[#22c55e]">
             {results.incorrect}
           </span>
-          <span className="text-sm text-muted-foreground">Incorrect</span>
+          <span className="md:text-sm max-md:text-xs text-muted-foreground">
+            Incorrect
+          </span>
         </div>
-        <div className="bg-card p-4 rounded-xl text-center">
-          <span className="block text-3xl font-bold text-[#22c55e]">
+        <div className="bg-card md:p-4 max-md:p-3 rounded-xl text-center">
+          <span className="block md:text-3xl max-md:text-2xl font-bold text-[#22c55e]">
             {results.skipped}
           </span>
-          <span className="text-sm text-muted-foreground">Skipped</span>
+          <span className="md:text-sm max-md:text-xs text-muted-foreground">
+            Skipped
+          </span>
         </div>
-        <div className="bg-card p-4 rounded-xl text-center">
-          <span className="block text-3xl font-bold text-[#22c55e]">
+        <div className="bg-card md:p-4 max-md:p-3 rounded-xl text-center">
+          <span className="block md:text-3xl max-md:text-2xl font-bold text-[#22c55e]">
             {Math.floor(timeTaken / 60)}:
             {(timeTaken % 60).toString().padStart(2, "0")}
           </span>
-          <span className="text-sm text-muted-foreground">Time Taken</span>
+          <span className="md:text-sm max-md:text-xs text-muted-foreground">
+            Time Taken
+          </span>
         </div>
       </div>
 

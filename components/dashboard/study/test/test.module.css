@@ -346,6 +346,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  z-index: 100;
 }
 
 .timer.warning {
@@ -1308,4 +1309,56 @@
   position: relative;
   z-index: 0; /* Ensure it stays below the intro section */
   border-top: 1px solid hsl(var(--border)); /* Add border here instead */
+}
+
+/* Specific styles for mobile portrait mode */
+@media (max-width: 430px) {
+  /* iPhone Pro Max width */
+  .testContainer {
+    padding: 1rem 0; /* Remove horizontal padding */
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .questionCard {
+    width: 100%; /* Full width */
+    max-width: none;
+    padding: 1.25rem;
+    margin: 0 0 1rem 0; /* Remove horizontal margins */
+    border-radius: 12px;
+  }
+
+  .questionsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Stretch to fill container */
+    padding: 0 0.5rem; /* Small horizontal padding */
+  }
+
+  /* Keep existing font sizes */
+  .questionText {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+  }
+
+  .questionNumber {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .answerText {
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .answerOption {
+    font-size: 0.85rem;
+  }
+
+  .dontKnowButton {
+    font-size: 0.85rem;
+  }
 }

@@ -426,7 +426,13 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
   return (
     <div className={styles.gameContainer}>
       <div className={styles.gameHeader}>
-        <div className="relative w-full flex items-center justify-between px-8 py-4 bg-gradient-to-r from-background/80 to-background rounded-2xl border border-border/50 backdrop-blur-sm">
+        <div
+          className={cn(
+            "relative w-full flex items-center justify-between rounded-2xl border border-border/50 backdrop-blur-sm bg-gradient-to-r from-background/80 to-background",
+            "px-8 py-4 md:px-8 md:py-4",
+            "max-md:px-4 max-md:py-3"
+          )}
+        >
           <div className={styles.exitButtonContainer}>
             <Button
               onClick={handleExit}
@@ -463,9 +469,9 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
       <div
         className={cn(
           styles.matchGameGrid,
-          "relative p-8 rounded-2xl",
-          "bg-gradient-to-b from-background/50 to-background/30",
-          "border border-border/50 backdrop-blur-sm"
+          "relative bg-gradient-to-b from-background/50 to-background/30 border border-border/50 backdrop-blur-sm rounded-2xl",
+          "p-8 md:p-8",
+          "max-md:p-0.5"
         )}
       >
         {shuffledCards.map((card) => (

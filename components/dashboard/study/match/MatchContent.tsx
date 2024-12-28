@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import MatchGame from "./MatchGame";
 import styles from "./match.module.css";
+import { cn } from "@/lib/utils";
 
 interface Question {
   question: string;

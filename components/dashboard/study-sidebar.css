@@ -33,3 +33,22 @@
     padding-top: 0.5rem; /* Reduce top padding significantly */
   }
 }
+
+/* Adjust the study container for mobile */
+@media (max-width: 430px) {
+  .studyContainer {
+    padding-left: 0; /* Remove left padding */
+    width: 100%;
+  }
+
+  .mainContent {
+    width: 100%;
+  }
+
+  .mainContent .container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    max-width: none; /* Remove max-width constraint */
+    width: 100%;
+  }
+}

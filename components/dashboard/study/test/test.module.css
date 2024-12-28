@@ -720,60 +720,6 @@
   }
 }
 
-/* Separate landscape styles */
-@media screen and (max-width: 932px) and (max-height: 430px) and (orientation: landscape) {
-  .gameIcon {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 2rem;
-    perspective: 1000px;
-  }
-
-  .iconCard {
-    border-width: 3px;
-  }
-
-  .iconCard:nth-child(1) {
-    transform: translateZ(50px);
-  }
-  .iconCard:nth-child(2) {
-    transform: rotateY(180deg) translateZ(50px);
-  }
-  .iconCard:nth-child(3) {
-    transform: rotateY(90deg) translateZ(50px);
-  }
-  .iconCard:nth-child(4) {
-    transform: rotateY(-90deg) translateZ(50px);
-  }
-  .iconCard:nth-child(5) {
-    transform: rotateX(90deg) translateZ(50px);
-  }
-  .iconCard:nth-child(6) {
-    transform: rotateX(-90deg) translateZ(50px);
-  }
-
-  .iconCard svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  /* Add reduced margin for the tablist container in landscape */
-  .matchGameIntro {
-    padding: 0rem 0;
-    gap: 0.5rem;
-  }
-
-  /* Adjust description and button spacing */
-  .gameDescription {
-    margin-bottom: 0rem; /* Reduce space between description and button */
-  }
-
-  /* Add more space between button and divider */
-  .configureButton {
-    margin-bottom: 2rem; /* Increase space between button and divider */
-  }
-}
-
 .optionCard {
   background-color: hsl(var(--card));
   border: 1px solid hsl(var(--border));
@@ -1349,7 +1295,27 @@
     margin-bottom: 0.5rem;
   }
 
-  .answerText {
+  .trueFalseOption {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .trueFalseOptions {
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .answerOptions {
+    font-size: 0.85rem;
+  }
+
+  .term {
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .definition {
     font-size: 0.85rem;
     line-height: 1.35;
   }
@@ -1360,5 +1326,119 @@
 
   .dontKnowButton {
     font-size: 0.85rem;
+  }
+
+  /* Make true/false buttons smaller */
+  .trueFalseOptions {
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .trueFalseOption {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    min-width: 120px;
+    width: 45%;
+  }
+
+  /* Fix next/previous buttons */
+  .nextButton,
+  .previousButton {
+    position: fixed;
+    bottom: 2rem;
+    padding: 0.75rem 1rem;
+    min-width: 90px; /* Reduced from 100px */
+    font-size: 0.9rem;
+    z-index: 50;
+  }
+
+  .previousButton {
+    left: 16rem;
+  }
+
+  .nextButton {
+    right: 18rem; /* Reduced from 1rem */
+  }
+
+  /* Add background to make text more readable */
+  .nextButton,
+  .previousButton {
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+  }
+
+  /* Add padding at bottom to prevent buttons overlapping content */
+  .questionsContainer {
+    padding-bottom: 4rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .submitButton {
+    max-width: 100px;
+    margin-right: 2.5rem;
+  }
+}
+
+/* Separate landscape styles */
+@media screen and (max-width: 932px) and (max-height: 430px) and (orientation: landscape) {
+  .gameIcon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 2rem;
+    perspective: 1000px;
+  }
+
+  .iconCard {
+    border-width: 3px;
+  }
+
+  .iconCard:nth-child(1) {
+    transform: translateZ(50px);
+  }
+  .iconCard:nth-child(2) {
+    transform: rotateY(180deg) translateZ(50px);
+  }
+  .iconCard:nth-child(3) {
+    transform: rotateY(90deg) translateZ(50px);
+  }
+  .iconCard:nth-child(4) {
+    transform: rotateY(-90deg) translateZ(50px);
+  }
+  .iconCard:nth-child(5) {
+    transform: rotateX(90deg) translateZ(50px);
+  }
+  .iconCard:nth-child(6) {
+    transform: rotateX(-90deg) translateZ(50px);
+  }
+
+  .iconCard svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Add reduced margin for the tablist container in landscape */
+  .matchGameIntro {
+    padding: 0rem 0;
+    gap: 0.5rem;
+  }
+
+  /* Adjust description and button spacing */
+  .gameDescription {
+    margin-bottom: 0rem; /* Reduce space between description and button */
+  }
+
+  /* Add more space between button and divider */
+  .configureButton {
+    margin-bottom: 2rem; /* Increase space between button and divider */
+  }
+
+  .previousButton {
+    left: 22rem;
+  }
+
+  .nextButton {
+    right: 19rem; /* Reduced from 1rem */
   }
 }

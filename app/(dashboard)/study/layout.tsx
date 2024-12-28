@@ -14,8 +14,8 @@ export default function StudyLayout({
       <Suspense fallback={<SidebarSkeleton />}>
         <StudySidebar />
       </Suspense>
-      <main className="flex-1 flex justify-center">
-        <div className="container max-w-6xl px-6 pl-[64px] pt-4">
+      <main className="flex-1 flex justify-center w-full">
+        <div className="container max-w-6xl px-4 pt-4">
           <Suspense fallback={<ContentSkeleton />}>{children}</Suspense>
         </div>
       </main>
@@ -25,7 +25,7 @@ export default function StudyLayout({
 
 function SidebarSkeleton() {
   return (
-    <div className="fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] w-20 animate-pulse">
+    <div className="fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] w-20 animate-pulse z-50">
       {/* Add skeleton UI here */}
     </div>
   );

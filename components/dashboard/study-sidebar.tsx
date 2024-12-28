@@ -251,9 +251,10 @@ export function StudySidebar() {
       <div
         className={cn(
           "fixed left-0 top-0 h-screen bg-white dark:bg-[#151e2a] transition-all duration-150 border-r border-[#ECECEC] dark:border-[#1c2936] z-50",
+          // Desktop width changes
           !isMobile && (isCollapsed ? "w-20" : "w-64"),
-          isMobile && "w-64",
           // Mobile styles
+          isMobile && "w-64",
           isMobile && !isMobileMenuOpen && "-translate-x-full",
           isMobile && "shadow-xl"
         )}

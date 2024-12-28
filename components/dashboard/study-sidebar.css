@@ -13,6 +13,7 @@
   /* Container adjustments for landscape */
   .studyContainer {
     padding-left: 64px; /* Match sidebar width */
+    padding-top: 0; /* Remove top padding */
   }
 
   /* Main content wrapper adjustments */
@@ -25,5 +26,10 @@
   .menuButton {
     left: 72px;
     z-index: 51;
+  }
+
+  /* Adjust main content padding for landscape */
+  .mainContent .container {
+    padding-top: 0.5rem; /* Reduce top padding significantly */
   }
 }

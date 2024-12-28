@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { StudySidebar } from "@/components/dashboard/study-sidebar";
+import "@/components/dashboard/study-sidebar.css";
 
 export default function StudyLayout({
   children,
@@ -10,11 +11,11 @@ export default function StudyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex studyContainer">
       <Suspense fallback={<SidebarSkeleton />}>
         <StudySidebar />
       </Suspense>
-      <main className="flex-1 flex justify-center w-full">
+      <main className="flex-1 flex justify-center w-full mainContent">
         <div className="container max-w-6xl px-4 pt-4">
           <Suspense fallback={<ContentSkeleton />}>{children}</Suspense>
         </div>

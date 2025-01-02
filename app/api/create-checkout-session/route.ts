@@ -106,8 +106,8 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
       metadata: {
-        userId,
-        planType,
+        userId: userId,
+        planType: planType,
       },
       client_reference_id: userId, // Add this to maintain session context
     });

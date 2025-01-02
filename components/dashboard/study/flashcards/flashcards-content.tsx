@@ -27,7 +27,6 @@ import {
   TestSettings,
 } from "@/components/dashboard/study/test/TestSetup";
 import { TestInterface } from "@/components/dashboard/study/test/TestInterface";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useSpring, animated } from "@react-spring/web";

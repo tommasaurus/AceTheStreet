@@ -259,23 +259,6 @@ html {
   }
 }
 
-.animate-scroll-left {
-  animation: scroll-left 30s linear infinite;
-}
-
-.animate-scroll-right {
-  animation: scroll-right 30s linear infinite;
-}
-
-/* Fast versions */
-.animate-scroll-left-fast {
-  animation: scroll-left 15s linear infinite;
-}
-
-.animate-scroll-right-fast {
-  animation: scroll-right 15s linear infinite;
-}
-
 /* Add these new utility classes */
 @keyframes spin-slow {
   from {

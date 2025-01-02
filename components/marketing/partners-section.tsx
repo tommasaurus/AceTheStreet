@@ -113,13 +113,13 @@ const SCHOOLS: Array<{ name: string; logo: string; size: LogoSize }> = [
 
 export function PartnersSection() {
   return (
-    <div className='py-16 sm:py-24 bg-white dark:bg-[#151e2a] -mt-14'>
-      <div className='space-y-16'>
-        <div className='space-y-6'>
-          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
+    <div className="py-16 sm:py-24 bg-white dark:bg-[#151e2a] -mt-14">
+      <div className="space-y-16">
+        <div className="space-y-6">
+          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
             Real interview questions from top investment banks
           </h3>
-          <div className='h-20'>
+          <div className="h-20">
             <InfiniteCarousel
               items={BANKS.map((bank) => ({
                 ...bank,
@@ -127,17 +127,17 @@ export function PartnersSection() {
                   <LogoImage src={bank.logo} alt={bank.name} size={bank.size} />
                 ),
               }))}
-              direction='left'
-              speed='fast'
+              direction="left"
+              speed="normal"
             />
           </div>
         </div>
 
-        <div className='space-y-6'>
-          <h3 className='text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider'>
+        <div className="space-y-6">
+          <h3 className="text-center text-2xl font-semibold text-gray-600 dark:text-blue-100/70 uppercase tracking-wider">
             Trusted by students at leading universities
           </h3>
-          <div className='h-20'>
+          <div className="h-20">
             <InfiniteCarousel
               items={SCHOOLS.map((school) => ({
                 ...school,
@@ -149,8 +149,8 @@ export function PartnersSection() {
                   />
                 ),
               }))}
-              direction='right'
-              speed='fast'
+              direction="right"
+              speed="normal"
             />
           </div>
         </div>

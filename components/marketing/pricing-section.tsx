@@ -42,7 +42,7 @@ const PRICING_PLANS: PricingPlan[] = [
     price: "$20",
     period: "month",
     duration: "1 MONTH",
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QcwfaKOf8uvbAVY1l1czMKy",
     type: "basic",
     features: [
       { included: true, text: "Bank specific questions" },
@@ -58,7 +58,7 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "3 MONTHS",
     popular: true,
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QWjTBKOf8uvbAVYPraJe8JN",
     type: "pro",
     features: [
       { included: true, text: "Bank specific questions" },
@@ -74,7 +74,7 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "12 MONTHS",
     bestValue: true,
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QWjUjKOf8uvbAVY8My8ZW74",
     type: "max",
     features: [
       { included: true, text: "Bank specific questions" },

@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
 interface Question {
   id: number;
@@ -189,6 +190,11 @@ export function TestInterface({
   const [revealedAnswers, setRevealedAnswers] = useState<boolean[]>(
     new Array(testQuestions.length).fill(false)
   );
+  const [fontSize, setFontSize] = useState(() => {
+    // Use the same localStorage key to maintain consistency with flashcards
+    const saved = localStorage.getItem("flashcards-font-size");
+    return saved ? parseInt(saved) : 16;
+  });
 
   useEffect(() => {
     const generatedQuestions = generateQuestions(questions, settings);
@@ -333,6 +339,11 @@ export function TestInterface({
     return testQuestions.every((q) => q.userAnswer !== undefined);
   };
 
+  const handleFontSizeChange = (value: number) => {
+    setFontSize(value);
+    localStorage.setItem("flashcards-font-size", value.toString());
+  };
+
   const renderAnswerOptions = () => {
     const currentQ = testQuestions[currentQuestion];
 
@@ -380,42 +391,58 @@ export function TestInterface({
                 onClick={() => handleAnswer(option)}
                 disabled={revealedAnswers[currentQuestion]}
               >
-                {option}
+                <span
+                  className="block"
+                  style={{ fontSize: `${fontSize - 2}px` }}
+                >
+                  {option}
+                </span>
               </motion.button>
             ))
           ) : (
-            // For true/false questions
-            <div className={styles.trueFalseOptions}>
-              <motion.button
-                className={cn(styles.trueFalseOption, {
-                  [styles.selected]:
-                    selectedAnswers[currentQuestion] === "match",
-                  [styles.revealed]:
-                    revealedAnswers[currentQuestion] &&
-                    testQuestions[currentQuestion].answer === "match",
-                })}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAnswer("match")}
-                disabled={revealedAnswers[currentQuestion]}
-              >
-                Match
-              </motion.button>
-              <motion.button
-                className={cn(styles.trueFalseOption, {
-                  [styles.selected]:
-                    selectedAnswers[currentQuestion] === "dontmatch",
-                  [styles.revealed]:
-                    revealedAnswers[currentQuestion] &&
-                    testQuestions[currentQuestion].answer === "dontmatch",
-                })}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAnswer("dontmatch")}
-                disabled={revealedAnswers[currentQuestion]}
-              >
-                Don't Match
-              </motion.button>
+            // True/False section
+            <div className="space-y-6">
+              {/* Question-Answer Pair Box */}
+              <div className="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-6 space-y-4">
+                <div style={{ fontSize: `${fontSize}px` }}>
+                  <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
+                    Term
+                  </h3>
+                  <div className="text-foreground">
+                    {
+                      (testQuestions[currentQuestion] as TrueFalseTestQuestion)
+                        .options.term
+                    }
+                  </div>
+                </div>
+                <div style={{ fontSize: `${fontSize}px` }}>
+                  <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
+                    Definition
+                  </h3>
+                  <div className="text-foreground">
+                    {
+                      (testQuestions[currentQuestion] as TrueFalseTestQuestion)
+                        .options.definition
+                    }
+                  </div>
+                </div>
+              </div>
+
+              {/* Match/Don't Match Buttons - fixed size */}
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => handleAnswer("match")}
+                  className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
+                >
+                  <span className="block">Match</span>
+                </button>
+                <button
+                  onClick={() => handleAnswer("dontmatch")}
+                  className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
+                >
+                  <span className="block">Don't Match</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -475,126 +502,129 @@ export function TestInterface({
               transition={{ duration: 0.3 }}
               className={styles.questionCard}
             >
-              <div className={styles.questionNumber}>
-                Question {currentQuestion + 1} of {testQuestions.length}
+              <div className="max-w-3xl mx-auto">
+                <div className="mb-8">
+                  {/* Question header with number and font size control */}
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="text-green-500 font-medium">
+                      Question {currentQuestion + 1} of {testQuestions.length}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-[120px] sm:min-w-[150px]">
+                        <span className="text-xs sm:text-sm text-gray-500">
+                          Aa
+                        </span>
+                        <Slider
+                          value={[fontSize]}
+                          onValueChange={(value) =>
+                            handleFontSizeChange(value[0])
+                          }
+                          min={12}
+                          max={32}
+                          step={2}
+                          className="w-16 sm:w-24"
+                        />
+                        <span className="text-sm sm:text-base text-gray-500">
+                          Aa
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Question text with dynamic font size */}
+                  <div
+                    className="text-2xl font-medium mb-8"
+                    style={{ fontSize: `${fontSize}px` }}
+                  >
+                    {testQuestions[currentQuestion].question}
+                  </div>
+
+                  {/* Answer section */}
+                  <div className="space-y-4">
+                    {testQuestions[currentQuestion].type ===
+                    "multipleChoice" ? (
+                      // Multiple choice options with dynamic font size
+                      <div className="grid gap-3">
+                        {(
+                          (
+                            testQuestions[
+                              currentQuestion
+                            ] as MultipleChoiceTestQuestion
+                          ).options as string[]
+                        ).map((option, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleAnswer(option)}
+                            className={cn(
+                              "p-4 rounded-lg text-left transition-all",
+                              "bg-gray-100 dark:bg-gray-800/50",
+                              "hover:bg-gray-200 dark:hover:bg-gray-800"
+                            )}
+                          >
+                            <span
+                              className="block"
+                              style={{ fontSize: `${fontSize - 2}px` }}
+                            >
+                              {option}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      // True/False section
+                      <div className="space-y-6">
+                        {/* Question-Answer Pair Box */}
+                        <div className="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-6 space-y-4">
+                          <div style={{ fontSize: `${fontSize}px` }}>
+                            <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
+                              Term
+                            </h3>
+                            <div className="text-foreground">
+                              {
+                                (
+                                  testQuestions[
+                                    currentQuestion
+                                  ] as TrueFalseTestQuestion
+                                ).options.term
+                              }
+                            </div>
+                          </div>
+                          <div style={{ fontSize: `${fontSize}px` }}>
+                            <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
+                              Definition
+                            </h3>
+                            <div className="text-foreground">
+                              {
+                                (
+                                  testQuestions[
+                                    currentQuestion
+                                  ] as TrueFalseTestQuestion
+                                ).options.definition
+                              }
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Match/Don't Match Buttons - fixed size */}
+                        <div className="flex gap-4 justify-center">
+                          <button
+                            onClick={() => handleAnswer("match")}
+                            className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
+                          >
+                            <span className="block">Match</span>
+                          </button>
+                          <button
+                            onClick={() => handleAnswer("dontmatch")}
+                            className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
+                          >
+                            <span className="block">Don't Match</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-
-              {testQuestions[currentQuestion].type !== "trueFalse" && (
-                <h2 className={styles.questionText}>
-                  {testQuestions[currentQuestion].question}
-                </h2>
-              )}
-
-              {/* Multiple Choice */}
-              {testQuestions[currentQuestion].type === "multipleChoice" && (
-                <>
-                  <div className={styles.answerOptions}>
-                    {(
-                      (
-                        testQuestions[
-                          currentQuestion
-                        ] as MultipleChoiceTestQuestion
-                      ).options as string[]
-                    ).map((option, index) => (
-                      <motion.button
-                        key={index}
-                        className={cn(styles.answerOption, {
-                          [styles.selected]:
-                            selectedAnswers[currentQuestion] === index,
-                          [styles.revealed]:
-                            revealedAnswers[currentQuestion] &&
-                            option === testQuestions[currentQuestion].answer,
-                        })}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                        onClick={() => handleAnswer(option)}
-                        disabled={revealedAnswers[currentQuestion]}
-                      >
-                        {option}
-                      </motion.button>
-                    ))}
-                  </div>
-                  <Button
-                    onClick={() =>
-                      handleDontKnow(testQuestions[currentQuestion].id)
-                    }
-                    variant="outline"
-                    className={cn(styles.dontKnowButton, {
-                      [styles.revealed]: revealedAnswers[currentQuestion],
-                    })}
-                  >
-                    {revealedAnswers[currentQuestion]
-                      ? "Answer Revealed"
-                      : "Don't Know"}
-                  </Button>
-                </>
-              )}
-
-              {/* True/False */}
-              {testQuestions[currentQuestion].type === "trueFalse" && (
-                <>
-                  <div className={styles.questionPair}>
-                    <div className={styles.term}>
-                      {testQuestions[currentQuestion].question}
-                    </div>
-                    <div className={styles.definition}>
-                      {
-                        (
-                          testQuestions[
-                            currentQuestion
-                          ] as TrueFalseTestQuestion
-                        ).options.definition
-                      }
-                    </div>
-                  </div>
-
-                  <div className={styles.trueFalseOptions}>
-                    <motion.button
-                      className={cn(styles.trueFalseOption, {
-                        [styles.selected]:
-                          selectedAnswers[currentQuestion] === "match",
-                        [styles.revealed]:
-                          revealedAnswers[currentQuestion] &&
-                          testQuestions[currentQuestion].answer === "match",
-                      })}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAnswer("match")}
-                      disabled={revealedAnswers[currentQuestion]}
-                    >
-                      Match
-                    </motion.button>
-                    <motion.button
-                      className={cn(styles.trueFalseOption, {
-                        [styles.selected]:
-                          selectedAnswers[currentQuestion] === "dontmatch",
-                        [styles.revealed]:
-                          revealedAnswers[currentQuestion] &&
-                          testQuestions[currentQuestion].answer === "dontmatch",
-                      })}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAnswer("dontmatch")}
-                      disabled={revealedAnswers[currentQuestion]}
-                    >
-                      Don't Match
-                    </motion.button>
-                  </div>
-                  <Button
-                    onClick={() =>
-                      handleDontKnow(testQuestions[currentQuestion].id)
-                    }
-                    variant="outline"
-                    className={cn(styles.dontKnowButton, {
-                      [styles.revealed]: revealedAnswers[currentQuestion],
-                    })}
-                  >
-                    {revealedAnswers[currentQuestion]
-                      ? "Answer Revealed"
-                      : "Don't Know"}
-                  </Button>
-                </>
-              )}
             </motion.div>
           </AnimatePresence>
 

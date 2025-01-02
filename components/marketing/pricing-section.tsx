@@ -263,8 +263,15 @@ export function PricingSection({
           </motion.p>
         </div>
 
-        {/* Pricing cards */}
+        {/* Desktop Grid */}
         <div className="hidden md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto pt-4">
+          {PRICING_PLANS.map((plan, index) => (
+            <PricingCard key={index} plan={plan} isRelative={true} />
+          ))}
+        </div>
+
+        {/* Mobile Stack */}
+        <div className="md:hidden space-y-6">
           {PRICING_PLANS.map((plan, index) => (
             <PricingCard key={index} plan={plan} isRelative={true} />
           ))}

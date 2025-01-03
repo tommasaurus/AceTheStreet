@@ -9,10 +9,10 @@ import { Footer } from "@/components/marketing/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-//test commit
+//test commit 1
 export default function Home() {
   return (
-    <main className="relative bg-background">
+    <main className='relative bg-background'>
       <Navbar />
       <HeroSection />
       <PartnersSection />

@@ -42,7 +42,7 @@ const PRICING_PLANS: PricingPlan[] = [
     price: "$20",
     period: "month",
     duration: "1 MONTH",
-    stripePriceId: "price_1QcwfaKOf8uvbAVY1l1czMKy",
+    stripePriceId: "price_1QWjSFKOf8uvbAVY38Gfmstu",
     type: "basic",
     features: [
       { included: true, text: "Bank specific questions" },

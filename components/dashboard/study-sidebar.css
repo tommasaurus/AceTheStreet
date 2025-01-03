@@ -52,3 +52,42 @@
     width: 100%;
   }
 }
+
+/* Add these mobile-specific styles */
+@media (max-width: 768px) {
+  .mainContent {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .studyContainer {
+    padding-left: 0;
+  }
+
+  /* Adjust spacing for the split view */
+  .splitView {
+    flex-direction: column;
+  }
+
+  /* Make the question list shorter on mobile */
+  .questionList {
+    height: 300px;
+  }
+
+  /* Add some spacing between sections */
+  .answerView {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 1.5rem;
+  }
+
+  /* Adjust font sizes for better readability */
+  .questionTitle {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .answerText {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+}

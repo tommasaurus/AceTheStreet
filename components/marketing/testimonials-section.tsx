@@ -14,7 +14,6 @@ const TESTIMONIALS = [
     author: "Paweł Michalski",
     role: "Investment Banking Analyst",
     location: "Goldman Sachs",
-    avatar: "/avatars/pawel.png",
   },
   {
     quote: "Best IB interview prep platform out there",
@@ -23,7 +22,6 @@ const TESTIMONIALS = [
     author: "Guy Solan",
     role: "Investment Banking Associate",
     location: "Morgan Stanley",
-    avatar: "/avatars/guy.png",
   },
   {
     quote: "From zero finance background to BB offer",
@@ -32,7 +30,6 @@ const TESTIMONIALS = [
     author: "Facu Montanaro",
     role: "Investment Banking Analyst",
     location: "J.P. Morgan",
-    avatar: "/avatars/facu.png",
   },
   {
     quote: "Very comprehensive IB interview prep",
@@ -41,7 +38,6 @@ const TESTIMONIALS = [
     author: "Richard Poelderl",
     role: "Investment Banking Analyst",
     location: "Bank of America",
-    avatar: "/avatars/richard.png",
   },
 ];
 
@@ -101,15 +97,15 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section className='bg-white dark:bg-[#151e2a] pt-28 sm:pt-20 pb-12 sm:pb-16'>
-      <div className='container mx-auto px-4'>
-        <div className='text-center max-w-4xl mx-auto mb-12'>
+    <section className="bg-white dark:bg-[#151e2a] pt-28 sm:pt-20 pb-12 sm:pb-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center max-w-4xl mx-auto mb-12">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className='text-4xl md:text-5xl font-bold text-center text-black dark:text-white'
+            className="text-4xl md:text-5xl font-bold text-center text-black dark:text-white"
           >
             What our users say
           </motion.h2>
@@ -118,10 +114,10 @@ export function TestimonialsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className='mt-4 text-xl text-gray-600 dark:text-gray-300 italic'
+            className="mt-4 text-xl text-gray-600 dark:text-gray-300 italic"
           >
             Join{" "}
-            <span className='bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-semibold'>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-semibold">
               2,000+ aspiring bankers
             </span>{" "}
             preparing for their dream roles
@@ -129,7 +125,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Desktop Grid */}
-        <div className='hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto'>
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {TESTIMONIALS.map((testimonial, index) => (
             <motion.div
               key={testimonial.author}
@@ -139,21 +135,21 @@ export function TestimonialsSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
               onClick={() => setSelectedTestimonial(testimonial)}
-              className='cursor-pointer h-full'
+              className="cursor-pointer h-full"
             >
-              <Card className='bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8 h-full flex flex-col'>
-                <CardContent className='p-0 flex flex-col h-full'>
-                  <div className='flex-grow'>
-                    <p className='text-2xl font-medium text-black dark:text-white mb-4 italic'>
+              <Card className="bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8 h-full flex flex-col">
+                <CardContent className="p-0 flex flex-col h-full">
+                  <div className="flex-grow">
+                    <p className="text-2xl font-medium text-black dark:text-white mb-4 italic">
                       "{testimonial.quote}"
                     </p>
-                    <p className='text-[15px] text-gray-600 dark:text-gray-300 mb-6 line-clamp-3'>
+                    <p className="text-[15px] text-gray-600 dark:text-gray-300 mb-6 line-clamp-3">
                       {testimonial.description}
                     </p>
                   </div>
 
-                  <div className='flex items-center gap-4 mt-auto'>
-                    <Avatar className='h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]'>
+                  <div className="flex items-center gap-4 mt-auto">
+                    <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
                       <AvatarImage
                         src={testimonial.avatar}
                         alt={testimonial.author}
@@ -161,10 +157,10 @@ export function TestimonialsSection() {
                       <AvatarFallback>{testimonial.author[0]}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className='text-lg font-medium text-black dark:text-white'>
+                      <p className="text-lg font-medium text-black dark:text-white">
                         {testimonial.author}
                       </p>
-                      <p className='text-sm text-gray-500 dark:text-gray-400'>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {testimonial.role} • {testimonial.location}
                       </p>
                     </div>
@@ -176,33 +172,33 @@ export function TestimonialsSection() {
         </div>
 
         {/* Mobile Carousel */}
-        <div className='sm:hidden relative'>
+        <div className="sm:hidden relative">
           <div
-            className='overflow-hidden touch-pan-y'
+            className="overflow-hidden touch-pan-y"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             <div
-              className='flex transition-transform duration-300 ease-out'
+              className="flex transition-transform duration-300 ease-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
               {TESTIMONIALS.map((testimonial, index) => (
                 <div
                   key={testimonial.author}
-                  className='w-full flex-shrink-0 px-4'
+                  className="w-full flex-shrink-0 px-4"
                 >
-                  <Card className='bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8'>
-                    <CardContent className='p-0'>
-                      <p className='text-2xl font-medium text-black dark:text-white mb-4 italic'>
+                  <Card className="bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8">
+                    <CardContent className="p-0">
+                      <p className="text-2xl font-medium text-black dark:text-white mb-4 italic">
                         "{testimonial.quote}"
                       </p>
-                      <p className='text-[15px] text-gray-600 dark:text-gray-300 mb-6'>
+                      <p className="text-[15px] text-gray-600 dark:text-gray-300 mb-6">
                         {testimonial.description}
                       </p>
 
-                      <div className='flex items-center gap-4'>
-                        <Avatar className='h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]'>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
                           <AvatarImage
                             src={testimonial.avatar}
                             alt={testimonial.author}
@@ -212,10 +208,10 @@ export function TestimonialsSection() {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className='text-lg font-medium text-black dark:text-white'>
+                          <p className="text-lg font-medium text-black dark:text-white">
                             {testimonial.author}
                           </p>
-                          <p className='text-sm text-gray-500 dark:text-gray-400'>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
                             {testimonial.role} • {testimonial.location}
                           </p>
                         </div>
@@ -228,8 +224,8 @@ export function TestimonialsSection() {
           </div>
 
           {/* Updated Carousel Controls - Mobile */}
-          <div className='flex justify-center items-center gap-4 mt-6'>
-            <div className='flex gap-2'>
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <div className="flex gap-2">
               {TESTIMONIALS.map((_, index) => (
                 <button
                   key={index}
@@ -254,32 +250,32 @@ export function TestimonialsSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedTestimonial(null)}
-            className='fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4'
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className='bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl shadow-xl max-w-lg w-full relative'
+              className="bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl shadow-xl max-w-lg w-full relative"
             >
               <button
                 onClick={() => setSelectedTestimonial(null)}
-                className='absolute top-6 right-6 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                className="absolute top-6 right-6 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               >
                 <X size={24} />
               </button>
 
-              <div className='p-8'>
-                <p className='text-2xl font-medium text-black dark:text-white mb-4 italic'>
+              <div className="p-8">
+                <p className="text-2xl font-medium text-black dark:text-white mb-4 italic">
                   "{selectedTestimonial.quote}"
                 </p>
-                <p className='text-[15px] text-gray-600 dark:text-gray-300 mb-6'>
+                <p className="text-[15px] text-gray-600 dark:text-gray-300 mb-6">
                   {selectedTestimonial.description}
                 </p>
 
-                <div className='flex items-center gap-4'>
-                  <Avatar className='h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]'>
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
                     <AvatarImage
                       src={selectedTestimonial.avatar}
                       alt={selectedTestimonial.author}
@@ -289,10 +285,10 @@ export function TestimonialsSection() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className='text-lg font-medium text-black dark:text-white'>
+                    <p className="text-lg font-medium text-black dark:text-white">
                       {selectedTestimonial.author}
                     </p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {selectedTestimonial.role} •{" "}
                       {selectedTestimonial.location}
                     </p>

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="relative bg-background">
+    <main className='relative bg-background'>
       <Navbar />
       <HeroSection />
       <PartnersSection />

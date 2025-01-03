@@ -6,7 +6,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-const TESTIMONIALS = [
+interface Testimonial {
+  quote: string;
+  description: string;
+  author: string;
+  role: string;
+  location: string;
+  avatar?: string;
+}
+
+const TESTIMONIALS: Testimonial[] = [
   {
     quote: "Secured my dream role at Goldman Sachs",
     description:
@@ -42,15 +51,6 @@ const TESTIMONIALS = [
 ];
 
 export function TestimonialsSection() {
-  interface Testimonial {
-    quote: string;
-    description: string;
-    author: string;
-    role: string;
-    location: string;
-    avatar: string;
-  }
-
   const [selectedTestimonial, setSelectedTestimonial] =
     useState<Testimonial | null>(null);
 
@@ -150,11 +150,14 @@ export function TestimonialsSection() {
 
                   <div className="flex items-center gap-4 mt-auto">
                     <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
-                      <AvatarImage
-                        src={testimonial.avatar}
-                        alt={testimonial.author}
-                      />
-                      <AvatarFallback>{testimonial.author[0]}</AvatarFallback>
+                      {testimonial.avatar ? (
+                        <AvatarImage
+                          src={testimonial.avatar}
+                          alt={testimonial.author}
+                        />
+                      ) : (
+                        <AvatarFallback>{testimonial.author[0]}</AvatarFallback>
+                      )}
                     </Avatar>
                     <div>
                       <p className="text-lg font-medium text-black dark:text-white">
@@ -199,13 +202,16 @@ export function TestimonialsSection() {
 
                       <div className="flex items-center gap-4">
                         <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
-                          <AvatarImage
-                            src={testimonial.avatar}
-                            alt={testimonial.author}
-                          />
-                          <AvatarFallback>
-                            {testimonial.author[0]}
-                          </AvatarFallback>
+                          {testimonial.avatar ? (
+                            <AvatarImage
+                              src={testimonial.avatar}
+                              alt={testimonial.author}
+                            />
+                          ) : (
+                            <AvatarFallback>
+                              {testimonial.author[0]}
+                            </AvatarFallback>
+                          )}
                         </Avatar>
                         <div>
                           <p className="text-lg font-medium text-black dark:text-white">
@@ -276,13 +282,16 @@ export function TestimonialsSection() {
 
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12 border-2 border-[#E0E0E0] dark:border-[#2a3744]">
-                    <AvatarImage
-                      src={selectedTestimonial.avatar}
-                      alt={selectedTestimonial.author}
-                    />
-                    <AvatarFallback>
-                      {selectedTestimonial.author[0]}
-                    </AvatarFallback>
+                    {selectedTestimonial.avatar ? (
+                      <AvatarImage
+                        src={selectedTestimonial.avatar}
+                        alt={selectedTestimonial.author}
+                      />
+                    ) : (
+                      <AvatarFallback>
+                        {selectedTestimonial.author[0]}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   <div>
                     <p className="text-lg font-medium text-black dark:text-white">

@@ -9,7 +9,6 @@ import { Footer } from "@/components/marketing/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-//test commit 1
 export default function Home() {
   return (
     <main className='relative bg-background'>

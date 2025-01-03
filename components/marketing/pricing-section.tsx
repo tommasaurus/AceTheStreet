@@ -42,7 +42,7 @@ const PRICING_PLANS: PricingPlan[] = [
     price: "$20",
     period: "month",
     duration: "1 MONTH",
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QcwfaKOf8uvbAVY1l1czMKy",
     type: "basic",
     features: [
       { included: true, text: "Bank specific questions" },
@@ -58,7 +58,7 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "3 MONTHS",
     popular: true,
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QWjTBKOf8uvbAVYPraJe8JN",
     type: "pro",
     features: [
       { included: true, text: "Bank specific questions" },
@@ -74,7 +74,7 @@ const PRICING_PLANS: PricingPlan[] = [
     period: "month",
     duration: "12 MONTHS",
     bestValue: true,
-    stripePriceId: "price_1QWjvkKOf8uvbAVYSOi1Wt42",
+    stripePriceId: "price_1QWjUjKOf8uvbAVY8My8ZW74",
     type: "max",
     features: [
       { included: true, text: "Bank specific questions" },
@@ -85,152 +85,158 @@ const PRICING_PLANS: PricingPlan[] = [
   },
 ];
 
-export function PricingSection() {
-  interface PricingCardProps {
-    plan: PricingPlan;
-    isRelative?: boolean;
-  }
+interface PricingCardProps {
+  plan: PricingPlan;
+  isRelative?: boolean;
+}
 
-  const PricingCard = ({ plan, isRelative = false }: PricingCardProps) => {
-    const Icon = plan.icon;
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
+const PricingCard = ({ plan, isRelative = false }: PricingCardProps) => {
+  const Icon = plan.icon;
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-    const handleSubscribe = async (plan: PricingPlan) => {
-      try {
-        setLoading(true);
-        const supabase = createClientComponentClient();
+  const handleSubscribe = async (plan: PricingPlan) => {
+    try {
+      setLoading(true);
+      const supabase = createClientComponentClient();
 
-        // Get current user
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+      // Get current user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        if (!user) {
-          // Redirect to signup instead of signin
-          router.push("/signup");
-          return;
-        }
-
-        // Create Stripe Checkout Session with metadata
-        const response = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            priceId: plan.stripePriceId,
-            userId: user.id,
-            planType: plan.type,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to create checkout session");
-        }
-
-        const { sessionUrl, error } = await response.json();
-
-        if (error) {
-          console.error("Checkout error:", error);
-          return;
-        }
-
-        if (sessionUrl) {
-          router.push(sessionUrl);
-        }
-      } catch (error) {
-        console.error("Subscribe error:", error);
-      } finally {
-        setLoading(false);
+      if (!user) {
+        // Redirect to signup instead of signin
+        router.push("/signup");
+        return;
       }
-    };
 
-    return (
-      <div className="relative" style={{ zIndex: 1 }}>
-        {(plan.popular || plan.bestValue) && (
-          <div
-            className="absolute -top-3 left-0 right-0 flex justify-center"
-            style={{ zIndex: 999 }}
-          >
-            <div
-              className={`px-6 py-1.5 rounded-full text-sm font-medium shadow-lg relative ${
-                plan.popular
-                  ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
-                  : "bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-400 text-white"
-              }`}
-            >
-              {plan.popular ? "Most Popular: Save 33%" : "Best Value"}
-            </div>
-          </div>
-        )}
-        <Card
-          className={`bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col ${
-            isRelative ? "relative" : ""
-          }`}
-        >
-          {plan.popular && (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[24px] z-0" />
-              <div className="absolute inset-[1px] bg-[#ECECEC] dark:bg-[#1c2936] rounded-[23px] z-10" />
-            </>
-          )}
-          <div className={`${plan.popular ? "relative z-10" : ""}`}>
-            <CardHeader className="p-0 space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-black dark:text-white" />
-                </div>
-                <span className="text-lg font-medium text-gray-500 dark:text-gray-400">
-                  {plan.duration}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <CardTitle className="text-2xl font-medium text-black dark:text-white">
-                  {plan.title}
-                </CardTitle>
-                <div className="flex flex-col">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-semibold text-black dark:text-white">
-                      {plan.price}
-                    </span>
-                    <span className="text-xl text-gray-500 dark:text-gray-400">
-                      /{plan.period}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="p-0 mt-8 flex-grow flex flex-col justify-between">
-              <ul className="space-y-5 mb-8">
-                {plan.features.map((feature: Feature, index: number) => (
-                  <li
-                    key={index}
-                    className="flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300"
-                  >
-                    {feature.included ? (
-                      <Check className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    ) : (
-                      <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    )}
-                    <span>{feature.text}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                className="w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90"
-                onClick={() => handleSubscribe(plan)}
-                disabled={loading}
-              >
-                {loading ? "Subscribing..." : "Subscribe"}
-              </Button>
-            </CardContent>
-          </div>
-        </Card>
-      </div>
-    );
+      // Create Stripe Checkout Session with metadata
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priceId: plan.stripePriceId,
+          userId: user.id,
+          planType: plan.type,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { sessionUrl, error } = await response.json();
+
+      if (error) {
+        console.error("Checkout error:", error);
+        return;
+      }
+
+      if (sessionUrl) {
+        router.push(sessionUrl);
+      }
+    } catch (error) {
+      console.error("Subscribe error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  return (
+    <div className="relative" style={{ zIndex: 1 }}>
+      {(plan.popular || plan.bestValue) && (
+        <div
+          className="absolute -top-3 left-0 right-0 flex justify-center"
+          style={{ zIndex: 999 }}
+        >
+          <div
+            className={`px-6 py-1.5 rounded-full text-sm font-medium shadow-lg relative ${
+              plan.popular
+                ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
+                : "bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-400 text-white"
+            }`}
+          >
+            {plan.popular ? "Most Popular: Save 33%" : "Best Value"}
+          </div>
+        </div>
+      )}
+      <Card
+        className={`bg-[#ECECEC] dark:bg-[#1c2936] rounded-3xl border-0 p-8 flex flex-col ${
+          isRelative ? "relative" : ""
+        }`}
+      >
+        {plan.popular && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[24px] z-0" />
+            <div className="absolute inset-[1px] bg-[#ECECEC] dark:bg-[#1c2936] rounded-[23px] z-10" />
+          </>
+        )}
+        <div className={`${plan.popular ? "relative z-10" : ""}`}>
+          <CardHeader className="p-0 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-xl bg-[#E0E0E0] dark:bg-[#2a3744] flex items-center justify-center">
+                <Icon className="w-6 h-6 text-black dark:text-white" />
+              </div>
+              <span className="text-lg font-medium text-gray-500 dark:text-gray-400">
+                {plan.duration}
+              </span>
+            </div>
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-medium text-black dark:text-white">
+                {plan.title}
+              </CardTitle>
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-semibold text-black dark:text-white">
+                    {plan.price}
+                  </span>
+                  <span className="text-xl text-gray-500 dark:text-gray-400">
+                    /{plan.period}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0 mt-8 flex-grow flex flex-col justify-between">
+            <ul className="space-y-5 mb-8">
+              {plan.features.map((feature: Feature, index: number) => (
+                <li
+                  key={index}
+                  className="flex items-center gap-3 text-[15px] text-gray-600 dark:text-gray-300"
+                >
+                  {feature.included ? (
+                    <Check className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  ) : (
+                    <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  )}
+                  <span>{feature.text}</span>
+                </li>
+              ))}
+            </ul>
+            <Button
+              className="w-full bg-black hover:bg-black/80 text-white rounded-full h-12 transition-colors dark:bg-white dark:text-black dark:hover:bg-white/90"
+              onClick={() => handleSubscribe(plan)}
+              disabled={loading}
+            >
+              {loading ? "Subscribing..." : "Subscribe"}
+            </Button>
+          </CardContent>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+interface PricingSectionProps {
+  showContinueButton?: boolean;
+}
+
+export function PricingSection({
+  showContinueButton = false,
+}: PricingSectionProps) {
   return (
     <section id="pricing" className="py-16 bg-white dark:bg-[#151e2a]">
       <div className="container mx-auto px-4">
@@ -264,43 +270,40 @@ export function PricingSection() {
           ))}
         </div>
 
-        {/* Mobile Stack - Replace the carousel with this */}
+        {/* Mobile Stack */}
         <div className="md:hidden space-y-6">
           {PRICING_PLANS.map((plan, index) => (
             <PricingCard key={index} plan={plan} isRelative={true} />
           ))}
         </div>
 
-        {/* Terms of Service Message */}
-        <div className="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
-          By subscribing, you agree to our{" "}
-          <Link
-            href="/terms"
-            className="text-black dark:text-white hover:underline"
-          >
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            href="/privacy"
-            className="text-black dark:text-white hover:underline"
-          >
-            Privacy Policy
-          </Link>
-        </div>
-
-        {/* Add this at the bottom */}
-        <div className="text-center pt-8 border-t">
-          <Button
-            variant="ghost"
-            asChild
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/study">
-              Continue without subscribing
-              <span className="text-sm ml-2">(Limited access)</span>
+        {/* Terms and continue button */}
+        <div className="text-center mt-8 space-y-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            By subscribing, you agree to our{" "}
+            <Link
+              href="/terms"
+              className="underline hover:text-gray-900 dark:hover:text-gray-200"
+            >
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy"
+              className="underline hover:text-gray-900 dark:hover:text-gray-200"
+            >
+              Privacy Policy
             </Link>
-          </Button>
+          </p>
+
+          {showContinueButton && (
+            <Link
+              href="/study"
+              className="block text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            >
+              Continue without subscribing (Limited access)
+            </Link>
+          )}
         </div>
       </div>
     </section>

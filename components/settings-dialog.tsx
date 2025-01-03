@@ -37,7 +37,10 @@ export function SettingsDialog({
   const [fullName, setFullName] = useState(initialProfile?.full_name || "");
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{
+    plan_type: "basic" | "pro" | "max";
+    status: string;
+  } | null>(null);
   const [mounted, setMounted] = useState(false);
   const { theme, systemTheme } = useTheme();
   const supabase = createClientComponentClient();
@@ -94,14 +97,13 @@ export function SettingsDialog({
           .eq("status", "active")
           .single();
 
-        // Set subscription status based on active subscription and expiration
-        if (
-          subscription &&
-          subscription.current_period_end > new Date().toISOString()
-        ) {
-          setSubscriptionStatus(subscription.plan_type);
+        if (subscription) {
+          setSubscriptionStatus({
+            plan_type: subscription.plan_type,
+            status: subscription.status,
+          });
         } else {
-          setSubscriptionStatus("free");
+          setSubscriptionStatus(null);
         }
       }
     };
@@ -176,7 +178,7 @@ export function SettingsDialog({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className='fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm'
+      className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm"
     >
       <div
         className={cn(
@@ -184,7 +186,7 @@ export function SettingsDialog({
           currentTheme === "dark" ? "bg-[#151e2a]" : "bg-white"
         )}
       >
-        <div className='flex items-center justify-between border-b p-6'>
+        <div className="flex items-center justify-between border-b p-6">
           <h2
             className={cn(
               "text-lg font-semibold",
@@ -194,8 +196,8 @@ export function SettingsDialog({
             Settings
           </h2>
           <Button
-            variant='ghost'
-            size='icon'
+            variant="ghost"
+            size="icon"
             onClick={onClose}
             className={cn(
               "h-8 w-8",
@@ -204,12 +206,12 @@ export function SettingsDialog({
                 : "hover:bg-[#ECECEC] text-black"
             )}
           >
-            <X className='h-4 w-4' />
+            <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-          <div className='px-6 pt-4'>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="px-6 pt-4">
             <TabsList
               className={cn(
                 "grid w-full grid-cols-2 p-0.5 rounded-lg",
@@ -217,7 +219,7 @@ export function SettingsDialog({
               )}
             >
               <TabsTrigger
-                value='profile'
+                value="profile"
                 className={cn(
                   "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
                   currentTheme === "dark"
@@ -228,7 +230,7 @@ export function SettingsDialog({
                 Profile
               </TabsTrigger>
               <TabsTrigger
-                value='billing'
+                value="billing"
                 className={cn(
                   "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
                   currentTheme === "dark"
@@ -241,13 +243,13 @@ export function SettingsDialog({
             </TabsList>
           </div>
 
-          <div className='h-[350px] overflow-y-auto px-6 py-4'>
-            <TabsContent value='profile' className='mt-0 h-full'>
-              <div className='flex h-full flex-col gap-6'>
-                <div className='grid w-full gap-4'>
-                  <div className='space-y-2'>
+          <div className="h-[350px] overflow-y-auto px-6 py-4">
+            <TabsContent value="profile" className="mt-0 h-full">
+              <div className="flex h-full flex-col gap-6">
+                <div className="grid w-full gap-4">
+                  <div className="space-y-2">
                     <Label
-                      htmlFor='fullName'
+                      htmlFor="fullName"
                       className={
                         currentTheme === "dark" ? "text-white" : "text-black"
                       }
@@ -255,8 +257,8 @@ export function SettingsDialog({
                       Name
                     </Label>
                     <Input
-                      id='fullName'
-                      placeholder='Enter your name'
+                      id="fullName"
+                      placeholder="Enter your name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className={cn(
@@ -278,7 +280,7 @@ export function SettingsDialog({
                   >
                     {isSaving ? (
                       <>
-                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Saving...
                       </>
                     ) : (
@@ -289,8 +291,8 @@ export function SettingsDialog({
               </div>
             </TabsContent>
 
-            <TabsContent value='billing' className='mt-0 h-full'>
-              <div className='flex h-full flex-col gap-4'>
+            <TabsContent value="billing" className="mt-0 h-full">
+              <div className="flex h-full flex-col gap-4">
                 <div
                   className={cn(
                     "rounded-lg p-4 space-y-4",
@@ -299,7 +301,7 @@ export function SettingsDialog({
                       : "border-gray-200"
                   )}
                 >
-                  <div className='flex items-center justify-between'>
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3
                         className={cn(
@@ -307,10 +309,12 @@ export function SettingsDialog({
                           currentTheme === "dark" ? "text-white" : "text-black"
                         )}
                       >
-                        {hasSubscription
+                        {subscriptionStatus
                           ? `${
-                              subscriptionStatus.charAt(0).toUpperCase() +
-                              subscriptionStatus.slice(1)
+                              subscriptionStatus.plan_type
+                                .charAt(0)
+                                .toUpperCase() +
+                              subscriptionStatus.plan_type.slice(1)
                             } Plan`
                           : "Free Plan"}
                       </h3>
@@ -322,16 +326,16 @@ export function SettingsDialog({
                             : "text-gray-600"
                         )}
                       >
-                        {hasSubscription
-                          ? subscriptionStatus === "pro"
-                            ? "$13.33/month, billed quarterly"
-                            : subscriptionStatus === "max"
-                            ? "$6.67/month, billed annually"
-                            : "$20/month, billed monthly"
+                        {subscriptionStatus?.plan_type === "pro"
+                          ? "$13.33/month, billed quarterly"
+                          : subscriptionStatus?.plan_type === "max"
+                          ? "$6.67/month, billed annually"
+                          : subscriptionStatus?.plan_type === "basic"
+                          ? "$20/month, billed monthly"
                           : "Limited access"}
                       </p>
                     </div>
-                    {hasSubscription && (
+                    {subscriptionStatus?.status === "active" && (
                       <span
                         className={cn(
                           "text-xs px-2.5 py-0.5 rounded-full font-medium",
@@ -345,11 +349,11 @@ export function SettingsDialog({
                     )}
                   </div>
 
-                  <div className='space-y-2'>
-                    {hasSubscription ? (
+                  <div className="space-y-2">
+                    {subscriptionStatus ? (
                       <>
-                        <div className='flex items-center gap-2'>
-                          <Check className='h-4 w-4 text-green-500' />
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -360,8 +364,8 @@ export function SettingsDialog({
                             M&I questions
                           </span>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <Check className='h-4 w-4 text-green-500' />
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -372,8 +376,8 @@ export function SettingsDialog({
                             Bank specific questions
                           </span>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <Check className='h-4 w-4 text-green-500' />
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -384,8 +388,8 @@ export function SettingsDialog({
                             Test modes
                           </span>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <Check className='h-4 w-4 text-green-500' />
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -399,8 +403,8 @@ export function SettingsDialog({
                       </>
                     ) : (
                       <>
-                        <div className='flex items-center gap-2'>
-                          <Check className='h-4 w-4 text-green-500' />
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -411,8 +415,8 @@ export function SettingsDialog({
                             M&I questions
                           </span>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <X className='h-4 w-4 text-red-500' />
+                        <div className="flex items-center gap-2">
+                          <X className="h-4 w-4 text-red-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -423,8 +427,8 @@ export function SettingsDialog({
                             Bank specific questions
                           </span>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <X className='h-4 w-4 text-red-500' />
+                        <div className="flex items-center gap-2">
+                          <X className="h-4 w-4 text-red-500" />
                           <span
                             className={
                               currentTheme === "dark"
@@ -449,7 +453,7 @@ export function SettingsDialog({
                       )}
                       onClick={handleManagePayment}
                     >
-                      <CreditCard className='h-4 w-4 mr-2' />
+                      <CreditCard className="h-4 w-4 mr-2" />
                       Manage billing
                     </Button>
                   ) : (

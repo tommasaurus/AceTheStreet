@@ -91,25 +91,17 @@
 .matchGameGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  position: relative;
+  gap: 1rem;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .matchCard {
-  aspect-ratio: 16/10;
-  border-radius: 12px;
+  aspect-ratio: 4/3;
+  border-radius: 1rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  user-select: none;
   position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 :global(.dark) .matchCard {
@@ -710,6 +702,14 @@
     width: 28px;
     height: 28px;
   }
+
+  .matchGameGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .matchCard {
+    aspect-ratio: 3/2;
+  }
 }
 
 @media screen and (max-width: 932px) and (max-height: 430px) and (orientation: landscape) {
@@ -816,5 +816,12 @@
   /* Make selected state more visible */
   .matchCard.selected {
     transform: scale(1.02);
+  }
+}
+
+/* Add responsive font sizes */
+@media (max-width: 640px) {
+  .cardContent {
+    padding: 0.75rem;
   }
 }

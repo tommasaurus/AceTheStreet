@@ -1,0 +1,36 @@
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes scroll-right {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 30s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 30s linear infinite;
+}
+
+/* Fast versions for mobile */
+@media (max-width: 430px) {
+  .animate-scroll-left {
+    animation: scroll-left 10s linear infinite;
+  }
+
+  .animate-scroll-right {
+    animation: scroll-right 10s linear infinite;
+  }
+}

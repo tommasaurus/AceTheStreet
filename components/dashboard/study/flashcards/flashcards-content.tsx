@@ -27,7 +27,6 @@ import {
   TestSettings,
 } from "@/components/dashboard/study/test/TestSetup";
 import { TestInterface } from "@/components/dashboard/study/test/TestInterface";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useSpring, animated } from "@react-spring/web";
@@ -574,7 +573,11 @@ export function FlashcardsContent({
   const [showAnswer, setShowAnswer] = useState(false);
   const [completedCards, setCompletedCards] = useState<number[]>([]);
   const [bookmarkedCards, setBookmarkedCards] = useState<number[]>([]);
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(() => {
+    // Try to get saved fontSize from localStorage, default to 16 if not found
+    const saved = localStorage.getItem("flashcards-font-size");
+    return saved ? parseInt(saved) : 16;
+  });
   const [prevIndex, setPrevIndex] = useState(0);
   const [isTestMode, setIsTestMode] = useState(false);
   const [testSettings, setTestSettings] = useState<TestSettings | null>(null);
@@ -748,6 +751,12 @@ export function FlashcardsContent({
         ? prev.filter((id) => id !== cardId)
         : [...prev, cardId]
     );
+  };
+
+  // Create a function to handle font size changes
+  const handleFontSizeChange = (value: number) => {
+    setFontSize(value);
+    localStorage.setItem("flashcards-font-size", value.toString());
   };
 
   if (!content) {
@@ -928,25 +937,48 @@ export function FlashcardsContent({
                               onClick={(e) => e.stopPropagation()}
                               className="flex items-center gap-3"
                             >
-                              <button
-                                onClick={toggleBookmark}
-                                className="relative p-2.5 rounded-full"
-                              >
-                                <Bookmark
-                                  className={cn(
-                                    "h-7 w-7 transition-colors duration-200",
-                                    "stroke-[1.5]",
-                                    bookmarkedCards.includes(currentCard.id)
-                                      ? "fill-foreground text-foreground"
-                                      : "fill-transparent text-muted-foreground"
-                                  )}
-                                />
-                                <span className="sr-only">Bookmark card</span>
-                              </button>
+                              <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 min-w-[120px] sm:min-w-[150px]">
+                                  <span className="text-xs sm:text-sm text-gray-500">
+                                    Aa
+                                  </span>
+                                  <Slider
+                                    value={[fontSize]}
+                                    onValueChange={(value) =>
+                                      handleFontSizeChange(value[0])
+                                    }
+                                    min={12}
+                                    max={32}
+                                    step={2}
+                                    className="w-16 sm:w-24"
+                                  />
+                                  <span className="text-sm sm:text-base text-gray-500">
+                                    Aa
+                                  </span>
+                                </div>
+                                <button
+                                  onClick={toggleBookmark}
+                                  className="relative p-1.5 sm:p-2.5 rounded-full"
+                                >
+                                  <Bookmark
+                                    className={cn(
+                                      "h-5 w-5 sm:h-7 sm:w-7 transition-colors duration-200",
+                                      "stroke-[1.5]",
+                                      bookmarkedCards.includes(currentCard.id)
+                                        ? "fill-foreground text-foreground"
+                                        : "fill-transparent text-muted-foreground"
+                                    )}
+                                  />
+                                  <span className="sr-only">Bookmark card</span>
+                                </button>
+                              </div>
                             </div>
                           </div>
 
-                          <div className="text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100">
+                          <div
+                            className="text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100"
+                            style={{ fontSize: `${fontSize}px` }}
+                          >
                             {currentCard.question}
                           </div>
 
@@ -966,7 +998,10 @@ export function FlashcardsContent({
                                 className="overflow-hidden"
                               >
                                 <div className="prose dark:prose-invert max-w-none">
-                                  <div className="text-2xl text-gray-700 dark:text-gray-300">
+                                  <div
+                                    className="text-2xl text-gray-700 dark:text-gray-300"
+                                    style={{ fontSize: `${fontSize}px` }}
+                                  >
                                     {currentCard.answer}
                                   </div>
                                 </div>

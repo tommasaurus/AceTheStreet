@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import styles from "@/components/marketing/partners-section.module.css";
 
 interface CarouselItem {
   name: string;
@@ -21,18 +22,24 @@ export function InfiniteCarousel({
   className,
 }: InfiniteCarouselProps) {
   const speedClass = {
-    slow: "animate-scroll",
-    normal: "animate-scroll",
+    slow:
+      direction === "left"
+        ? styles["animate-scroll-left"]
+        : styles["animate-scroll-right"],
+    normal:
+      direction === "left"
+        ? styles["animate-scroll-left"]
+        : styles["animate-scroll-right"],
     fast:
       direction === "left"
-        ? "animate-scroll-left-fast"
-        : "animate-scroll-right-fast",
+        ? styles["animate-scroll-left-fast"]
+        : styles["animate-scroll-right-fast"],
   }[speed];
 
   const content = (
     <>
       {items.map((item, idx) => (
-        <div key={idx} className='flex items-center group px-16'>
+        <div key={idx} className="flex items-center group px-16">
           <Image
             src={item.logo}
             alt={item.name}
@@ -47,7 +54,7 @@ export function InfiniteCarousel({
                   : "150px",
               height: "auto",
             }}
-            className='group-hover:opacity-100 transition-opacity'
+            className="group-hover:opacity-100 transition-opacity"
           />
         </div>
       ))}

@@ -135,6 +135,7 @@ export async function POST(req: Request) {
             .from("subscriptions")
             .update({
               status: "active",
+              plan_type: planType,
               stripe_customer_id: customerId,
               current_period_start: now.toISOString(),
               current_period_end: periodEnd.toISOString(),

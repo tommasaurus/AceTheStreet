@@ -321,8 +321,22 @@ export function StudySidebar() {
                 <div key={item.href} className="relative">
                   {isLocked && (
                     <Link href="/pricing" className="absolute inset-0 z-10">
-                      <div className="absolute inset-0 bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center group">
-                        <Lock className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <div
+                        className={cn(
+                          "absolute inset-0 rounded-lg flex items-center justify-center",
+                          isCollapsed
+                            ? "bg-transparent"
+                            : "bg-[#ECECEC]/5 dark:bg-[#1c2936]/5 backdrop-blur-[2px]"
+                        )}
+                      >
+                        <Lock
+                          className={cn(
+                            "h-5 w-5 transition-colors",
+                            isCollapsed
+                              ? "text-muted-foreground/70"
+                              : "text-muted-foreground/50 group-hover:text-primary/70"
+                          )}
+                        />
                       </div>
                     </Link>
                   )}
@@ -335,7 +349,7 @@ export function StudySidebar() {
                           ? "bg-orange-500/10 text-orange-600 dark:text-orange-400"
                           : "bg-[#ECECEC] dark:bg-[#1c2936] text-black dark:text-white"
                         : "text-gray-600 dark:text-gray-300 hover:bg-[#ECECEC] dark:hover:bg-[#1c2936]",
-                      isLocked && "opacity-75",
+                      isLocked && !isCollapsed && "opacity-60", // Only apply opacity when expanded
                       !isMobile && isCollapsed && "justify-center px-3 group"
                     )}
                   >
@@ -345,7 +359,9 @@ export function StudySidebar() {
                         pathname.startsWith(item.href) && item.name === "Match"
                           ? "text-orange-500"
                           : "",
-                        !isMobile && isCollapsed ? "h-6 w-6" : "h-5 w-5"
+                        !isMobile && isCollapsed ? "h-6 w-6" : "h-5 w-5",
+                        // Hide the original icon when collapsed and locked
+                        isLocked && isCollapsed && "opacity-0"
                       )}
                     />
                     {(!isCollapsed || isMobile) && (

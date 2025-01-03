@@ -259,23 +259,6 @@ html {
   }
 }
 
-.animate-scroll-left {
-  animation: scroll-left 30s linear infinite;
-}
-
-.animate-scroll-right {
-  animation: scroll-right 30s linear infinite;
-}
-
-/* Fast versions */
-.animate-scroll-left-fast {
-  animation: scroll-left 15s linear infinite;
-}
-
-.animate-scroll-right-fast {
-  animation: scroll-right 15s linear infinite;
-}
-
 /* Add these new utility classes */
 @keyframes spin-slow {
   from {
@@ -393,4 +376,13 @@ html {
 
 .animate-shine {
   animation: shine 8s linear infinite;
+}
+
+/* Add these styles if you don't already have them */
+.text-size-control {
+  @apply flex items-center gap-2 px-2 py-1 rounded-lg bg-gray-100;
+}
+
+.text-size-control:hover {
+  @apply bg-gray-200;
 }

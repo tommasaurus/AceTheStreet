@@ -7,6 +7,7 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Slider } from "@/components/ui/slider";
 
 interface Question {
   question: string;
@@ -303,6 +304,10 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
   const [showPenalty, setShowPenalty] = useState(false);
   const [lastClickedCard, setLastClickedCard] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem("flashcards-font-size");
+    return saved ? parseInt(saved) : 16;
+  });
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -415,6 +420,11 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
     setWrongPair([]);
   };
 
+  const handleFontSizeChange = (value: number) => {
+    setFontSize(value);
+    localStorage.setItem("flashcards-font-size", value.toString());
+  };
+
   if (!gameStarted) {
     return <MatchGameIntro onStartGame={() => setGameStarted(true)} />;
   }
@@ -466,12 +476,29 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
         </div>
       </div>
 
+      <div className="flex justify-end mb-6">
+        <div className="flex items-center gap-2 min-w-[120px] sm:min-w-[150px]">
+          <span className="text-xs sm:text-sm text-gray-500">Aa</span>
+          <Slider
+            value={[fontSize]}
+            onValueChange={(value) => handleFontSizeChange(value[0])}
+            min={12}
+            max={32}
+            step={2}
+            className="w-16 sm:w-24"
+          />
+          <span className="text-sm sm:text-base text-gray-500">Aa</span>
+        </div>
+      </div>
+
       <div
         className={cn(
           styles.matchGameGrid,
           "relative bg-gradient-to-b from-background/50 to-background/30 border border-border/50 backdrop-blur-sm rounded-2xl",
           "p-8 md:p-8",
-          "max-md:p-0.5"
+          "max-md:p-0.5",
+          "grid grid-cols-4 gap-4",
+          "auto-rows-fr"
         )}
       >
         {shuffledCards.map((card) => (
@@ -484,6 +511,8 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
               "border border-border/50",
               "shadow-sm hover:shadow-md",
               "transition-all duration-300",
+              "min-h-[120px]",
+              "flex items-center",
               selectedCard?.id === card.id && "ring-2 ring-orange-500/50",
               matchedPairs.includes(card.id) &&
                 "ring-2 ring-green-500/50 bg-green-500/5",
@@ -508,9 +537,17 @@ const MatchGame: React.FC<MatchGameProps> = ({ questions }) => {
               className={cn(
                 styles.cardContent,
                 "relative z-10 p-4",
-                "text-sm md:text-base font-medium",
-                "transition-colors duration-300"
+                "w-full",
+                "font-medium",
+                "transition-colors duration-300",
+                "break-words",
+                "flex items-center justify-center",
+                "text-center"
               )}
+              style={{
+                fontSize: `${fontSize}px`,
+                minHeight: "100%",
+              }}
             >
               {card.content}
               {wrongPair.includes(card.id) && card.id === lastClickedCard && (

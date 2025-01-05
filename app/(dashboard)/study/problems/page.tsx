@@ -8,7 +8,7 @@ import { Check, Bookmark, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 
-//question
+//questions
 const questions = [
   {
     id: 1,

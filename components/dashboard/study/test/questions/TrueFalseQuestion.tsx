@@ -20,6 +20,7 @@ interface TrueFalseQuestionProps {
   questionNumber: number;
   onAnswer: (id: string, answer: string) => void;
   onDontKnow: (id: string) => void;
+  fontSize: number;
 }
 
 export function TrueFalseQuestion({
@@ -27,59 +28,70 @@ export function TrueFalseQuestion({
   questionNumber,
   onAnswer,
   onDontKnow,
+  fontSize,
 }: TrueFalseQuestionProps) {
   const handleDontKnow = () => {
-    // Set the correct answer first, then mark as "don't know"
     onAnswer(question.id, question.answer);
     onDontKnow(question.id);
   };
 
   return (
-    <div className={styles.questionCard}>
-      <div className={styles.questionNumber}>Question {questionNumber}</div>
+    <>
       <div className={styles.trueFalseContainer}>
         <div className={styles.questionSide}>
           <div className={styles.questionLabel}>Term</div>
-          <div className={styles.questionText}>{question.options.term}</div>
+          <div
+            className={styles.questionText}
+            style={{ fontSize: `${fontSize}px` }}
+          >
+            {question.options.term}
+          </div>
         </div>
         <div className={styles.answerSide}>
           <div className={styles.questionLabel}>Definition</div>
-          <div className={styles.questionText}>
+          <div
+            className={styles.questionText}
+            style={{ fontSize: `${fontSize}px` }}
+          >
             {question.options.definition}
           </div>
         </div>
       </div>
-      <div className={styles.answerOptions}>
-        <Button
-          variant={question.userAnswer === "true" ? "default" : "outline"}
-          onClick={() => onAnswer(question.id, "true")}
-          className={
-            question.userAnswer === "dontknow" && question.answer === "true"
-              ? styles.correctAnswer
-              : ""
+      <div className={styles.trueFalseOptions}>
+        <button
+          onClick={() => onAnswer(question.id, "match")}
+          className={`${styles.matchButton} ${
+            question.userAnswer === "match" ? styles.selected : ""
+          }`}
+          data-correct={
+            question.userAnswer === "dontknow" && question.answer === "match"
           }
         >
           Match
-        </Button>
-        <Button
-          variant={question.userAnswer === "false" ? "default" : "outline"}
-          onClick={() => onAnswer(question.id, "false")}
-          className={
-            question.userAnswer === "dontknow" && question.answer === "false"
-              ? styles.correctAnswer
-              : ""
+        </button>
+        <button
+          onClick={() => onAnswer(question.id, "dontMatch")}
+          className={`${styles.matchButton} ${
+            question.userAnswer === "dontMatch" ? styles.selected : ""
+          }`}
+          data-correct={
+            question.userAnswer === "dontknow" &&
+            question.answer === "dontMatch"
           }
         >
           Don't Match
-        </Button>
+        </button>
       </div>
       <Button
         variant="ghost"
-        className={styles.dontKnowButton}
+        className={`${styles.dontKnowButton} ${
+          question.userAnswer === "dontknow" ? styles.selected : ""
+        }`}
         onClick={handleDontKnow}
+        data-selected={question.userAnswer === "dontknow"}
       >
-        Don't know
+        {question.userAnswer === "dontknow" ? "Answer Revealed" : "Don't know"}
       </Button>
-    </div>
+    </>
   );
 }

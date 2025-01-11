@@ -14,6 +14,7 @@ interface MultipleChoiceQuestionProps {
   questionNumber: number;
   onAnswer: (id: string, answer: string) => void;
   onDontKnow: (id: string) => void;
+  fontSize: number;
 }
 
 export function MultipleChoiceQuestion({
@@ -21,39 +22,48 @@ export function MultipleChoiceQuestion({
   questionNumber,
   onAnswer,
   onDontKnow,
+  fontSize,
 }: MultipleChoiceQuestionProps) {
   const handleDontKnow = () => {
-    onAnswer(question.id, question.answer); // Set the correct answer first
-    onDontKnow(question.id); // Then mark as "don't know"
+    onAnswer(question.id, question.answer);
+    onDontKnow(question.id);
   };
 
   return (
-    <div className={styles.questionCard}>
-      <div className={styles.questionNumber}>Question {questionNumber}</div>
-      <div className={styles.questionText}>{question.question}</div>
+    <>
+      <div
+        className={styles.questionText}
+        style={{ fontSize: `${fontSize}px` }}
+      >
+        {question.question}
+      </div>
       <div className={styles.answerOptions}>
         {question.options?.map((option) => (
-          <Button
+          <button
             key={option}
-            variant={question.userAnswer === option ? "default" : "outline"}
             onClick={() => onAnswer(question.id, option)}
-            className={
-              question.userAnswer === "dontknow" && question.answer === option
-                ? styles.correctAnswer
-                : ""
+            className={`${styles.answerChoice} ${
+              question.userAnswer === option ? styles.selected : ""
+            }`}
+            style={{ fontSize: `${fontSize - 2}px` }}
+            data-correct={
+              question.userAnswer === "dontknow" && option === question.answer
             }
           >
             {option}
-          </Button>
+          </button>
         ))}
       </div>
       <Button
         variant="ghost"
-        className={styles.dontKnowButton}
+        className={`${styles.dontKnowButton} ${
+          question.userAnswer === "dontknow" ? styles.selected : ""
+        }`}
         onClick={handleDontKnow}
+        data-selected={question.userAnswer === "dontknow"}
       >
-        Don't know
+        {question.userAnswer === "dontknow" ? "Answer Revealed" : "Don't know"}
       </Button>
-    </div>
+    </>
   );
 }

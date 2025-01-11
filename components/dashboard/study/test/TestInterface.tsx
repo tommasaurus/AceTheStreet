@@ -531,98 +531,30 @@ export function TestInterface({
                     </div>
                   </div>
 
-                  {/* Question text with dynamic font size */}
-                  <div
-                    className="text-2xl font-medium mb-8"
-                    style={{ fontSize: `${fontSize}px` }}
-                  >
-                    {testQuestions[currentQuestion].question}
-                  </div>
-
-                  {/* Answer section */}
-                  <div className="space-y-4">
-                    {testQuestions[currentQuestion].type ===
-                    "multipleChoice" ? (
-                      // Multiple choice options with dynamic font size
-                      <div className="grid gap-3">
-                        {(
-                          (
-                            testQuestions[
-                              currentQuestion
-                            ] as MultipleChoiceTestQuestion
-                          ).options as string[]
-                        ).map((option, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleAnswer(option)}
-                            className={cn(
-                              "p-4 rounded-lg text-left transition-all",
-                              "bg-gray-100 dark:bg-gray-800/50",
-                              "hover:bg-gray-200 dark:hover:bg-gray-800"
-                            )}
-                          >
-                            <span
-                              className="block"
-                              style={{ fontSize: `${fontSize - 2}px` }}
-                            >
-                              {option}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      // True/False section
-                      <div className="space-y-6">
-                        {/* Question-Answer Pair Box */}
-                        <div className="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-6 space-y-4">
-                          <div style={{ fontSize: `${fontSize}px` }}>
-                            <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
-                              Term
-                            </h3>
-                            <div className="text-foreground">
-                              {
-                                (
-                                  testQuestions[
-                                    currentQuestion
-                                  ] as TrueFalseTestQuestion
-                                ).options.term
-                              }
-                            </div>
-                          </div>
-                          <div style={{ fontSize: `${fontSize}px` }}>
-                            <h3 className="font-medium text-gray-500 dark:text-gray-400 mb-2">
-                              Definition
-                            </h3>
-                            <div className="text-foreground">
-                              {
-                                (
-                                  testQuestions[
-                                    currentQuestion
-                                  ] as TrueFalseTestQuestion
-                                ).options.definition
-                              }
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Match/Don't Match Buttons - fixed size */}
-                        <div className="flex gap-4 justify-center">
-                          <button
-                            onClick={() => handleAnswer("match")}
-                            className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
-                          >
-                            <span className="block">Match</span>
-                          </button>
-                          <button
-                            onClick={() => handleAnswer("dontmatch")}
-                            className="w-32 h-12 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800"
-                          >
-                            <span className="block">Don't Match</span>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Replace the custom implementation with the imported components */}
+                  {testQuestions[currentQuestion].type === "multipleChoice" ? (
+                    <MultipleChoiceQuestion
+                      question={
+                        testQuestions[
+                          currentQuestion
+                        ] as MultipleChoiceTestQuestion
+                      }
+                      questionNumber={currentQuestion + 1}
+                      onAnswer={handleAnswerChange}
+                      onDontKnow={handleDontKnow}
+                      fontSize={fontSize}
+                    />
+                  ) : (
+                    <TrueFalseQuestion
+                      question={
+                        testQuestions[currentQuestion] as TrueFalseTestQuestion
+                      }
+                      questionNumber={currentQuestion + 1}
+                      onAnswer={handleAnswerChange}
+                      onDontKnow={handleDontKnow}
+                      fontSize={fontSize}
+                    />
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -162,7 +162,7 @@
   opacity: 0.8;
 }
 
-/* Multiple Choice Styling */
+/* Multiple Choice Answer Options */
 .answerOptions {
   display: flex;
   flex-direction: column;
@@ -173,54 +173,118 @@
   padding: 0.5rem;
 }
 
-.answerOption {
+.answerChoice {
   position: relative;
-  background: rgba(23, 23, 23, 0.05); /* Lighter background for light mode */
-  border: 1px solid rgba(23, 23, 23, 0.1); /* Darker border for light mode */
-  border-radius: 12px;
-  padding: 1.5rem;
-  cursor: grab;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+  color: #1e293b;
   text-align: left;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #171717; /* Dark text for light mode */
-  user-select: none;
-  touch-action: none; /* Add this to improve touch handling */
+  width: 100%;
 }
 
-.answerOption:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.08);
+.answerChoice:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
 }
 
-.answerOption.selected {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #15803d;
-}
-
-:global(.dark) .answerOption.selected {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #22c55e;
+.answerChoice.selected {
+  background-color: #1e293b;
+  border-color: #1e293b;
+  color: white;
+  font-weight: 500;
 }
 
 /* Dark mode styles for answer options */
-:global(.dark) .answerOption {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f3f4f6;
+:global(.dark) .answerChoice {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+:global(.dark) .answerChoice:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .answerChoice.selected {
+  background-color: #f8fafc;
+  border-color: #f8fafc;
+  color: #1e293b;
 }
 
 /* Don't Know Button Styling */
-.dontKnowContainer {
-  width: 100%;
+.dontKnowButton {
+  padding: 12px 24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  margin: 2rem auto 1rem;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 2rem;
-  position: relative;
+  background-color: transparent;
+}
+
+/* Light mode styles */
+.dontKnowButton {
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.dontKnowButton:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.dontKnowButton.selected,
+.dontKnowButton[data-selected="true"] {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: white;
+  font-weight: 500;
+}
+
+/* Dark mode styles */
+:global(.dark) .dontKnowButton {
+  color: #94a3b8;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .dontKnowButton:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+:global(.dark) .dontKnowButton.selected,
+:global(.dark) .dontKnowButton[data-selected="true"] {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+/* Active state */
+.dontKnowButton:active {
+  transform: scale(0.98);
+}
+
+/* When don't know is selected, show the correct answer */
+.answerChoice[data-correct="true"],
+.matchButton[data-correct="true"] {
+  background-color: #22c55e;
+  border-color: #22c55e;
+  color: white;
+  font-weight: 500;
+}
+
+:global(.dark) .answerChoice[data-correct="true"],
+:global(.dark) .matchButton[data-correct="true"] {
+  background-color: #22c55e;
+  border-color: #22c55e;
+  color: white;
 }
 
 /* True/False Styling */
@@ -229,6 +293,64 @@
   justify-content: center;
   gap: 1rem;
   margin: 2rem 0;
+}
+
+.matchButton {
+  padding: 12px 24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.matchButton:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.matchButton.selected {
+  background-color: #1e293b;
+  border-color: #1e293b;
+  color: white;
+  font-weight: 500;
+}
+
+/* Dark mode styles for match buttons */
+:global(.dark) .matchButton {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+:global(.dark) .matchButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .matchButton.selected {
+  background-color: #f8fafc;
+  border-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* Active state for both types of buttons */
+.matchButton:active,
+.answerChoice:active {
+  transform: scale(0.98);
+}
+
+/* Add subtle shadow for better depth */
+.matchButton,
+.answerChoice {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+:global(.dark) .matchButton,
+:global(.dark) .answerChoice {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .trueFalseOption {

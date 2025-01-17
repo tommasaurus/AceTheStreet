@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
 interface Question {
-  id: number;
+  id: string;
   type: string;
   question: string;
   answer: string;

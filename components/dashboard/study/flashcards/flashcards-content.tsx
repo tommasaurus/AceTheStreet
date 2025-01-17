@@ -35,14 +35,15 @@ import { cva } from "class-variance-authority";
 import { useTheme } from "next-themes";
 import TabsList from "./tabslist";
 import { Separator } from "@/components/ui/separator";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface Question {
-  id: number;
+  id: string;
   type: string;
   question: string;
   answer: string;
-  completed: boolean;
-  bookmarked: boolean;
+  completed?: boolean;
+  bookmarked?: boolean;
 }
 
 interface BankContent {
@@ -73,7 +74,7 @@ const sampleQuestions: QuestionsData = {
       bank: "Goldman Sachs",
       questions: [
         {
-          id: 1,
+          id: "1",
           type: "Technical",
           question: "Walk me through a DCF for a SaaS company",
           answer:
@@ -82,7 +83,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 2,
+          id: "2",
           type: "Technical",
           question: "How would you value a pre-revenue startup?",
           answer:
@@ -91,7 +92,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 3,
+          id: "3",
           type: "Technical",
           question: "What's the impact of increasing depreciation by $10?",
           answer:
@@ -100,7 +101,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 4,
+          id: "4",
           type: "Technical",
           question: "What is WACC and how do you calculate it?",
           answer:
@@ -109,7 +110,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 5,
+          id: "5",
           type: "Technical",
           question: "How do you calculate Unlevered Free Cash Flow?",
           answer:
@@ -118,7 +119,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 6,
+          id: "6",
           type: "Technical",
           question:
             "What are the key differences between enterprise and equity value?",
@@ -128,7 +129,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 7,
+          id: "7",
           type: "Technical",
           question: "Walk me through a leveraged buyout model",
           answer:
@@ -137,7 +138,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 8,
+          id: "8",
           type: "Technical",
           question: "What makes a good LBO candidate?",
           answer:
@@ -146,7 +147,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 9,
+          id: "9",
           type: "Technical",
           question: "How do you calculate EBITDA?",
           answer:
@@ -155,7 +156,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 10,
+          id: "10",
           type: "Technical",
           question: "What are the three main valuation methodologies?",
           answer:
@@ -169,7 +170,7 @@ const sampleQuestions: QuestionsData = {
       bank: "Morgan Stanley",
       questions: [
         {
-          id: 1,
+          id: "1",
           type: "Technical",
           question: "Walk me through a leveraged buyout model",
           answer:
@@ -178,7 +179,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 2,
+          id: "2",
           type: "Technical",
           question: "What makes a good LBO candidate?",
           answer:
@@ -187,7 +188,7 @@ const sampleQuestions: QuestionsData = {
           bookmarked: false,
         },
         {
-          id: 3,
+          id: "3",
           type: "Behavioral",
           question: "Why Morgan Stanley?",
           answer:
@@ -203,7 +204,7 @@ const sampleQuestions: QuestionsData = {
       category: "Valuation",
       questions: [
         {
-          id: 1,
+          id: "1",
           type: "Technical",
           question: "What are the three main valuation methodologies?",
           answer:
@@ -569,15 +570,15 @@ export function FlashcardsContent({
   bankId,
   categoryId,
 }: FlashcardsContentProps) {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [completedCards, setCompletedCards] = useState<number[]>([]);
-  const [bookmarkedCards, setBookmarkedCards] = useState<number[]>([]);
-  const [fontSize, setFontSize] = useState(() => {
-    // Try to get saved fontSize from localStorage, default to 16 if not found
-    const saved = localStorage.getItem("flashcards-font-size");
-    return saved ? parseInt(saved) : 16;
-  });
+  const [completedCards, setCompletedCards] = useState<string[]>([]);
+  const [bookmarkedCards, setBookmarkedCards] = useState<string[]>([]);
+  const [bankName, setBankName] = useState("");
+  const supabase = createClientComponentClient();
+  const [fontSize, setFontSize] = useState(16); // Default to 16
   const [prevIndex, setPrevIndex] = useState(0);
   const [isTestMode, setIsTestMode] = useState(false);
   const [testSettings, setTestSettings] = useState<TestSettings | null>(null);
@@ -588,73 +589,82 @@ export function FlashcardsContent({
   const [activeTab, setActiveTab] = useState("flashcards");
   const [hasScrolled, setHasScrolled] = useState(false);
 
+  // Add useEffect for localStorage
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const threshold = windowHeight * 0.3; // Show questions after scrolling 30% of viewport height
-
-      if (scrollPosition > threshold) {
-        setHasScrolled(true);
-      } else {
-        setHasScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Only access localStorage on client side
+    const saved = localStorage.getItem("flashcards-font-size");
+    if (saved) {
+      setFontSize(parseInt(saved));
+    }
   }, []);
 
-  const handleStartTest = (settings: TestSettings) => {
-    if (
-      !settings.questionTypes.trueFalse &&
-      !settings.questionTypes.multipleChoice
-    ) {
-      toast.error("Please select at least one question type");
-      return;
+  // Fetch questions and bank info
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        if (category === "banks" && bankId) {
+          // First get the bank name and id
+          const { data: bankData, error: bankError } = await supabase
+            .from("banks")
+            .select("id, name")
+            .eq("slug", bankId)
+            .single();
+
+          if (bankError) {
+            console.error("Error fetching bank:", bankError);
+            return;
+          }
+
+          if (!bankData) {
+            console.error("No bank found with slug:", bankId);
+            return;
+          }
+
+          setBankName(bankData.name);
+
+          // Then get the questions for this bank
+          const { data: questionsData, error: questionsError } = await supabase
+            .from("questions")
+            .select("*")
+            .eq("bank_id", bankData.id);
+
+          if (questionsError) {
+            console.error("Error fetching questions:", questionsError);
+            return;
+          }
+
+          // Add client-side tracking properties
+          const questionsWithTracking = questionsData.map((q: Question) => ({
+            ...q,
+            completed: false,
+            bookmarked: false,
+          }));
+
+          setQuestions(questionsWithTracking);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    if (settings.questionCount === 0) {
-      toast.error("Please enter the number of questions");
-      return;
-    }
+    fetchQuestions();
+  }, [category, bankId, supabase]);
 
-    if (settings.timeLimit < 1 || settings.timeLimit > 120) {
-      toast.error("Please enter a valid time limit between 1 and 120 minutes");
-      return;
-    }
-
-    setTestSettings(settings);
-    setIsTestMode(true);
-  };
-
-  const handleTestComplete = (results: any) => {
-    if (results === null) {
-      setIsTestMode(false);
-      setTestSettings(null);
-    } else {
-      console.log("Test completed with results:", results);
-    }
-  };
-
-  const handleTabChange = (value: string) => {
-    if (value !== "test") {
-      setIsTestMode(false);
-      setTestSettings(null);
-    }
-    setActiveTab(value);
-  };
-
-  const id = category === "banks" ? bankId : categoryId;
-
-  let content;
-  if (category === "banks" && id && id in sampleQuestions.banks) {
-    content = sampleQuestions.banks[id];
-  } else if (category === "m-and-i" && id && id in sampleQuestions["m-and-i"]) {
-    content = sampleQuestions["m-and-i"][id];
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
+      </div>
+    );
   }
 
-  const questions = content?.questions || [];
+  // No content found state
+  if (!questions.length) {
+    return <div>No questions found</div>;
+  }
 
   const remainingCards = questions.filter(
     (q) => !completedCards.includes(q.id)
@@ -663,8 +673,6 @@ export function FlashcardsContent({
   const handleNext = () => {
     setShowAnswer(false);
     if (remainingCards.length > 1) {
-      setPrevIndex(currentIndex);
-      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % remainingCards.length);
     }
   };
@@ -672,8 +680,6 @@ export function FlashcardsContent({
   const handlePrevious = () => {
     setShowAnswer(false);
     if (remainingCards.length > 1) {
-      setPrevIndex(currentIndex);
-      setDirection(-1);
       setCurrentIndex(
         (prev) => (prev - 1 + remainingCards.length) % remainingCards.length
       );
@@ -732,15 +738,8 @@ export function FlashcardsContent({
   };
 
   // Helper function to get the title
-  const getTitle = (content: Content | null) => {
-    if (!content) return "";
-    if (category === "banks" && "bank" in content) {
-      return content.bank;
-    }
-    if ("category" in content) {
-      return content.category;
-    }
-    return "";
+  const getTitle = () => {
+    return bankName || "Questions";
   };
 
   const toggleBookmark = (e: React.MouseEvent) => {
@@ -759,7 +758,48 @@ export function FlashcardsContent({
     localStorage.setItem("flashcards-font-size", value.toString());
   };
 
-  if (!content) {
+  // Add back the handlers
+  const handleStartTest = (settings: TestSettings) => {
+    if (
+      !settings.questionTypes.trueFalse &&
+      !settings.questionTypes.multipleChoice
+    ) {
+      toast.error("Please select at least one question type");
+      return;
+    }
+
+    if (settings.questionCount === 0) {
+      toast.error("Please enter the number of questions");
+      return;
+    }
+
+    if (settings.timeLimit < 1 || settings.timeLimit > 120) {
+      toast.error("Please enter a valid time limit between 1 and 120 minutes");
+      return;
+    }
+
+    setTestSettings(settings);
+    setIsTestMode(true);
+  };
+
+  const handleTestComplete = (results: any) => {
+    if (results === null) {
+      setIsTestMode(false);
+      setTestSettings(null);
+    } else {
+      console.log("Test completed with results:", results);
+    }
+  };
+
+  const handleTabChange = (value: string) => {
+    if (value !== "test") {
+      setIsTestMode(false);
+      setTestSettings(null);
+    }
+    setActiveTab(value);
+  };
+
+  if (!questions.length) {
     return <div>Content not found</div>;
   }
 
@@ -857,7 +897,7 @@ export function FlashcardsContent({
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </div>
-        <h1 className="text-3xl font-semibold pt-4">{getTitle(content)}</h1>
+        <h1 className="text-3xl font-semibold pt-4">{getTitle()}</h1>
       </div>
 
       <div className="w-full">
@@ -1002,7 +1042,11 @@ export function FlashcardsContent({
                                     className="text-2xl text-gray-700 dark:text-gray-300"
                                     style={{ fontSize: `${fontSize}px` }}
                                   >
-                                    {currentCard.answer}
+                                    {currentCard.answer
+                                      ?.split("\n\n")
+                                      .map((paragraph, i) => (
+                                        <p key={i}>{paragraph}</p>
+                                      )) ?? "No answer provided"}
                                   </div>
                                 </div>
                               </motion.div>
@@ -1198,10 +1242,10 @@ export function FlashcardsContent({
                               )}
                             >
                               {question.answer
-                                .split("\n\n")
+                                ?.split("\n\n")
                                 .map((paragraph, i) => (
                                   <p key={i}>{paragraph}</p>
-                                ))}
+                                )) ?? "No answer provided"}
                             </div>
                           </div>
                         </div>

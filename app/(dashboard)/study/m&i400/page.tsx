@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,48 +8,60 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const categories = [
-  {
-    id: "valuation-1",
-    name: "Valuation",
-    questionCount: 4,
-    description: "Core valuation concepts and methodologies",
-    gradient: "from-[#FF8F71] to-[#EF2F88]",
-  },
-  {
-    id: "accounting-1",
-    name: "Accounting",
-    questionCount: 3,
-    description: "Essential accounting concepts and financial statements",
-    gradient: "from-[#4158D0] to-[#C850C0]",
-  },
-  {
-    id: "ma-1",
-    name: "M&A",
-    questionCount: 3,
-    description: "Mergers & Acquisitions process and analysis",
-    gradient: "from-[#0093E9] to-[#80D0C7]",
-  },
-  {
-    id: "lbo-1",
-    name: "Leveraged Buyouts",
-    questionCount: 3,
-    description: "LBO modeling and private equity concepts",
-    gradient: "from-[#8EC5FC] to-[#E0C3FC]",
-  },
-];
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  question_count: number;
+  gradient: string;
+}
 
 export default function M_and_I_Page() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const { data, error } = await supabase
+          .from("m_and_i_400")
+          .select("*")
+          .order("name");
+
+        if (error) {
+          console.error("Error fetching categories:", error);
+          return;
+        }
+
+        setCategories(data || []);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCategories();
+  }, [supabase]);
 
   const filteredCategories = categories.filter(
     (category) =>
       category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       category.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white' />
+      </div>
+    );
+  }
 
   return (
     <div className='relative min-h-screen w-full'>
@@ -120,7 +132,7 @@ export default function M_and_I_Page() {
                           variant='secondary'
                           className='text-sm py-1.5 px-4 rounded-full bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300 backdrop-blur-sm'
                         >
-                          {category.questionCount} Questions
+                          {category.question_count} Questions
                         </Badge>
                         <div className='w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-sm flex items-center justify-center'>
                           <span className='text-sm font-medium text-gray-600 dark:text-gray-300'>

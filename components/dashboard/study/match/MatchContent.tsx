@@ -22,34 +22,48 @@ export default function MatchContent() {
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        // Extract bank slug from pathname
-        const slug = pathname.split("/").pop();
+        const pathParts = pathname.split("/");
+        const id = pathParts.pop(); // Get the last part (bank slug or category id)
+        const route = pathParts[pathParts.length - 1]; // Get the route type (banks or m&i400)
 
-        if (slug) {
-          // First get the bank id
-          const { data: bankData, error: bankError } = await supabase
-            .from("banks")
-            .select("id")
-            .eq("slug", slug)
-            .single();
+        if (id) {
+          let query;
 
-          if (bankError) {
-            console.error("Error fetching bank:", bankError);
-            return;
+          if (route === "banks") {
+            // First get the bank id
+            const { data: bankData, error: bankError } = await supabase
+              .from("banks")
+              .select("id")
+              .eq("slug", id)
+              .single();
+
+            if (bankError) {
+              console.error("Error fetching bank:", bankError);
+              return;
+            }
+
+            query = supabase
+              .from("questions")
+              .select("id, question, answer")
+              .eq("bank_id", bankData.id);
+          } else if (route === "m&i400") {
+            // For M&I 400, use the category id directly
+            query = supabase
+              .from("questions")
+              .select("id, question, answer")
+              .eq("m_and_i_400_id", id);
           }
 
-          // Then get the questions for this bank
-          const { data: questionsData, error: questionsError } = await supabase
-            .from("questions")
-            .select("id, question, answer")
-            .eq("bank_id", bankData.id);
+          if (query) {
+            const { data: questionsData, error: questionsError } = await query;
 
-          if (questionsError) {
-            console.error("Error fetching questions:", questionsError);
-            return;
+            if (questionsError) {
+              console.error("Error fetching questions:", questionsError);
+              return;
+            }
+
+            setQuestions(questionsData || []);
           }
-
-          setQuestions(questionsData || []);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -63,8 +77,8 @@ export default function MatchContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
+      <div className='flex items-center justify-center min-h-[400px]'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white' />
       </div>
     );
   }

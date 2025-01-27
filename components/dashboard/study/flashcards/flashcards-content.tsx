@@ -257,12 +257,12 @@ const FancyButton = ({
   showAnswer: boolean;
 }) => (
   <motion.div
-    className="w-full mb-6 relative group"
+    className='w-full mb-6 relative group'
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
   >
     <Button
-      variant="default"
+      variant='default'
       onClick={onClick}
       className={cn(
         "w-full relative",
@@ -277,16 +277,16 @@ const FancyButton = ({
         "group/button"
       )}
     >
-      <div className="relative flex items-center justify-center gap-2">
+      <div className='relative flex items-center justify-center gap-2'>
         <motion.div
           initial={false}
           animate={{ rotate: showAnswer ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className="text-gray-800 dark:text-gray-100"
+          className='text-gray-800 dark:text-gray-100'
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className='w-4 h-4' />
         </motion.div>
-        <span className="relative">
+        <span className='relative'>
           {showAnswer ? "Hide Answer" : "Show Answer"}
         </span>
       </div>
@@ -303,27 +303,27 @@ const TextSizeControl = ({
   setFontSize: (size: number) => void;
 }) => (
   <motion.div
-    className="relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5"
+    className='relative group flex items-center bg-white/10 dark:bg-white/5 rounded-full px-3 py-1.5'
     whileHover={{ scale: 1.02 }}
   >
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <button
         onClick={() => setFontSize(Math.max(12, fontSize - 2))}
-        className="text-sm opacity-60 hover:opacity-100 transition-opacity"
+        className='text-sm opacity-60 hover:opacity-100 transition-opacity'
       >
         A
       </button>
-      <div className="h-3 w-px bg-gray-400/20" />
+      <div className='h-3 w-px bg-gray-400/20' />
       <button
         onClick={() => setFontSize(Math.min(24, fontSize + 2))}
-        className="text-lg font-medium opacity-60 hover:opacity-100 transition-opacity"
+        className='text-lg font-medium opacity-60 hover:opacity-100 transition-opacity'
       >
         A
       </button>
     </div>
 
     {/* Tooltip */}
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
       Adjust text size
     </span>
   </motion.div>
@@ -351,7 +351,7 @@ const ActionButton = ({
 
   return (
     <motion.div
-      className="relative"
+      className='relative'
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -378,15 +378,15 @@ const ActionButton = ({
         whileHover={{ y: -2 }}
       >
         {/* Inner gradient overlay */}
-        <div className="absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className='absolute inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
 
         {/* Icon container */}
-        <div className="relative z-10">
-          <Icon className="w-6 h-6 text-white" />
+        <div className='relative z-10'>
+          <Icon className='w-6 h-6 text-white' />
         </div>
 
         {/* Tooltip */}
-        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
           {label}
         </span>
       </motion.button>
@@ -404,17 +404,17 @@ const IconButton = ({
   onClick?: () => void;
   label: string;
 }) => (
-  <motion.div className="relative group">
+  <motion.div className='relative group'>
     <Button
-      variant="ghost"
-      size="icon"
+      variant='ghost'
+      size='icon'
       onClick={onClick}
-      className="rounded-full hover:bg-white/10 dark:hover:bg-white/5"
+      className='rounded-full hover:bg-white/10 dark:hover:bg-white/5'
     >
-      <Icon className="w-4 h-4" />
+      <Icon className='w-4 h-4' />
     </Button>
     {/* Tooltip */}
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <span className='absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap'>
       {label}
     </span>
   </motion.div>
@@ -441,7 +441,7 @@ const NavigationButton = ({
     )}
   >
     <Button
-      variant="ghost"
+      variant='ghost'
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -453,7 +453,7 @@ const NavigationButton = ({
         "group/button"
       )}
     >
-      <div className="relative flex items-center gap-2">
+      <div className='relative flex items-center gap-2'>
         {direction === "left" && (
           <motion.div
             initial={false}
@@ -465,10 +465,10 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className='h-4 w-4' />
           </motion.div>
         )}
-        <span className="relative font-medium">{label}</span>
+        <span className='relative font-medium'>{label}</span>
         {direction === "right" && (
           <motion.div
             initial={false}
@@ -480,7 +480,7 @@ const NavigationButton = ({
               ease: "easeInOut",
             }}
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className='h-4 w-4' />
           </motion.div>
         )}
       </div>
@@ -508,7 +508,7 @@ const TabIcon = ({
     }}
   >
     <motion.div
-      className="absolute inset-0 rounded-xl"
+      className='absolute inset-0 rounded-xl'
       animate={{
         boxShadow: isActive ? `0 0 25px 5px rgb(${color} / 0.15)` : "none",
       }}
@@ -522,11 +522,11 @@ const TabIcon = ({
     />
     {isActive && (
       <motion.div
-        layoutId="activeTab"
-        className="absolute inset-0 rounded-xl"
+        layoutId='activeTab'
+        className='absolute inset-0 rounded-xl'
         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       >
-        <div className="absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40" />
+        <div className='absolute inset-0 rounded-xl border-2 border-[rgb(${color})] opacity-40' />
       </motion.div>
     )}
   </motion.div>
@@ -542,9 +542,9 @@ const ScrollIndicator = () => {
         delay: 0.5,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="absolute left-[50%] -translate-x-[50%] mt-16 flex flex-col items-center gap-2 whitespace-nowrap"
+      className='absolute left-[50%] -translate-x-[50%] mt-16 flex flex-col items-center gap-2 whitespace-nowrap'
     >
-      <span className="text-sm text-muted-foreground/80">
+      <span className='text-sm text-muted-foreground/80'>
         Scroll to see all cards
       </span>
       <motion.div
@@ -556,10 +556,10 @@ const ScrollIndicator = () => {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="relative"
+        className='relative'
       >
-        <div className="absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md" />
-        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+        <div className='absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md' />
+        <ChevronDown className='h-5 w-5 text-muted-foreground' />
       </motion.div>
     </motion.div>
   );
@@ -602,8 +602,11 @@ export function FlashcardsContent({
   useEffect(() => {
     async function fetchQuestions() {
       try {
+        setLoading(true);
+        let query;
+
         if (category === "banks" && bankId) {
-          // First get the bank name and id
+          // First get the bank ID from the slug
           const { data: bankData, error: bankError } = await supabase
             .from("banks")
             .select("id, name")
@@ -622,25 +625,59 @@ export function FlashcardsContent({
 
           setBankName(bankData.name);
 
-          // Then get the questions for this bank
-          const { data: questionsData, error: questionsError } = await supabase
+          // Then fetch questions using the bank's ID
+          query = supabase
             .from("questions")
-            .select("*")
+            .select(
+              `
+              id,
+              type,
+              question,
+              answer,
+              banks (name)
+            `
+            )
             .eq("bank_id", bankData.id);
+        } else if (category === "m-and-i" && categoryId) {
+          // For M&I 400, we can use the categoryId directly
+          query = supabase
+            .from("questions")
+            .select(
+              `
+              id,
+              type,
+              question,
+              answer,
+              m_and_i_400 (name)
+            `
+            )
+            .eq("m_and_i_400_id", categoryId);
+        }
 
-          if (questionsError) {
-            console.error("Error fetching questions:", questionsError);
-            return;
-          }
+        if (!query) {
+          console.error("No valid query constructed");
+          return;
+        }
 
-          // Add client-side tracking properties
-          const questionsWithTracking = questionsData.map((q: Question) => ({
-            ...q,
-            completed: false,
-            bookmarked: false,
-          }));
+        const { data, error } = await query;
 
-          setQuestions(questionsWithTracking);
+        if (error) {
+          console.error("Error fetching questions:", error);
+          return;
+        }
+
+        const formattedQuestions = data.map((q) => ({
+          id: q.id,
+          type: q.type,
+          question: q.question,
+          answer: q.answer,
+          completed: false,
+          bookmarked: false,
+        }));
+
+        setQuestions(formattedQuestions);
+        if (formattedQuestions.length > 0) {
+          setCurrentIndex(0);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -650,13 +687,13 @@ export function FlashcardsContent({
     }
 
     fetchQuestions();
-  }, [category, bankId, supabase]);
+  }, [category, bankId, categoryId, supabase]);
 
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white' />
       </div>
     );
   }
@@ -744,7 +781,7 @@ export function FlashcardsContent({
 
   const toggleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const cardId = currentCard.id;
+    const cardId = remainingCards[currentIndex].id;
     setBookmarkedCards((prev) =>
       prev.includes(cardId)
         ? prev.filter((id) => id !== cardId)
@@ -805,27 +842,27 @@ export function FlashcardsContent({
 
   if (remainingCards.length === 0) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80">
-        <div className="w-full space-y-12 text-center">
+      <div className='min-h-[80vh] flex items-center justify-center p-4 bg-gradient-to-b from-background to-background/80'>
+        <div className='w-full space-y-12 text-center'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-8"
+            className='space-y-8'
           >
-            <div className="relative mx-auto w-fit">
-              <h2 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%">
+            <div className='relative mx-auto w-fit'>
+              <h2 className='text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient bg-300%'>
                 Congratulations!
               </h2>
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse" />
+              <div className='absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg opacity-20 blur-lg animate-pulse' />
             </div>
 
-            <p className="text-2xl text-muted-foreground">
+            <p className='text-2xl text-muted-foreground'>
               You've completed all the flashcards 🎉
             </p>
 
             <motion.div
-              className="pt-6 flex flex-col gap-4 max-w-[260px] mx-auto"
+              className='pt-6 flex flex-col gap-4 max-w-[260px] mx-auto'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -843,8 +880,8 @@ export function FlashcardsContent({
                   "text-white font-medium text-lg"
                 )}
               >
-                <div className="relative flex items-center justify-center gap-2">
-                  <RotateCcw className="h-5 w-5 animate-spin-slow" />
+                <div className='relative flex items-center justify-center gap-2'>
+                  <RotateCcw className='h-5 w-5 animate-spin-slow' />
                   <span>Start Over</span>
                 </div>
               </Button>
@@ -862,10 +899,10 @@ export function FlashcardsContent({
               >
                 <Link
                   href={category === "banks" ? "/study/banks" : "/study/m&i400"}
-                  className="hover:no-underline"
+                  className='hover:no-underline'
                 >
-                  <div className="relative flex items-center justify-center gap-2">
-                    <ChevronLeft className="h-5 w-5" />
+                  <div className='relative flex items-center justify-center gap-2'>
+                    <ChevronLeft className='h-5 w-5' />
                     <span>Back to Menu</span>
                   </div>
                 </Link>
@@ -885,43 +922,43 @@ export function FlashcardsContent({
   const nextCard = remainingCards[(currentIndex + 1) % remainingCards.length];
 
   return (
-    <div className="min-h-screen">
-      <div className="flex items-center gap-2 mb-12 pl-2">
-        <div className="pt-4">
+    <div className='min-h-screen'>
+      <div className='flex items-center gap-2 mb-12 pl-2'>
+        <div className='pt-4'>
           <Button
-            variant="ghost"
-            size="icon"
+            variant='ghost'
+            size='icon'
             onClick={() => window.history.back()}
-            className="text-foreground"
+            className='text-foreground'
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className='h-5 w-5' />
           </Button>
         </div>
-        <h1 className="text-3xl font-semibold pt-4">{getTitle()}</h1>
+        <h1 className='text-3xl font-semibold pt-4'>{getTitle()}</h1>
       </div>
 
-      <div className="w-full">
-        <div className="relative px-6 mb-4">
+      <div className='w-full'>
+        <div className='relative px-6 mb-4'>
           <TabsList activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
 
-        <div className="p-4 md:p-6">
+        <div className='p-4 md:p-6'>
           {activeTab === "flashcards" && (
-            <div className="max-w-6xl mx-auto">
-              <div className="relative max-w-3xl mx-auto mb-32">
+            <div className='max-w-6xl mx-auto'>
+              <div className='relative max-w-3xl mx-auto mb-32'>
                 {/* Progress Bar */}
-                <div className="mb-6 flex flex-col gap-2 px-8">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
+                <div className='mb-6 flex flex-col gap-2 px-8'>
+                  <div className='flex items-center justify-between'>
+                    <span className='text-sm font-medium text-muted-foreground'>
                       Progress
                     </span>
-                    <span className="text-sm font-medium">
+                    <span className='text-sm font-medium'>
                       {completedCards.length + 1} / {questions.length}
                     </span>
                   </div>
-                  <div className="h-1 w-full bg-gray-200 dark:bg-muted/30 rounded-full overflow-hidden">
+                  <div className='h-1 w-full bg-gray-200 dark:bg-muted/30 rounded-full overflow-hidden'>
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
+                      className='h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out'
                       style={{
                         width: `${
                           ((completedCards.length + 1) / questions.length) * 100
@@ -933,13 +970,13 @@ export function FlashcardsContent({
 
                 {/* Flashcard Container */}
                 <div
-                  className="relative"
+                  className='relative'
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
                 >
                   <AnimatePresence
-                    mode="wait"
+                    mode='wait'
                     custom={direction}
                     initial={false}
                   >
@@ -947,10 +984,10 @@ export function FlashcardsContent({
                       key={currentIndex}
                       custom={direction}
                       variants={cardVariants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      className="relative"
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      className='relative'
                     >
                       <motion.div
                         className={cn(
@@ -965,21 +1002,21 @@ export function FlashcardsContent({
                         )}
                         onClick={() => setShowAnswer(!showAnswer)}
                       >
-                        <div className="relative z-10">
-                          <div className="flex justify-between items-center mb-4">
+                        <div className='relative z-10'>
+                          <div className='flex justify-between items-center mb-4'>
                             <Badge
-                              variant="outline"
-                              className="bg-[#E5E5E5] dark:bg-[#243442] border-none px-4 py-1.5 text-sm"
+                              variant='outline'
+                              className='bg-[#E5E5E5] dark:bg-[#243442] border-none px-4 py-1.5 text-sm'
                             >
                               {currentCard.type}
                             </Badge>
                             <div
                               onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-3"
+                              className='flex items-center gap-3'
                             >
-                              <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-2 min-w-[120px] sm:min-w-[150px]">
-                                  <span className="text-xs sm:text-sm text-gray-500">
+                              <div className='flex items-center gap-2'>
+                                <div className='flex items-center gap-2 min-w-[120px] sm:min-w-[150px]'>
+                                  <span className='text-xs sm:text-sm text-gray-500'>
                                     Aa
                                   </span>
                                   <Slider
@@ -990,15 +1027,15 @@ export function FlashcardsContent({
                                     min={12}
                                     max={32}
                                     step={2}
-                                    className="w-16 sm:w-24"
+                                    className='w-16 sm:w-24'
                                   />
-                                  <span className="text-sm sm:text-base text-gray-500">
+                                  <span className='text-sm sm:text-base text-gray-500'>
                                     Aa
                                   </span>
                                 </div>
                                 <button
                                   onClick={toggleBookmark}
-                                  className="relative p-1.5 sm:p-2.5 rounded-full"
+                                  className='relative p-1.5 sm:p-2.5 rounded-full'
                                 >
                                   <Bookmark
                                     className={cn(
@@ -1009,21 +1046,21 @@ export function FlashcardsContent({
                                         : "fill-transparent text-muted-foreground"
                                     )}
                                   />
-                                  <span className="sr-only">Bookmark card</span>
+                                  <span className='sr-only'>Bookmark card</span>
                                 </button>
                               </div>
                             </div>
                           </div>
 
                           <div
-                            className="text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100"
+                            className='text-3xl font-medium mb-4 text-gray-800 dark:text-gray-100'
                             style={{ fontSize: `${fontSize}px` }}
                           >
                             {currentCard.question}
                           </div>
 
-                          <div className="flex items-center mb-4">
-                            <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                          <div className='flex items-center mb-4'>
+                            <span className='text-sm text-muted-foreground hover:text-foreground transition-colors'>
                               {showAnswer ? "Hide Answer" : "Show Answer"}
                             </span>
                           </div>
@@ -1035,11 +1072,11 @@ export function FlashcardsContent({
                                 animate={{ opacity: 1, height: "auto", y: 0 }}
                                 exit={{ opacity: 0, height: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
+                                className='overflow-hidden'
                               >
-                                <div className="prose dark:prose-invert max-w-none">
+                                <div className='prose dark:prose-invert max-w-none'>
                                   <div
-                                    className="text-2xl text-gray-700 dark:text-gray-300"
+                                    className='text-2xl text-gray-700 dark:text-gray-300'
                                     style={{ fontSize: `${fontSize}px` }}
                                   >
                                     {currentCard.answer
@@ -1055,44 +1092,44 @@ export function FlashcardsContent({
                         </div>
                       </motion.div>
 
-                      <div className="flex flex-col items-center">
+                      <div className='flex flex-col items-center'>
                         {/* Action Buttons */}
-                        <div className="flex justify-center items-center px-4 mb-8">
-                          <div className="relative flex items-center gap-8">
+                        <div className='flex justify-center items-center px-4 mb-8'>
+                          <div className='relative flex items-center gap-8'>
                             <NavigationButton
-                              direction="left"
+                              direction='left'
                               onClick={handlePrevious}
                               disabled={remainingCards.length <= 1}
-                              label="Previous"
+                              label='Previous'
                             />
 
-                            <div className="flex gap-6 scale-110 relative">
+                            <div className='flex gap-6 scale-110 relative'>
                               <ActionButton
                                 icon={X}
                                 onClick={handleNext}
-                                variant="error"
-                                label="Skip"
+                                variant='error'
+                                label='Skip'
                               />
                               <ActionButton
                                 icon={Check}
                                 onClick={handleCorrect}
-                                variant="success"
-                                label="Got it!"
+                                variant='success'
+                                label='Got it!'
                               />
 
                               {/* Keep only this Scroll Indicator */}
-                              <AnimatePresence mode="wait">
+                              <AnimatePresence mode='wait'>
                                 {!hasScrolled && (
                                   <motion.div
                                     initial={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3 }}
-                                    className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+                                    className='absolute left-1/2 -translate-x-1/2 whitespace-nowrap'
                                     style={{
                                       top: "calc(100% + 48px)",
                                     }}
                                   >
-                                    <span className="text-sm text-muted-foreground/80">
+                                    <span className='text-sm text-muted-foreground/80'>
                                       Scroll to see all cards
                                     </span>
                                     <motion.div
@@ -1104,11 +1141,11 @@ export function FlashcardsContent({
                                         repeat: Infinity,
                                         ease: "easeInOut",
                                       }}
-                                      className="flex justify-center mt-2"
+                                      className='flex justify-center mt-2'
                                     >
-                                      <div className="relative">
-                                        <div className="absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md" />
-                                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                                      <div className='relative'>
+                                        <div className='absolute -inset-2 bg-gradient-to-b from-blue-500/20 to-purple-500/20 rounded-full blur-md' />
+                                        <ChevronDown className='h-5 w-5 text-muted-foreground' />
                                       </div>
                                     </motion.div>
                                   </motion.div>
@@ -1117,10 +1154,10 @@ export function FlashcardsContent({
                             </div>
 
                             <NavigationButton
-                              direction="right"
+                              direction='right'
                               onClick={handleNext}
                               disabled={remainingCards.length <= 1}
-                              label="Next"
+                              label='Next'
                             />
                           </div>
                         </div>
@@ -1130,7 +1167,7 @@ export function FlashcardsContent({
 
                   {touchStart && touchEnd && (
                     <div
-                      className="absolute inset-y-0 left-0 w-full pointer-events-none"
+                      className='absolute inset-y-0 left-0 w-full pointer-events-none'
                       style={{
                         background: `linear-gradient(to ${
                           touchStart - touchEnd > 0 ? "left" : "right"
@@ -1151,10 +1188,10 @@ export function FlashcardsContent({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="relative mt-24 pt-16"
+                className='relative mt-24 pt-16'
               >
                 <div
-                  className="absolute inset-0 pointer-events-none"
+                  className='absolute inset-0 pointer-events-none'
                   style={{
                     background:
                       "linear-gradient(to bottom, var(--background), transparent 50%)",
@@ -1168,19 +1205,19 @@ export function FlashcardsContent({
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true, margin: "-100px" }}
-                  className="flex items-center justify-between mb-12"
+                  className='flex items-center justify-between mb-12'
                 >
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold">All Questions</h2>
-                    <Badge variant="outline" className="px-4 py-1.5">
+                  <div className='flex items-center gap-3'>
+                    <h2 className='text-2xl font-semibold'>All Questions</h2>
+                    <Badge variant='outline' className='px-4 py-1.5'>
                       {questions.length} Questions
                     </Badge>
                   </div>
 
-                  <div className="h-px flex-1 mx-8 bg-gradient-to-r from-transparent via-muted-foreground/20 to-transparent" />
+                  <div className='h-px flex-1 mx-8 bg-gradient-to-r from-transparent via-muted-foreground/20 to-transparent' />
                 </motion.div>
 
-                <div className="grid gap-4">
+                <div className='grid gap-4'>
                   {questions.map((question, index) => (
                     <motion.div
                       key={question.id}
@@ -1191,7 +1228,7 @@ export function FlashcardsContent({
                         delay: index * 0.05,
                       }}
                       viewport={{ once: true, margin: "-50px" }}
-                      className="group"
+                      className='group'
                     >
                       <div
                         className={cn(
@@ -1205,32 +1242,32 @@ export function FlashcardsContent({
                           "hover:border-blue-500/20 dark:hover:border-blue-400/20"
                         )}
                       >
-                        <div className="space-y-4">
-                          <div className="flex items-start justify-between">
+                        <div className='space-y-4'>
+                          <div className='flex items-start justify-between'>
                             <Badge
-                              variant="outline"
-                              className="bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300"
+                              variant='outline'
+                              className='bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-300'
                             >
                               {question.type}
                             </Badge>
-                            <div className="flex items-center gap-2">
+                            <div className='flex items-center gap-2'>
                               {completedCards.includes(question.id) && (
                                 <motion.div
                                   initial={{ scale: 0 }}
                                   animate={{ scale: 1 }}
-                                  className="text-green-500"
+                                  className='text-green-500'
                                 >
-                                  <Check className="h-5 w-5" />
+                                  <Check className='h-5 w-5' />
                                 </motion.div>
                               )}
                               {bookmarkedCards.includes(question.id) && (
-                                <Bookmark className="h-5 w-5 fill-foreground" />
+                                <Bookmark className='h-5 w-5 fill-foreground' />
                               )}
                             </div>
                           </div>
 
-                          <div className="space-y-2">
-                            <h3 className="text-lg font-medium text-foreground">
+                          <div className='space-y-2'>
+                            <h3 className='text-lg font-medium text-foreground'>
                               {question.question}
                             </h3>
                             <div
@@ -1258,7 +1295,7 @@ export function FlashcardsContent({
           )}
 
           {activeTab === "test" && (
-            <div className="w-full">
+            <div className='w-full'>
               {isTestMode && testSettings ? (
                 <TestInterface
                   settings={testSettings}
@@ -1266,7 +1303,7 @@ export function FlashcardsContent({
                   onComplete={handleTestComplete}
                 />
               ) : (
-                <div className="max-w-3xl mx-auto">
+                <div className='max-w-3xl mx-auto'>
                   <TestSetup
                     maxQuestions={questions.length}
                     onStartTest={handleStartTest}

@@ -31,7 +31,7 @@ export function TrueFalseQuestion({
   fontSize,
 }: TrueFalseQuestionProps) {
   const handleDontKnow = () => {
-    onAnswer(question.id, question.answer);
+    onAnswer(question.id, "dontknow");
     onDontKnow(question.id);
   };
 
@@ -61,7 +61,10 @@ export function TrueFalseQuestion({
         <button
           onClick={() => onAnswer(question.id, "match")}
           className={`${styles.matchButton} ${
-            question.userAnswer === "match" ? styles.selected : ""
+            question.userAnswer === "match" ||
+            (question.userAnswer === "dontknow" && question.answer === "match")
+              ? styles.selected
+              : ""
           }`}
           data-correct={
             question.userAnswer === "dontknow" && question.answer === "match"
@@ -70,20 +73,24 @@ export function TrueFalseQuestion({
           Match
         </button>
         <button
-          onClick={() => onAnswer(question.id, "dontMatch")}
+          onClick={() => onAnswer(question.id, "dontmatch")}
           className={`${styles.matchButton} ${
-            question.userAnswer === "dontMatch" ? styles.selected : ""
+            question.userAnswer === "dontmatch" ||
+            (question.userAnswer === "dontknow" &&
+              question.answer === "dontmatch")
+              ? styles.selected
+              : ""
           }`}
           data-correct={
             question.userAnswer === "dontknow" &&
-            question.answer === "dontMatch"
+            question.answer === "dontmatch"
           }
         >
           Don't Match
         </button>
       </div>
       <Button
-        variant="ghost"
+        variant='ghost'
         className={`${styles.dontKnowButton} ${
           question.userAnswer === "dontknow" ? styles.selected : ""
         }`}
